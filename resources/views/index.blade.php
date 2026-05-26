@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('layouts.base')
 
-        <title>{{ config('app.name', 'Laravel') }}</title>
+@section('title', 'Accueil')
 
-        @fonts
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body>
-        
-    </body>
-</html>
+@section('content')
+    <h1>Welcome to the Home Page</h1>
+    <p>This is the content of the home page.</p>
+    <x-btn>Button</x-btn>
+@endsection
