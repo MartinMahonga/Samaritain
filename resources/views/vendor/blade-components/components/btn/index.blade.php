@@ -55,8 +55,8 @@ $class = [
     'bg-transparent' => $style === 'ghost',
 
     // Outline...
-    'bg-[var(--input)] border-[var(--border)] text-[var(--secondary-foreground)]' => $style === 'outline',
-    'active:bg-[var(--input)]' => $style === 'outline',
+    'bg-none border-[var(--border)] text-[var(--foreground)]' => $style === 'outline',
+    'active:bg-[var(--primary)]' => $style === 'outline',
 
     // Success...
     'bg-[color-mix(in_oklab,var(--success)_10%,transparent)] text-[var(--success-foreground)]' => $style === 'success',

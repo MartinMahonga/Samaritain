@@ -23,10 +23,16 @@
                     class="bg-primary text-white py-2.5 px-5 font-semibold rounded-4xl hover:bg-secondary">
                     <i class="fas fa-phone-alt"></i> +242 06 800 71 38
                 </a>
-                <div>
-                    <x-btn href="auth.login" style='outline'>Se connecter</x-btn>
-                    <x-btn href="auth.register">S'inscrire</x-btn>
-                </div>
+                @if (auth()->user())
+                    <form action="{{ route('logout') }}" method="POST">
+                        <x-btn type="submit" style="outline">Se déconnecter</x-btn>
+                    </form>
+                @else
+                    <div>
+                        <x-btn href="{{ route('login') }}" style='outline'>Se connecter</x-btn>
+                        <x-btn href="{{ route('register') }}">S'inscrire</x-btn>
+                    </div>
+                @endif
             </div>
         </div>
     </nav>
