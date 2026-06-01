@@ -46,16 +46,16 @@ $class = [
     'active:bg-[var(--primary)]' => $style === 'primary',
 
     // Secondary, Ghost and Outline...
-    'bg-[var(--secondary)] text-[var(--secondary-foreground)]' => in_array($style, ['secondary', 'ghost']),
+    'bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80' => in_array($style, ['secondary', 'ghost']),
     'hover:bg-[color-mix(in_oklab,var(--secondary)_70%,transparent)]' => in_array($style, ['secondary', 'ghost', 'outline']),
     'focus:bg-[color-mix(in_oklab,var(--secondary)_70%,transparent)]' => in_array($style, ['secondary', 'ghost', 'outline']),
     'active:bg-[var(--secondary)]' => in_array($style, ['secondary', 'ghost']),
 
     // Ghost...
-    'bg-transparent' => $style === 'ghost',
+    'hover:bg-accent hover:text-accent-foreground' => $style === 'ghost',
 
     // Outline...
-    'bg-none border-[var(--border)] text-[var(--foreground)]' => $style === 'outline',
+    'border border-input bg-background shadow-xs hover:bg-accent hover:text-accent-foreground' => $style === 'outline',
     'active:bg-[var(--primary)]' => $style === 'outline',
 
     // Success...
@@ -84,6 +84,12 @@ $class = [
 
     // Disabled...
     'disabled:pointer-events-none disabled:opacity-50',
+
+    // Link
+    'text-primary underline-offset-4 hover:underline' => $style === 'link',
+
+    // Destructive
+    'bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40' => $style === 'destructive',
 ];
 
 $attributes = $attributes->merge([

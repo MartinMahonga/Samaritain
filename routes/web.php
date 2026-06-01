@@ -14,3 +14,7 @@ Route::get('/auth/{provider}/callback', ProviderCallbackController::class)->name
 Route::get('/home', function () {
     return view('pages.home');
 })->middleware('auth')->name('home');
+
+Route::get('/dashboard', function () {
+    return view('pages.dashboard.index');
+});
