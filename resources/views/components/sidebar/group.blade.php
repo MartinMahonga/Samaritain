@@ -7,7 +7,7 @@
     @if ($label)
         <span x-show="sidebarOpen" x-transition:enter="transition ease-out duration-150"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
-            class="text-[10px] font-medium tracking-wider text-zinc-500 uppercase px-2 py-1.5 select-none block">
+            class="text-[10px] font-medium tracking-wider text-[var(--sidebar-accent-foreground)] uppercase px-2 py-1.5 select-none block">
             {{ $label }}
         </span>
     @endif

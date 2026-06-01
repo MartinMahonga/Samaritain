@@ -4,7 +4,7 @@
     'avatar' => 'https://github.com/shadcn.png',
 ])
 
-<div class="h-14 border-t border-zinc-800 flex items-center px-3 gap-2 justify-between shrink-0 bg-zinc-900/40 mt-auto">
+<div class="h-14 border-t border-[var(--sidebar-border)] flex items-center px-3 gap-2 justify-between shrink-0 bg-[var(--sidebar)]/80 mt-auto">
     <div class="flex items-center gap-2 overflow-hidden w-full">
         <!-- User avatar -->
         <img src="{{ $avatar }}" alt="{{ $name }}"
@@ -15,13 +15,13 @@
         <div x-show="sidebarOpen" x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100"
             class="flex flex-col text-left overflow-hidden flex-1 select-none">
-            <span class="text-xs font-semibold text-zinc-200 truncate leading-tight">{{ $name }}</span>
-            <span class="text-[10px] text-zinc-400 truncate leading-tight">{{ $email }}</span>
+            <span class="text-xs font-semibold text-[var(--sidebar-primary-foreground)] truncate leading-tight">{{ $name }}</span>
+            <span class="text-[10px] text-[var(--sidebar-accent-foreground)] truncate leading-tight">{{ $email }}</span>
         </div>
     </div>
 
     <!-- User options menu icon (hidden when collapsed) -->
-    <div x-show="sidebarOpen" class="text-zinc-400 shrink-0">
+    <div x-show="sidebarOpen" class="text-[var(--sidebar-accent-foreground)] shrink-0">
         <i data-lucide="chevrons-up-down" height="16" width="16"></i>
     </div>
 </div>

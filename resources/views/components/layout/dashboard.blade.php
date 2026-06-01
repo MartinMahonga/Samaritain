@@ -44,7 +44,7 @@
     $sidebarHtml = (string) $sidebar;
 @endphp
 
-<body class="bg-zinc-950 text-zinc-50 font-sans antialiased min-h-screen flex overflow-hidden" x-data="{
+<body class="bg-[var(--background)] text-[var(--foreground)] font-sans antialiased h-screen flex overflow-hidden" x-data="{
     sidebarOpen: true,
     mobileMenuOpen: false,
     toggleSidebar() {
@@ -73,13 +73,11 @@
                 x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transition ease-in-out duration-300 transform"
                 x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
-                class="w-64 bg-zinc-950 flex flex-col h-full border-r border-zinc-800 relative shadow-2xl transition-transform"
-                @click.away="mobileMenuOpen = false">
+                class="w-64 bg-[var(--sidebar)] flex flex-col h-full border-r border-[var(--sidebar-border)] relative shadow-2xl transition-transform">
 
-                <!-- Close Button inside Drawer -->
                 <div class="absolute top-3.5 right-3 z-50">
                     <button @click="mobileMenuOpen = false"
-                        class="p-1 rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors focus:outline-none">
+                        class="p-1 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
                         <i data-lucide="x" height="16" width="16"></i>
                     </button>
                 </div>
@@ -98,20 +96,20 @@
     </div>
 
     <!-- Main Content Area Wrapper -->
-    <div class="flex-1 flex flex-col min-h-screen overflow-hidden transition-all duration-300">
+    <div class="flex-1 flex flex-col min-h-0 overflow-hidden transition-all duration-300">
 
         <!-- Header / Top navigation bar -->
-        <header class="h-12 border-b border-zinc-800 flex items-center px-4 justify-between shrink-0 bg-zinc-950">
+        <header class="h-14 border-b border-[var(--sidebar-border)] flex items-center px-4 justify-between shrink-0 bg-[var(--sidebar)]">
             <div class="flex items-center gap-2">
                 <!-- Sidebar Toggle Button -->
                 <button @click="toggleSidebar()"
-                    class="p-1.5 rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors focus:outline-none"
+                    class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none"
                     aria-label="Toggle Sidebar">
                     <i data-lucide="panel-left" height="16" width="16"></i>
                 </button>
 
                 <!-- Divider -->
-                <div class="w-px h-4 bg-zinc-800 mx-2"></div>
+                <div class="w-px h-4 bg-[var(--sidebar-border)] mx-2"></div>
 
                 <!-- Breadcrumbs -->
                 {{ $breadcrumbs ?? '' }}
@@ -119,14 +117,14 @@
 
             <!-- Right-side actions -->
             <div class="flex items-center gap-3">
-                <button class="p-1.5 rounded-md text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 transition-colors">
+                <button class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors">
                     <i data-lucide="bell" height="16" width="16"></i>
                 </button>
             </div>
         </header>
 
         <!-- Main Panel Content -->
-        <main class="flex-1 overflow-y-auto p-3 sm:p-4 bg-zinc-950 flex flex-col gap-4">
+        <main class="flex-1 overflow-y-auto min-h-0 p-3 sm:p-4 bg-[var(--background)] flex flex-col gap-4">
             {{ $slot }}
         </main>
     </div>
