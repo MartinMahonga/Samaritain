@@ -24,6 +24,16 @@ import {
     X,
     Home,
     Inbox,
+    BadgeCheck,
+    ArrowRight,
+    ChevronLeft,
+    Users,
+    Wallet,
+    Building,
+    Briefcase,
+    TrendingUp,
+    Ticket,
+    Drill
 } from "lucide";
 
 createIcons({
@@ -51,6 +61,16 @@ createIcons({
         X,
         Home,
         Inbox,
+        BadgeCheck,
+        ArrowRight,
+        ChevronLeft,
+        Users,
+        Wallet,
+        Building,
+        Briefcase,
+        TrendingUp,
+        Ticket,
+        Drill
     },
 });
 
