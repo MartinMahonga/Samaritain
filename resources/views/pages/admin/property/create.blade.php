@@ -19,12 +19,7 @@
                 </div>
                 <x-form.input name="surface" label="Surface (m²)" type="number" step="0.01" />
                 <x-form.input name="price" label="Prix" type="number" step="0.01" />
-                <x-form.select name="category_id" label="Catégorie" placeholder="Choisir une catégorie" :options="[
-                    '1' => 'Appartement',
-                    '2' => 'Maison',
-                    '3' => 'Studio',
-                    '4' => 'Local commercial',
-                ]" />
+                <x-form.select name="category_id" label="Catégorie" placeholder="Choisir une catégorie" :options="$categories" />
             </div>
 
             <x-form.textarea name="description" label="Description" />
@@ -37,21 +32,12 @@
             </div>
 
             <div>
-                <x-form.multi-select name="equipments" label="Équipements" :options="[
-                    'wifi' => 'Wi-Fi',
-                    'pool' => 'Piscine',
-                    'garage' => 'Garage',
-                    'garden' => 'Jardin',
-                    'security' => 'Sécurité',
-                ]" />
+                <x-form.multi-select name="amenities" label="Équipements" :options="$amenities" />
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <x-form.input name="address" label="Adresse" />
-                <x-form.select name="city_id" label="Ville" placeholder="Choisir une ville" :options="[
-                    '1' => 'Brazzaville',
-                    '2' => 'Pointe-Noire',
-                ]" />
+                <x-form.select name="city_id" label="Ville" placeholder="Choisir une ville" :options="$cities" />
                 <x-form.select name="status" label="Statut" placeholder="Choisir un statut" :options="[
                     'available' => 'Disponible',
                     'sold' => 'Vendu',
@@ -60,7 +46,7 @@
             </div>
 
             <div>
-                <x-form.file-input name="image" label="Images" accept="image/*" />
+                <x-form.file-input name="images" label="Images" accept="image/*" />
             </div>
 
             <div class="flex items-center gap-3">

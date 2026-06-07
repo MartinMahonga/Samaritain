@@ -30,7 +30,7 @@ return new class extends Migration
             $table->dropColumn('provider_name');
             $table->dropColumn('provider_token');
             $table->dropColumn('provider_refresh_token');
-            $table->string('profile_image');
+            $table->dropColumn('profile_image');
         });
     }
 };

@@ -4,6 +4,10 @@
     'options' => [],
     'placeholder' => null,
     'value' => null,
+
+    // Pour les tableaux associatifs
+    'optionValue' => 'id',
+    'optionLabel' => 'name',
 ])
 
 <div>
@@ -49,16 +53,29 @@
             @endif
 
             @foreach ($options as $key => $option)
+
+                @php
+                    $isArray = is_array($option);
+                    $isObject = is_object($option);
+
+                    $optionKey = $isArray
+                        ? $option[$optionValue]
+                        : ($isObject ? $option->{$optionValue} : $key);
+
+                    $optionText = $isArray
+                        ? $option[$optionLabel]
+                        : ($isObject ? $option->{$optionLabel} : $option);
+                @endphp
+
                 <option
-                    value="{{ $key }}"
-                    @selected(old($name, $value) == $key)
+                    value="{{ $optionKey }}"
+                    @selected(old($name, $value) == $optionKey)
                 >
-                    {{ $option }}
+                    {{ $optionText }}
                 </option>
             @endforeach
         </select>
 
-        <!-- Icône -->
         <div class="pointer-events-none absolute inset-y-0 right-3 flex items-center">
             <i data-lucide="chevrons-up-down" class="w-4 h-4"></i>
         </div>

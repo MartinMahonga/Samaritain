@@ -42,7 +42,7 @@
                                     <td class="px-4 py-3">{{ $property->floor }}</td>
                                     <td class="px-4 py-3">{{ $property->address }}</td>
                                     <td class="px-4 py-3">
-                                        @switch($property->status)
+                                        @switch($property->status->value)
                                             @case('available')
                                                 <span
                                                     class="px-2 py-1 text-xs font-medium text-green-500 bg-green-300 rounded-full">disponible</span>

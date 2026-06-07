@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Actions\UploadImage;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\PropertyFormRequest;
+use App\Models\Amenity;
+use App\Models\Category;
+use App\Models\City;
 use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -27,22 +32,48 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.property.create');
+        // Category::create(['name' => 'Appartement']);
+        // Category::create(['name' => 'Maison']);
+        // Category::create(['name' => 'Studio']);
+        // Category::create(['name' => 'Local commercial']);
+
+        // City::create(['name' => 'Brazzaville']);
+        // City::create(['name' => 'Pointe-Noire']);
+
+        // Amenity::create(['name' => 'WiFi']);
+        // Amenity::create(['name' => 'Piscine']);
+        // Amenity::create(['name' => 'Parkings']);
+        // Amenity::create(['name' => 'Balcon']);
+        // Amenity::create(['name' => 'Jardin']);
+        // Amenity::create(['name' => 'Terrain de golfe']);
+
+
+        return view('pages.admin.property.create', [
+            'categories' => Category::select(['id', 'name'])->get(),
+            'cities' => City::select(['id', 'name'])->get(),
+            'amenities' => Amenity::select(['id', 'name'])->get(),
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(PropertyFormRequest $request)
+    public function store(PropertyFormRequest $request, UploadImage $storeImage)
     {
         $data = $request->validated();
 
-        Property::create([
+        $property = Property::create([
             ...$data,
             'created_by' => Auth::id(),
         ]);
 
-        return redirect()->route('admin.property.index')->with('success', 'Bien créé avec succès.');
+        $property->amenities()->sync($request->validated('amenities'));
+    
+        if ($request->hasFile('images')) {
+            $storeImage->handle($property, $request->file('images'));
+        }
+
+        return redirect()->route('admin.property.index')->with('success', 'Le bien a été créé avec succès.');
     }
 
     /**
@@ -50,21 +81,41 @@ class PropertyController extends Controller
      */
     public function edit(Property $property)
     {
+        $property->load(['amenities', 'images']);
+        
         return view('pages.admin.property.edit', [
             'property' => $property,
+            'categories' => Category::select(['id', 'name'])->get(),
+            'cities' => City::select(['id', 'name'])->get(),
+            'amenities' => Amenity::select(['id', 'name'])->get(),
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(PropertyFormRequest $request, Property $property)
+    public function update(PropertyFormRequest $request, Property $property, UploadImage $storeImage)
     {
-        $data = $request->validated();
+        $property->update($request->validated());
+        $property->amenities()->sync($request->validated('amenities'));
 
-        $property->update($data);
+        // Supprimer uniquement les images non conservées
+        $keptIds = $request->input('kept_images', []);
 
-        return redirect()->route('admin.property.index')->with('success', 'Bien mis à jour avec succès.');
+        $property->images()
+            ->whereNotIn('id', $keptIds)
+            ->get()
+            ->each(function ($image) {
+                Storage::disk('public')->delete($image->getRawOriginal('image_url'));
+                $image->delete();
+            });
+
+        if ($request->hasFile('images')) {
+            $storeImage->handle($property, $request->file('images'));
+        }
+
+        return redirect()->route('admin.property.index')
+            ->with('success', 'Le bien a été mis à jour avec succès.');
     }
 
     /**
@@ -72,8 +123,16 @@ class PropertyController extends Controller
      */
     public function destroy(Property $property)
     {
+
+        $property->images()
+            ->get()
+            ->each(function ($image) {
+                Storage::disk('public')->delete($image->getRawOriginal('image_url'));
+                $image->delete();
+        });
+
         $property->delete($property->id);
 
-        return redirect()->route('admin.property.index')->with('success', 'Bien supprimé avec succès.');
+        return redirect()->route('admin.property.index')->with('success', 'Le bien a été supprimé avec succès.');
     }
 }
