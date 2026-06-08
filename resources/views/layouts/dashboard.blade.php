@@ -15,7 +15,7 @@
             <x-sidebar.group label="Gestion">
                 <!-- Collapsible Properties item, expanded by default -->
                 <x-sidebar.item icon="home" label="Propriétés" :active="false" :expanded="true">
-                    <x-sidebar.sub-item label="Tous les biens" href="#" />
+                    <x-sidebar.sub-item label="Tous les biens" href="{{ route('admin.property.index') }}" />
                     <x-sidebar.sub-item label="Les biens vérifiés" href="#" />
                     <x-sidebar.sub-item label="Les biens non vérifiés" href="#" />
                     <x-sidebar.sub-item label="Les biens en cour de vérification" href="#" />
@@ -49,6 +49,12 @@
     <x-slot:breadcrumbs>
         <x-breadcrumb />
     </x-slot:breadcrumbs>
+
+    @if (session('success'))
+        <x-alert style="success">
+            {{ session('success') }}
+        </x-alert>
+    @endif
 
     @yield('content')
     

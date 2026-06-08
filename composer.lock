@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "26d6af64f948c3190874a9ff2a0acaf4",
+    "content-hash": "98a43e3ddc1998c63897d1008f85b410",
     "packages": [
         {
             "name": "bacon/bacon-qr-code",
@@ -585,6 +585,64 @@
                 "source": "https://github.com/distortedfusion/blade-colors/tree/2.0.4"
             },
             "time": "2026-04-08T19:35:45+00:00"
+        },
+        {
+            "name": "distortedfusion/blade-forms",
+            "version": "3.0.13",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/distortedfusion/blade-forms.git",
+                "reference": "21c5406e46c758e9c1cead8c70478d31028e5be2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/distortedfusion/blade-forms/zipball/21c5406e46c758e9c1cead8c70478d31028e5be2",
+                "reference": "21c5406e46c758e9c1cead8c70478d31028e5be2",
+                "shasum": ""
+            },
+            "require": {
+                "distortedfusion/blade-colors": "^2.0",
+                "illuminate/support": "*",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "distortedfusion/php-cs-fixer-config": "^2.1"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "DistortedFusion\\BladeForms\\BladeFormsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "DistortedFusion\\BladeForms\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Dierkx",
+                    "email": "kevin@distortedfusion.com"
+                }
+            ],
+            "description": "Laravel Blade Form Components.",
+            "keywords": [
+                "Forms",
+                "distortedfusion",
+                "laravel",
+                "tailwind"
+            ],
+            "support": {
+                "issues": "https://github.com/distortedfusion/blade-forms/issues",
+                "source": "https://github.com/distortedfusion/blade-forms/tree/3.0.13"
+            },
+            "time": "2025-12-30T17:11:32+00:00"
         },
         {
             "name": "doctrine/deprecations",
