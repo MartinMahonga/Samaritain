@@ -36,7 +36,11 @@ import {
     Drill,
     LogOut,
     User,
-    Settings
+    Settings,
+    Eye,
+    Trash,
+    Edit,
+    AlertOctagon
 } from "lucide";
 
 createIcons({
@@ -76,7 +80,11 @@ createIcons({
         Drill,
         LogOut,
         User,
-        Settings
+        Settings,
+        Eye,
+        Trash,
+        Edit,
+        AlertOctagon,
     },
 });
 

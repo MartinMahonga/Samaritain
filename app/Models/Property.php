@@ -1,0 +1,65 @@
+<?php
+
+namespace App\Models;
+
+use App\Enums\PropertyStatus;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+
+class Property extends Model
+{
+    use SoftDeletes;
+
+    protected $fillable = [
+        'created_by',
+        'title',
+        'description',
+        'price',
+        'surface',
+        'rooms',
+        'bedrooms',
+        'bathrooms',
+        'floor',
+        'furnished',
+        'address',
+        'category_id',
+        'city_id',
+        'status',
+        'verified'
+    ];
+
+    protected $casts = [
+        'status' => PropertyStatus::class,
+    ];
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function city ()
+    {
+        return $this->belongsTo(City::class);
+    }
+
+    public function amenities()
+    {
+        return $this->belongsToMany(Amenity::class, 'amenity_property');
+    }
+
+    public function images()
+    {
+        return $this->hasMany(PropertyImage::class);
+    }
+
+    public function getCoverImageUrlAttribute()
+    {
+        $coverImage = $this->images()->where('cover_image', true)->first();
+        return $coverImage ? $coverImage->image_url : null;
+    }
+}
