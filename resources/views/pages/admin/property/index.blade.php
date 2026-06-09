@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Les biens')
+
 @section('content')
     @if (!$properties->isEmpty())
         <div class="flex justify-between">

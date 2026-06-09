@@ -266,7 +266,7 @@
         /* ── Grid layout ── */
         .properties-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(5, 1fr);
             gap: 1.5rem;
         }
 
@@ -804,123 +804,9 @@
             {{-- ── Property grid ── ────────────────────────────── --}}
             <div class="properties-grid" id="properties-grid">
 
-                @forelse($properties as $property)
-                    @php
-                        $statusMap = ['disponible' => 'available', 'loué' => 'rented', 'vendu' => 'sold'];
-                        $statusClass = $statusMap[strtolower($property->status->value ?? '')] ?? 'available';
-                        $statusLabel = $property->status ?? 'Disponible';
-                    @endphp
-
-                    <a href="{{ route('property.show', $property) }}" class="prop-card">
-
-                        {{-- Photo --}}
-                        <div class="prop-photo">
-                            @if ($property->images->isNotEmpty())
-                                <img src="{{ $property->images->first()->image_url }}" alt="{{ $property->title }}"
-                                    loading="lazy">
-                            @else
-                                <div
-                                    style="width:100%;height:100%;background:var(--border);display:flex;align-items:center;justify-content:center;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                        stroke="currentColor" stroke-width="1"
-                                        style="width:2.5rem;height:2.5rem;color:#ccc;">
-                                        <rect x="3" y="3" width="18" height="18" rx="2" />
-                                        <circle cx="8.5" cy="8.5" r="1.5" />
-                                        <polyline points="21 15 16 10 5 21" />
-                                    </svg>
-                                </div>
-                            @endif
-
-                            <button class="btn-wishlist"
-                                onclick="event.preventDefault(); toggleWishlist(this, {{ $property->id }})"
-                                title="Sauvegarder">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path
-                                        d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                                </svg>
-                            </button>
-
-                            <span class="photo-status {{ $statusClass }}">{{ $statusLabel }}</span>
-
-                            @if ($property->price)
-                                <div class="photo-price">
-                                    {{ number_format($property->price, 0, ',', ' ') }}
-                                    <sub>XAF{{ $property->price_type === 'monthly' ? '/m' : '' }}</sub>
-                                </div>
-                            @endif
-                        </div>
-
-                        {{-- Body --}}
-                        <div class="prop-body">
-                            @if ($property->type)
-                                <span class="prop-type">{{ $property->type }}</span>
-                            @endif
-
-                            <h2 class="prop-title">{{ $property->title }}</h2>
-
-                            <div class="prop-location">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                    stroke="currentColor" stroke-width="2">
-                                    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" />
-                                    <circle cx="12" cy="10" r="3" />
-                                </svg>
-                                {{ $property->city->name ?? 'Brazzaville' }}
-                                @if ($property->address)
-                                    , {{ $property->address }}
-                                @endif
-                            </div>
-
-                            @if ($property->description)
-                                <p class="prop-description">{{ $property->description }}</p>
-                            @endif
-
-                            {{-- Feature chips --}}
-                            <div class="prop-features">
-                                @if ($property->surface)
-                                    <span class="feat-chip">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <rect x="3" y="3" width="18" height="18" rx="1" />
-                                        </svg>
-                                        {{ $property->surface }} m²
-                                    </span>
-                                @endif
-                                @if ($property->bedrooms)
-                                    <span class="feat-chip">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path d="M2 20v-8a2 2 0 012-2h16a2 2 0 012 2v8" />
-                                            <path d="M2 10V6a2 2 0 012-2h16a2 2 0 012 2v4" />
-                                        </svg>
-                                        {{ $property->bedrooms }} ch.
-                                    </span>
-                                @endif
-                                @if ($property->bathrooms)
-                                    <span class="feat-chip">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path d="M4 12h16a2 2 0 010 4H4a2 2 0 010-4z" />
-                                            <path d="M6 12V5a2 2 0 012-2h4l2 3" />
-                                        </svg>
-                                        {{ $property->bathrooms }} sdb
-                                    </span>
-                                @endif
-                                @if ($property->rooms)
-                                    <span class="feat-chip">
-                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none"
-                                            stroke="currentColor" stroke-width="2">
-                                            <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
-                                        </svg>
-                                        {{ $property->rooms }} pièces
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                    </a>
+                @forelse ($properties as $property)
+                    <x-ui.property-card :property="$property" />
                 @empty
-
                     {{-- Empty state --}}
                     <div class="empty-state">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -936,6 +822,7 @@
                         </a>
                     </div>
                 @endforelse
+
             </div>
 
             {{-- ── Pagination ── ──────────────────────────────── --}}

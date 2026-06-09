@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Ajouter un bien')
+
 @section('content')
     @php
         $status = [
@@ -49,12 +51,12 @@
                 <x-form.file-input name="images" label="Images" accept="image/*" />
             </div>
 
-            <div class="flex items-center gap-3">
-                <x-btn type="submit">
-                    Ajouter le bien
-                </x-btn>
+            <div class="flex justify-end items-center gap-3">
                 <x-btn href="{{ route('admin.property.index') }}" style="outline">
                     Annuler
+                </x-btn>
+                <x-btn type="submit">
+                    Enregistrer le bien
                 </x-btn>
             </div>
         </form>

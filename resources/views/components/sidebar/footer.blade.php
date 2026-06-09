@@ -11,7 +11,7 @@
         <!-- User avatar -->
         @if ($avatar)
             <img src="{{ $avatar }}" alt="{{ $name }}"
-                class="w-7 h-7 rounded-md shrink-0 object-cover border border-zinc-700 shadow-sm"
+                class="w-7 h-7 rounded-md shrink-0 object-cover border border-gray-200 shadow-sm"
                 onerror="this.src='https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=100&auto=format&fit=crop'">
         @else
             <div
@@ -34,8 +34,7 @@
     <!-- User options dropdown (hidden when collapsed) -->
     <div x-show="sidebarOpen" class="shrink-0" x-cloak>
         <div class="relative text-[var(--sidebar-accent-foreground)]">
-            <button
-                class="p-1 rounded-md hover:bg-white/5">
+            <button class="p-1 rounded-md hover:bg-white/5">
                 <i data-lucide="chevrons-up-down" height="16" width="16"></i>
             </button>
 

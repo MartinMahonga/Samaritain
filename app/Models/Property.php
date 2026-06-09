@@ -62,4 +62,25 @@ class Property extends Model
         $coverImage = $this->images()->where('cover_image', true)->first();
         return $coverImage ? $coverImage->image_url : null;
     }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(
+            User::class,
+            'favorites'
+        )->withTimestamps();
+    }
+
+    public function isFavorited(): bool
+    {
+        if (!auth()->check()) {
+            return false;
+        }
+
+        return auth()
+            ->user()
+            ->favorites()
+            ->where('property_id', $this->id)
+            ->exists();
+    }
 }

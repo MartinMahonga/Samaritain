@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Modifier un bien')
+
 @section('content')
     <h1>Modifier le bien</h1>
     <x-container-dashed>

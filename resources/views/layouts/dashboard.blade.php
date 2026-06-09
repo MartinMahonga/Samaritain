@@ -44,9 +44,9 @@
             </x-sidebar.group>
 
             <!-- User Profile Footer -->
-            @if (auth()->user()->avatar)
+            @if (auth()->user()->profile_image)
                 <x-sidebar.footer name="{{ auth()->user()->name }}" email="{{ auth()->user()->email }}"
-                    avatar="{{ auth()->user()->avatar }}" />
+                    avatar="{{ auth()->user()->profile_image }}" />
             @else
                 <x-sidebar.footer name="{{ auth()->user()->name }}" email="{{ auth()->user()->email }}" />
             @endif

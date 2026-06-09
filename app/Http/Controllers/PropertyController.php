@@ -17,17 +17,32 @@ class PropertyController extends Controller
         ]);
     }
     
-    public function show(Property $property)
-    {
-        $property->load([
+public function show(Property $property)
+{
+    $property->load([
+        'images',
+        'city',
+        'category',
+        'amenities',
+    ]);
+
+    $similarProperties = Property::with([
             'images',
             'city',
             'category',
-            'amenities',
-        ]);
+        ])
+        ->where('id', '!=', $property->id)
+        ->where(function ($query) use ($property) {
+            $query->where('category_id', $property->category_id)
+                ->orWhere('city_id', $property->city_id);
+        })
+        ->latest()
+        ->take(6)
+        ->get();
 
-        return view('pages.property.show', [
-            'property' => $property
-        ]);
-    }
+    return view('pages.property.show', [
+        'property' => $property,
+        'similarProperties' => $similarProperties,
+    ]);
+}
 }
