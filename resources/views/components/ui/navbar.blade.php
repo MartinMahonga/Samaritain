@@ -60,7 +60,7 @@
                     <div x-show="open" x-cloak @click.outside="open = false"
                         class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-1 text-sm">
                         <p class="px-3 py-2 text-xs text-gray-400 border-b border-gray-100">
-                            {{ auth()->user()->name }}</p>
+                            {{ auth()->user()?->name }}</p>
                         <a href="#"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 hover:bg-gray-50">
                             <i data-lucide="user" class="w-3.5 h-3.5 text-gray-400"></i> Mon profil
@@ -73,7 +73,7 @@
                             class="flex items-center mb-2 gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                             <i data-lucide="warehouse" class="w-4 h-4 text-gray-400"></i> Publier un bien
                         </a>
-                        @if (!auth()->user()->artisan())
+                        @if (!auth()->user()?->artisan())
                             <a href="{{ route('artisan.create') }}" @click="isOpen = false"
                                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                                 <i data-lucide="drill" class="w-4 h-4 text-gray-400"></i> Devenir artisan
@@ -171,7 +171,7 @@
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                 <i data-lucide="warehouse" class="w-4 h-4 text-gray-400"></i> Publier un bien
             </a>
-            @if (!auth()->user()->artisan())
+            @if (!auth()->user()?->artisan())
                 <a href="{{ route('artisan.create') }}" @click="isOpen = false"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                     <i data-lucide="drill" class="w-4 h-4 text-gray-400"></i> Devenir artisan
