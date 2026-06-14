@@ -12,7 +12,7 @@
                         <p class="text-white/90 mt-1">Gérez votre profil et suivez votre activité</p>
                     </div>
                 </div>
-                <x-btn href="{{ route('artisan.edit', $artisan) }}" style="white">
+                <x-btn href="{{ route('artisan.edit', $artisan) }}" style="secondary">
                     <x-slot:prefix>
                         <i data-lucide="user"></i>
                     </x-slot:prefix>
@@ -252,7 +252,7 @@
         </div>
 
         <!-- Conseils et progression -->
-        <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100">
+        {{-- <div class="mt-8 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-5 border border-blue-100">
             <div class="flex items-start gap-3">
                 <div class="p-2 bg-blue-100 rounded-lg">
                     <i data-lucide="trending-up" class="w-5 h-5 text-blue-600"></i>
@@ -276,7 +276,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
     </div>
 
     <style>
