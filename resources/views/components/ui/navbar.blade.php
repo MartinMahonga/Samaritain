@@ -12,19 +12,19 @@
         {{-- Nav links --}}
         <div class="flex items-center gap-1">
             <a href="{{ route('index') }}"
-                class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition">
+                @class(['px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition', 'text-primary bg-primary/5' => request()->route()->getName() === 'index'])>
                 Accueil
             </a>
             <a href="{{ route('property.index') }}"
-                class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition">
+                @class(['px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition', 'text-primary bg-primary/5' => request()->route()->getName() === 'property.index'])>
                 Maisons
             </a>
             <a href="{{ route('parcelles.index') }}"
-                class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition">
+                @class(['px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition', 'text-primary bg-primary/5' => request()->route()->getName() === 'parcelles.index'])>
                 Parcelles à vendre
             </a>
             <a href="{{ route('artisans.index') }}"
-                class="px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition">
+                @class(['px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition', 'text-primary bg-primary/5' => request()->route()->getName() === 'artisans.index'])>
                 Services
             </a>
             @if (!auth()->user())
@@ -45,7 +45,7 @@
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" class="flex items-center gap-2 hover:opacity-80 transition">
                         @if (auth()->user()->profile_image)
-                            <img src="{{ auth()->user()->profile_image }}" alt="{{ auth()->user()->name }}"
+                            <img src="{{ auth()->user()->profileUrl() }}" alt="{{ auth()->user()->name }}"
                                 class="w-8 h-8 rounded-full object-cover border-2 border-primary/20 shadow-sm">
                         @else
                             <div
@@ -61,7 +61,7 @@
                         class="absolute right-0 mt-2 w-44 bg-white rounded-xl shadow-lg border border-gray-100 py-1 text-sm">
                         <p class="px-3 py-2 text-xs text-gray-400 border-b border-gray-100">
                             {{ auth()->user()?->name }}</p>
-                        <a href="#"
+                        <a href="{{ route('profile.show') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 hover:bg-gray-50">
                             <i data-lucide="user" class="w-3.5 h-3.5 text-gray-400"></i> Mon profil
                         </a>
@@ -121,7 +121,7 @@
         <div class="flex items-center gap-2">
             @if (auth()->user())
                 @if (auth()->user()->profile_image)
-                    <img src="{{ auth()->user()->profile_image }}" alt="{{ auth()->user()->name }}"
+                    <img src="{{ auth()->user()->profileUrl() }}" alt="{{ auth()->user()->name }}"
                         class="w-7 h-7 rounded-full object-cover border border-gray-200">
                 @else
                     <div
@@ -166,6 +166,10 @@
             <a href="{{ route('artisans.index') }}" @click="isOpen = false"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                 <i data-lucide="briefcase" class="w-4 h-4 text-gray-400"></i> Services
+            </a>
+            <a href="{{ route('property.create') }}" @click="isOpen = false"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 text-gray-400"></i> Gérer les biens
             </a>
             <a href="{{ route('property.create') }}" @click="isOpen = false"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">

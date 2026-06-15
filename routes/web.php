@@ -16,7 +16,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PropertyController; // Changé : plus d'alias
+use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
@@ -33,6 +33,14 @@ Route::get('properties/category/{category}', [PropertyController::class, 'byCate
 
 // Routes protégées pour les biens (CRUD utilisateur)
 Route::middleware(['auth'])->group(function () {
+    // Profil
+    Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.update-info');
+    Route::put('/profile/photo', [ProfileController::class, 'updatePhoto'])->name('profile.update-photo');
+    Route::delete('/profile/photo', [ProfileController::class, 'deletePhoto'])->name('profile.delete-photo');
+    Route::put('/profile/password', [ProfileController::class, 'updatePassword'])->name('profile.update-password');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
     Route::get('my-properties/dashboard', [PropertyController::class, 'dashboard'])->name('property.dashboard');
     Route::post('property/{property}/duplicate', [PropertyController::class, 'duplicate'])->name('property.duplicate');
 

@@ -1,7 +1,8 @@
 <div class="fixed bottom-0 inset-x-0 md:hidden z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 safe-area-pb">
     <div class="flex justify-around items-center py-2 px-2">
 
-        <a href="{{ route('index') }}" class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-primary">
+        <a href="{{ route('index') }}" 
+            @class(['flex flex-col items-center gap-0.5 px-3 py-1.5 text-gray-400 rounded-xl', 'text-primary' => request()->route()->getName() === 'index'])>
             <i data-lucide="home" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Accueil</span>
         </a>
@@ -21,16 +22,16 @@
         </a>
 
         <a href="{{ route('favorite') }}"
-            class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-gray-400 hover:text-primary transition">
+            @class(['flex flex-col items-center gap-0.5 px-3 py-1.5 text-gray-400 rounded-xl', 'text-primary' => request()->route()->getName() === 'favorite'])>
             <i data-lucide="heart" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Favoris</span>
         </a>
 
         @if (auth()->user())
-            <a href="#"
-                class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-gray-400 hover:text-primary transition">
+            <a href="{{ route('profile.show') }}"
+                @class(['flex flex-col items-center gap-0.5 px-3 py-1.5 text-gray-400 rounded-xl', 'text-primary' => request()->route()->getName() === 'profile.show'])>
                 @if (auth()->user()->profile_image)
-                    <img src="{{ auth()->user()->profile_image }}" alt="{{ auth()->user()->name }}"
+                    <img src="{{ auth()->user()->profileUrl() }}" alt="{{ auth()->user()->name }}"
                         class="w-5 h-5 rounded-full object-cover">
                 @else
                     <div

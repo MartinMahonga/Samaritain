@@ -2,117 +2,100 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
-use App\Models\Property;
-use App\Models\Artisan;
+use App\Actions\DeleteUserAccount;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\DeleteAccountRequest;
+use App\Http\Requests\UpdateProfilePhotoRequest;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
+use Illuminate\View\View;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
+use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
 class ProfileController extends Controller
 {
     /**
-     * Afficher le dashboard utilisateur
+     * Show the user profile page.
      */
-    public function dashboard()
+    public function show(Request $request): View
     {
-        $user = Auth::user();
-        
-        // Statistiques des biens
-        $propertiesStats = [
-            'total' => Property::where('created_by', $user->id)->count(),
-            'active' => Property::where('created_by', $user->id)->where('is_active', true)->count(),
-            'pending' => Property::where('created_by', $user->id)->where('is_verify', false)->count(),
-            'sold' => Property::where('created_by', $user->id)->where('status', 'sold')->count(),
-        ];
-        
-        // Derniers biens
-        $recentProperties = Property::where('created_by', $user->id)
-            ->with(['city', 'category'])
-            ->latest()
-            ->take(5)
-            ->get();
-        
-        // Profil artisan si existe
-        $artisan = Artisan::where('user_id', $user->id)->first();
-        
-        // Statistiques artisan si applicable
-        $artisanStats = null;
-        if ($artisan) {
-            $artisanStats = [
-                'reviews_count' => $artisan->reviews()->count(),
-                'average_rating' => $artisan->average_rating ?? 0,
-                'projects_count' => $artisan->projects()->count(),
-                'verified' => $artisan->verified,
-            ];
-        }
-        
-        return view('profile.dashboard', compact('user', 'propertiesStats', 'recentProperties', 'artisan', 'artisanStats'));
-    }
-    
-    /**
-     * Afficher le formulaire d'édition du profil
-     */
-    public function edit()
-    {
-        $user = Auth::user();
-        return view('profile.edit', compact('user'));
-    }
-    
-    /**
-     * Mettre à jour le profil utilisateur
-     */
-    public function update(Request $request, UpdatesUserProfileInformation $updater)
-    {
-        $updater->update(Auth::user(), $request->all());
-        
-        return redirect()->route('profile.edit')->with('success', 'Profil mis à jour avec succès.');
-    }
-    
-    /**
-     * Mettre à jour l'avatar
-     */
-    public function updateAvatar(Request $request)
-    {
-        $request->validate([
-            'avatar' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
+        return view('pages.profile.show', [
+            'user' => $request->user(),
         ]);
-        
-        $user = Auth::user();
-        
-        // Supprimer l'ancien avatar
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
+    }
+
+    /**
+     * Update the user's profile information.
+     */
+    public function updateInfo(Request $request, UpdatesUserProfileInformation $updater): RedirectResponse
+    {
+        $updater->update($request->user(), $request->all());
+
+        return back()->with('success', 'Profil mis à jour avec succès.');
+    }
+
+    /**
+     * Update the user's profile photo.
+     */
+    public function updatePhoto(UpdateProfilePhotoRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        // Delete old photo if exists
+        if ($user->profile_image && ! str_starts_with($user->profile_image, 'http')) {
+            Storage::disk('public')->delete($user->profile_image);
         }
-        
-        // Upload du nouvel avatar
-        $path = $request->file('avatar')->store('avatars', 'public');
-        $user->avatar = $path;
-        $user->save();
-        
-        return redirect()->route('profile.edit')->with('success', 'Avatar mis à jour avec succès.');
+
+        $path = $request->file('photo')->store('profile-photos', 'public');
+
+        $user->forceFill([
+            'profile_image' => $path,
+        ])->save();
+
+        return back()->with('success', 'Photo de profil mise à jour avec succès.');
+    }
+
+    /**
+     * Delete the user's profile photo.
+     */
+    public function deletePhoto(Request $request): RedirectResponse
+    {
+        $user = $request->user();
+
+        if ($user->profile_image && ! str_starts_with($user->profile_image, 'http')) {
+            Storage::disk('public')->delete($user->profile_image);
+        }
+
+        $user->forceFill([
+            'profile_image' => null,
+        ])->save();
+
+        return back()->with('success', 'Photo de profil supprimée.');
+    }
+
+    /**
+     * Update the user's password.
+     */
+    public function updatePassword(Request $request, UpdatesUserPasswords $updater): RedirectResponse
+    {
+        $updater->update($request->user(), $request->all());
+
+        return back()->with('success', 'Mot de passe modifié avec succès.');
     }
     
     /**
-     * Supprimer le compte utilisateur
+     * Delete the user's account.
      */
-    public function destroy(Request $request)
+    public function destroy(DeleteAccountRequest $request, DeleteUserAccount $deleter): RedirectResponse
     {
-        $user = Auth::user();
-        
-        // Supprimer l'avatar
-        if ($user->avatar && Storage::disk('public')->exists($user->avatar)) {
-            Storage::disk('public')->delete($user->avatar);
-        }
-        
-        // Supprimer l'utilisateur
-        $user->delete();
-        
-        Auth::logout();
-        
-        return redirect('/')->with('success', 'Votre compte a été supprimé avec succès.');
+        $deleter->delete($request->user(), $request->validated('password'));
+
+        auth()->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/')->with('success', 'Votre compte a été supprimé définitivement.');
     }
 }
