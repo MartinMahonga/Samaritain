@@ -52,7 +52,7 @@
         <div class="flex items-center gap-3">
 
             @if (auth()->user())
-                @if (auth()->user()->is_staff)
+                @if (auth()->user()?->is_staff)
                     <x-btn href="{{ route('admin.index') }}" style="outline">Dashboard</x-btn>
                 @endif
                 {{-- Avatar + menu --}}
@@ -202,7 +202,7 @@
             @endif
 
             <div class="border-t border-gray-100 my-2"></div>
-            @if (auth()->user()->is_staff)
+            @if (auth()->user()?->is_staff)
                 <a href="{{ route('admin.index') }}" @click="isOpen = false"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                     <i data-lucide="layout-panel-left" class="w-4 h-4 text-gray-400"></i> Dashboard
