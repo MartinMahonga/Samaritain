@@ -56,8 +56,6 @@
                         {{ $amenity->name }}
                     </span>
                 </div>
-
-                <i data-lucide="check" class="w-4 h-4 text-green-600"></i>
             </li>
         @endforeach
     </ul>

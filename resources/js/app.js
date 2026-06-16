@@ -103,7 +103,8 @@ import {
     Calendar,
     Images,
     Navigation,
-    LayoutPanelLeft
+    LayoutPanelLeft,
+    UtensilsCrossed
 } from "lucide";
 
 createIcons({
@@ -210,7 +211,8 @@ createIcons({
         Calendar,
         Images,
         Navigation,
-        LayoutPanelLeft
+        LayoutPanelLeft,
+        UtensilsCrossed,
     },
 });
 

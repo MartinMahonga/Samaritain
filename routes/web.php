@@ -89,10 +89,6 @@ Route::prefix('/admin/dashboard')->middleware('auth')->name('admin.')->group(fun
 Route::get('/auth/{provider}/redirect', ProviderRedirectController::class)->name('auth.redirect');
 Route::get('/auth/{provider}/callback', ProviderCallbackController::class)->name('auth.callback');
 
-Route::get('/home', function () {
-    return view('pages.home');
-})->middleware('auth')->name('home');
-
 // Parcelles
 Route::get('/parcelles', [ParcelleWebController::class, 'index'])->name('parcelles.index');
 Route::get('/parcelles/create', [ParcelleWebController::class, 'create'])->name('parcelles.create');

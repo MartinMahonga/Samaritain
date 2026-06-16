@@ -9,12 +9,12 @@
 
         <a href="#"
             class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-gray-400 hover:text-primary transition">
-            <i data-lucide="search" class="w-5 h-5"></i>
-            <span class="text-[10px] font-medium">Recherche</span>
+            <i data-lucide="warehouse" class="w-5 h-5"></i>
+            <span class="text-[10px] font-medium">Maison</span>
         </a>
 
         {{-- Bouton central proéminent --}}
-        <a href="tel:+242068007138" class="flex flex-col items-center gap-0.5 -mt-5">
+        <a href="https://wa.me/242067418261" class="flex flex-col items-center gap-0.5 -mt-5">
             <div class="w-12 h-12 bg-primary rounded-full flex items-center justify-center shadow-lg shadow-primary/30">
                 <i data-lucide="phone" class="w-5 h-5 text-white"></i>
             </div>
