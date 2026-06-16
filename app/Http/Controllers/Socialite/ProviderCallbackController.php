@@ -51,6 +51,6 @@ class ProviderCallbackController extends Controller
 
         Auth::login($user);
 
-        return redirect('/home');
+        return redirect('/properties');
     }
 }
