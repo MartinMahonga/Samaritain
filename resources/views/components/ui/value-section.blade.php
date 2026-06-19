@@ -25,13 +25,13 @@
         @endphp
 
         @foreach ($values as $v)
-            <div class="flex items-start gap-4 bg-gray-50 rounded-2xl p-5 border border-gray-100">
+            <div class="flex items-start gap-4 bg-gray-50 dark:bg-background rounded-2xl p-5 border border-gray-100 dark:border-accent">
                 <div class="flex-shrink-0 w-10 h-10 {{ $v['color'] }} rounded-xl flex items-center justify-center">
                     <i data-lucide="{{ $v['icon'] }}" class="w-5 h-5"></i>
                 </div>
                 <div>
-                    <h3 class="font-semibold text-gray-800 text-sm">{{ $v['title'] }}</h3>
-                    <p class="text-gray-500 text-xs mt-1 leading-relaxed">{{ $v['desc'] }}</p>
+                    <h3 class="font-semibold text-gray-800 dark:text-gray-300 text-sm">{{ $v['title'] }}</h3>
+                    <p class="text-gray-500 dark:text-gray-400 text-xs mt-1 leading-relaxed">{{ $v['desc'] }}</p>
                 </div>
             </div>
         @endforeach

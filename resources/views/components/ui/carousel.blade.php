@@ -30,8 +30,8 @@
     {{-- En-tête section --}}
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h2 class="text-xl font-bold text-gray-800">Nos biens à découvrir</h2>
-            <p class="text-gray-500 text-xs mt-0.5">Sélection de biens disponibles dès maintenant</p>
+            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-300">Nos biens à découvrir</h2>
+            <p class="text-gray-500 dark:text-gray-400 text-xs mt-0.5">Sélection de biens disponibles dès maintenant</p>
         </div>
 
         <div class="flex items-center gap-2">

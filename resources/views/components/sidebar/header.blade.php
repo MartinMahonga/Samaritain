@@ -8,8 +8,7 @@
     <div class="flex items-center gap-2 overflow-hidden w-full">
         <!-- Logo block -->
         <div>
-            <img src="{{ asset('light_logo.svg') }}" alt="light logo" class="block w-10 h-10 dark:hidden">
-            <img src="{{ asset('dark_logo.svg') }}" alt="dark logo" class="hidden w-10 h-10 dark:block">
+            <img src="{{ asset('light_logo.svg') }}" alt="light logo" class="w-10 h-10">
         </div>
 
         <!-- Text labels (hidden when collapsed) -->

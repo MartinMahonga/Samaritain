@@ -3,14 +3,14 @@
 @section('title', 'Connexion')
 
 @section('content')
-    <div class="relative z-1 p-6 sm:p-0 dark:bg-gray-900">
-        <div class="flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row dark:bg-gray-900">
+    <div class="relative z-1 p-6 sm:p-0">
+        <div class="flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row">
             <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
                 <div class="mb-5 sm:mb-8">
-                    <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
+                    <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800">
                         Se connecter
                     </h1>
-                    <p class="text-sm text-gray-500 dark:text-gray-400">
+                    <p class="text-sm text-gray-500">
                         Entrez votre adresse mail ainsi que votre mot de passe afin de vous connecter
                     </p>
                 </div>
@@ -46,10 +46,10 @@
                     </div>
                     <div class="relative py-3 sm:py-5">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                            <div class="w-full border-t border-gray-200"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="bg-white p-2 text-primary sm:px-5 sm:py-2">Ou</span>
+                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2">Ou</span>
                         </div>
                     </div>
                     <form action="{{ route('login') }}" method="POST">
@@ -57,7 +57,7 @@
                         <div class="space-y-5">
                             <!-- Email -->
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700">
                                     Adresse mail
                                 </label>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}"
@@ -71,7 +71,7 @@
                             <!-- Password -->
                             <div>
                                 <div class="flex items-center justify-between">
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                    <label class="mb-1.5 block text-sm font-medium text-gray-700">
                                         Mot de passe
                                     </label>
                                     <a href="{{ route('password.request') }}" class="text-sm text-gray-500 hover:text-primary underline">
@@ -124,7 +124,7 @@
                             </div>
                     </form>
                     <div class="mt-5">
-                        <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
+                        <p class="text-center text-sm font-normal text-gray-700 sm:text-start">
                             Vous n'avez pas de compte?
                             <a href="{{ route('register') }}" class="hover:text-primary underline">
                                 Créer un compte
