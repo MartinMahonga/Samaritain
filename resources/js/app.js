@@ -228,7 +228,7 @@ createIcons({
         Headphones,
         Inbox,
         List,
-        Activity
+        Activity,
     },
 });
 

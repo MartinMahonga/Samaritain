@@ -9,26 +9,26 @@
                 class="text-sm font-semibold font-display uppercase tracking-widest transition-all duration-300"
                 :class="city === 'brazzaville' 
                     ? 'text-primary' 
-                    : 'text-gray-400 hover:text-gray-600'"
+                    : 'text-foreground hover:text-primary'"
             >
                 Brazzaville
             </button>
             
-            <span class="text-gray-300 text-sm">/</span>
+            <span class="text-muted-foreground text-sm">/</span>
             
             <button 
                 @click="switchCity('pointeNoire')"
                 class="text-sm font-semibold font-display uppercase tracking-widest transition-all duration-300"
                 :class="city === 'pointeNoire' 
                     ? 'text-primary' 
-                    : 'text-gray-400 hover:text-gray-600'"
+                    : 'text-foreground hover:text-primary'"
             >
                 Pointe-Noire
             </button>
         </div>
         
-        <h2 class="text-2xl md:text-3xl font-bold font-display text-gray-900">Quartiers populaires</h2>
-        <p class="text-gray-500 mt-2 text-sm max-w-md mx-auto">
+        <h2 class="text-2xl md:text-3xl font-bold font-display text-foreground">Quartiers populaires</h2>
+        <p class="text-muted-foreground mt-2 text-sm max-w-md mx-auto">
             Explorez les zones les plus recherchées de la ville.
         </p>
     </div>
@@ -46,7 +46,7 @@
                 </div>
 
                 <div>
-                    <p class="font-semibold text-gray-900 text-sm leading-tight" x-text="arrondissement.name"></p>
+                    <p class="font-semibold text-foreground text-sm leading-tight" x-text="arrondissement.name"></p>
                     <p class="text-xs text-gray-400 mt-0.5">
                         <span x-text="arrondissement.count"></span> 
                         bien<span x-show="arrondissement.count > 1">s</span> 
@@ -62,7 +62,7 @@
         </template>
         
         <!-- Message si aucun arrondissement -->
-        <div x-show="filteredDistricts.length === 0" class="col-span-full text-center py-8 text-gray-500">
+        <div x-show="filteredDistricts.length === 0" class="col-span-full text-center py-8 text-foreground">
             Aucun arrondissement disponible pour cette ville.
         </div>
         

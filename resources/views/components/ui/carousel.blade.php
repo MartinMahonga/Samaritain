@@ -1,5 +1,5 @@
 @props([
-    'properties' => null
+    'properties' => null,
 ])
 
 <section class="max-w-7xl mx-auto px-6 pb-12" x-data="{
@@ -30,17 +30,17 @@
     {{-- En-tête section --}}
     <div class="flex items-center justify-between mb-5">
         <div>
-            <h2 class="text-xl font-bold text-gray-800 dark:text-gray-300">Nos biens à découvrir</h2>
+            <div class="flex items-center gap-4">
+                <h2 class="text-xl font-bold text-gray-800 dark:text-gray-300">Nos biens à découvrir</h2>
+                <a href="{{ route('property.index') }}"
+                    class="hidden md:inline-flex items-center gap-1.5 text-xs font-medium text-primary border border-primary/30 px-3 py-1.5 rounded-full hover:bg-primary/5 transition">
+                    <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                </a>
+            </div>
             <p class="text-gray-500 dark:text-gray-400 text-xs mt-0.5">Sélection de biens disponibles dès maintenant</p>
         </div>
 
         <div class="flex items-center gap-2">
-            <a href="{{ route('property.index') }}"
-                class="hidden md:inline-flex items-center gap-1.5 text-xs font-medium text-primary border border-primary/30 px-3 py-1.5 rounded-full hover:bg-primary/5 transition">
-                Tout afficher
-                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
-            </a>
-
             <button @click="prev" :disabled="atStart"
                 :class="atStart ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-200'"
                 class="hidden md:flex w-8 h-8 items-center justify-center rounded-full bg-gray-100 transition">

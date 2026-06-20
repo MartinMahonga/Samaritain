@@ -1,10 +1,10 @@
 <div class="py-16 px-4 sm:px-6 lg:px-8">
     <div class="max-w-4xl mx-auto text-center">
-        <h2 class="text-2xl md:text-3xl font-bold font-display text-gray-900 mb-6">
+        <h2 class="text-2xl md:text-3xl font-bold font-display text-foreground mb-6">
             Pourquoi Samaritain ne prend pas de commission ?
         </h2>
 
-        <p class="text-gray-700 text-sm leading-relaxed mb-6 max-w-2xl mx-auto">
+        <p class="text-muted-foreground text-sm leading-relaxed mb-6 max-w-2xl mx-auto">
             Nous croyons que l'accès à un logement de qualité ne devrait pas être pénalisé par des frais d'agence injustes. Nous sommes rémunérés par nos partenaires propriétaires.
         </p>
 
