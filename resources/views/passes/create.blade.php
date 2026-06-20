@@ -22,93 +22,32 @@
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Colonne gauche -->
                         <div class="space-y-5">
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nom du titulaire <span class="text-red-500">*</span>
-                                </label>
-                                <input type="text" name="holder_name" value="{{ old('holder_name') }}" required
-                                    x-model="holderName"
-                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
-                                @error('holder_name')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
+                            <x-form.input label="Nom du titulaire" name="holder_name" x-model="holderName" />
+                            <x-form.input label="Téléphone" type="tel" name="phone" icon="phone" />
+                            <x-form.input label="Email(optionnel)" type="email" name="email" icon="mail" />
+                            <x-form.input label="Nombre de visites autorisées" type="number" name="allowed_visits"
+                                min="1" x-model="allowedVisits" @change="updateVisitsLabel" />
 
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Téléphone <span class="text-red-500">*</span>
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i data-lucide="phone" class="h-4 w-4 text-gray-400"></i>
-                                    </div>
-                                    <input type="tel" name="phone" value="{{ old('phone') }}" required
-                                        class="w-full pl-10 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
-                                </div>
-                                @error('phone')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Email <span class="text-gray-400 text-xs">(optionnel)</span>
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i data-lucide="mail" class="h-4 w-4 text-gray-400"></i>
-                                    </div>
-                                    <input type="email" name="email" value="{{ old('email') }}"
-                                        class="w-full pl-10 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
-                                </div>
-                                @error('email')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Nombre de visites autorisées <span class="text-red-500">*</span>
-                                </label>
-                                <input type="number" name="allowed_visits" value="{{ old('allowed_visits', 3) }}" min="1"
-                                    x-model="allowedVisits" @change="updateVisitsLabel"
-                                    class="w-full rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
                                 <div class="mt-2">
                                     <div class="flex justify-between text-xs text-gray-500 mb-1">
                                         <span>Visites disponibles</span>
                                         <span x-text="allowedVisits"></span>
                                     </div>
                                     <div class="w-full bg-gray-200 rounded-full h-1">
-                                        <div class="bg-blue-600 rounded-full h-1 transition-all duration-300" style="width: 100%"></div>
+                                        <div class="bg-blue-600 rounded-full h-1 transition-all duration-300"
+                                            style="width: 100%"></div>
                                     </div>
                                 </div>
-                                @error('allowed_visits')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
                             </div>
                         </div>
 
                         <!-- Colonne droite -->
                         <div class="space-y-5">
+                            <x-form.input label="Date de début" type="date" name="start_date" icon="calendar"
+                                x-model="startDate" @change="updateExpirationMin" />
                             <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
-                                    Date de début <span class="text-red-500">*</span>
-                                </label>
-                                <div class="relative">
-                                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <i data-lucide="calendar" class="h-4 w-4 text-gray-400"></i>
-                                    </div>
-                                    <input type="date" name="start_date" value="{{ old('start_date', date('Y-m-d')) }}" required
-                                        x-model="startDate" @change="updateExpirationMin"
-                                        class="w-full pl-10 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
-                                </div>
-                                @error('start_date')
-                                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700 mb-1">
+                                <label class="block text-xs font-medium text-gray-700 mb-1">
                                     Date d'expiration <span class="text-red-500">*</span>
                                 </label>
                                 <div class="relative">
@@ -118,10 +57,10 @@
                                     <input type="date" name="expiration_date"
                                         value="{{ old('expiration_date', date('Y-m-d', strtotime('+7 days'))) }}" required
                                         x-model="expirationDate" :min="expirationMin"
-                                        class="w-full pl-10 rounded-lg border-gray-300 focus:border-blue-500 focus:ring-blue-500 transition">
+                                        class="w-full h-9 rounded-lg text-sm border border-gray-300 px-4 py-2 focus:outline-hidden focus:ring-2 focus:border-primary focus:ring-primary/10 pl-10">
                                 </div>
-                                <p class="text-xs text-gray-500 mt-1" x-show="durationDays">
-                                    ⏱️ Durée: <span x-text="durationDays"></span> jour(s)
+                                <p class="flex gap-1 items-center text-xs text-gray-500 mt-1" x-show="durationDays">
+                                    <i data-lucide="clock" class="w-4 h-4"></i> Durée: <span x-text="durationDays"></span> jour(s)
                                 </p>
                                 @error('expiration_date')
                                     <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
@@ -141,11 +80,13 @@
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Visites :</span>
-                                        <span class="font-medium text-gray-800" x-text="allowedVisits + ' visite(s)'"></span>
+                                        <span class="font-medium text-gray-800"
+                                            x-text="allowedVisits + ' visite(s)'"></span>
                                     </div>
                                     <div class="flex justify-between">
                                         <span class="text-gray-600">Validité :</span>
-                                        <span class="font-medium text-gray-800" x-text="startDate + ' → ' + expirationDate"></span>
+                                        <span class="font-medium text-gray-800"
+                                            x-text="startDate + ' → ' + expirationDate"></span>
                                     </div>
                                 </div>
                             </div>
@@ -178,11 +119,11 @@
                 allowedVisits: {{ old('allowed_visits', 3) }},
                 startDate: '{{ old('start_date', date('Y-m-d')) }}',
                 expirationDate: '{{ old('expiration_date', date('Y-m-d', strtotime('+7 days'))) }}',
-                
+
                 get expirationMin() {
                     return this.startDate;
                 },
-                
+
                 get durationDays() {
                     if (this.startDate && this.expirationDate) {
                         const start = new Date(this.startDate);
@@ -193,17 +134,17 @@
                     }
                     return null;
                 },
-                
+
                 updateExpirationMin() {
                     if (this.expirationDate < this.startDate) {
                         this.expirationDate = this.startDate;
                     }
                 },
-                
+
                 updateVisitsLabel() {
                     // La mise à jour est automatique grâce à x-model
                 },
-                
+
                 validateForm() {
                     // Validation supplémentaire si nécessaire
                     if (!this.startDate || !this.expirationDate) {

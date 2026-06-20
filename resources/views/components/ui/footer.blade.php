@@ -1,10 +1,10 @@
 {{-- resources/views/components/footer.blade.php --}}
-<footer class="bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800">
+<footer class="bg-gray-900 border-t border-gray-800">
     <div class="container mx-auto px-4 py-10 md:py-12">
 
         {{-- 1ère ligne : Logo + Brand + Newsletter --}}
         <div
-            class="flex flex-col md:flex-row justify-between items-start gap-8 border-b border-gray-200 dark:border-gray-800 pb-10">
+            class="flex flex-col md:flex-row justify-between items-start gap-8 border-b border-gray-800 pb-10">
             {{-- Logo + Nom --}}
             <div class="flex gap-2 items-center">
                 <img src="{{ asset('light_logo.svg') }}" alt="light logo"
@@ -175,7 +175,7 @@
 
             {{-- Badge "Made with" --}}
             <div
-                class="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500 bg-gray-100 dark:bg-gray-800/50 px-3 py-1.5 rounded-full">
+                class="flex items-center gap-1 text-xs text-gray-500 bg-gray-800/50 px-3 py-1.5 rounded-full">
                 <svg class="w-3.5 h-3.5 text-accent" fill="currentColor" viewBox="0 0 24 24">
                     <path
                         d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
@@ -187,7 +187,7 @@
 
         {{-- Liens supplémentaires style Zen --}}
         <div
-            class="mt-6 text-center text-xs text-gray-400 dark:text-gray-600 flex flex-wrap justify-center gap-x-4 gap-y-1">
+            class="mt-6 text-center text-xs text-gray-600 flex flex-wrap justify-center gap-x-4 gap-y-1">
             <a href="#" class="hover:text-primary">Statut des services</a>
             <span>•</span>
             <a href="#" class="hover:text-primary">Sécurité</a>

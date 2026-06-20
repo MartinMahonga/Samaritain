@@ -46,10 +46,10 @@
                     </div>
                     <div class="relative py-3 sm:py-5">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200 dark:border-gray-800"></div>
+                            <div class="w-full border-t border-gray-200"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="bg-white p-2 text-primary sm:px-5 sm:py-2">Ou</span>
+                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2">Ou</span>
                         </div>
                     </div>
                     <form action="{{ route('register') }}" method="POST">

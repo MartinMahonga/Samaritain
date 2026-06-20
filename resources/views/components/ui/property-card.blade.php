@@ -3,7 +3,7 @@
 ])
 
 <a href="{{ route('property.show', ['property' => $property->id]) }}"
-    class="group flex-shrink-0 w-56 snap-start cursor-pointer">
+    class="group flex-shrink-0 w-42 md:w-56 snap-start cursor-pointer">
 
     {{-- Image --}}
     <div class="relative overflow-hidden rounded-2xl bg-gray-100" style="height: 176px;">
@@ -58,7 +58,7 @@
         <div class="flex items-start justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-semibold text-xs text-gray-800 truncate group-hover:text-primary transition">
+                    <h3 class="font-semibold text-xs text-gray-800 dark:text-gray-300 truncate group-hover:text-primary transition">
                         {{ $property->title }}
                     </h3>
                     <div class="text-gray-400 text-xs flex items-center gap-1">
@@ -78,7 +78,7 @@
         </p>
 
         <div class="flex items-center justify-between pt-1">
-            <p class="text-gray-800 text-xs font-bold">
+            <p class="text-gray-800 dark:text-gray-300 text-xs font-bold">
                 {{ number_format($property->price, 0, ',', ' ') }}
                 <span class="text-xs font-normal text-gray-400">FCFA / mois</span>
             </p>

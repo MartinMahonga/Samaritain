@@ -3,8 +3,8 @@
 <div x-data="{ openFaq: null }" class="py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
         <div class="max-w-3xl mx-auto">
-            <h2 class="text-3xl font-bold font-display text-center text-gray-900 mb-4">Questions fréquentes</h2>
-            <p class="text-center text-sm text-gray-600 mb-12">Tout ce que vous devez savoir avant de louer avec Samaritain.</p>
+            <h2 class="text-3xl font-bold font-display text-center text-foreground mb-4">Questions fréquentes</h2>
+            <p class="text-center text-sm text-muted-foreground mb-12">Tout ce que vous devez savoir avant de louer avec Samaritain.</p>
 
             <div class="space-y-4 border border-accent rounded-xl">
                 @php
@@ -45,7 +45,7 @@
                             @click="openFaq = openFaq === {{ $faq->id }} ? null : {{ $faq->id }}"
                             class="w-full px-6 py-4 text-left transition flex justify-between items-center"
                         >
-                            <span class="font-semibold text-sm font-display text-gray-900">{{ $faq->question }}</span>
+                            <span class="font-semibold text-sm font-display text-foreground">{{ $faq->question }}</span>
                             <svg 
                                 class="w-5 h-5 text-gray-500 transition-transform duration-200"
                                 :class="{ 'rotate-180': openFaq === {{ $faq->id }} }"
@@ -61,7 +61,7 @@
                             x-collapse
                             class="px-6 py-4"
                         >
-                            <p class="text-gray-700 text-sm">{{ $faq->reponse }}</p>
+                            <p class="text-muted-foreground text-sm">{{ $faq->reponse }}</p>
                         </div>
                     </div>
                 @endforeach

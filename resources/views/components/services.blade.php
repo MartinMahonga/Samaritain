@@ -55,8 +55,8 @@
             <div class="space-y-3 pt-4">
                 @foreach ($services as $service)
                     <div class="flex items-center gap-4 rounded-xl p-4 hover:bg-muted/50 transition-colors">
-                        <div class="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
-                            <i data-lucide="{{ $service['icon'] }}" class="h-5 w-5"></i>
+                        <div class="flex h-10 w-18 md:h-10 md:w-10 items-center justify-center rounded-full bg-primary/10 text-primary">
+                            <i data-lucide="{{ $service['icon'] }}" class="h-4 w-4 md:h-5 md:w-5"></i>
                         </div>
 
                         <div>

@@ -7,7 +7,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>@yield('title') | Dashboard Samaritain</title>
-    
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <style>
@@ -34,21 +34,21 @@
     $sidebarHtml = (string) $sidebar;
 @endphp
 
-<body class="bg-[var(--background)] text-[var(--foreground)] font-sans antialiased h-screen flex overflow-hidden" x-data="{
-    sidebarOpen: true,
-    mobileMenuOpen: false,
-    toggleSidebar() {
-        if (window.innerWidth < 768) {
-            this.mobileMenuOpen = !this.mobileMenuOpen;
-        } else {
-            this.sidebarOpen = !this.sidebarOpen;
+<body class="bg-[var(--background)] text-[var(--foreground)] font-sans antialiased h-screen flex overflow-hidden"
+    x-data="{
+        sidebarOpen: true,
+        mobileMenuOpen: false,
+        toggleSidebar() {
+            if (window.innerWidth < 768) {
+                this.mobileMenuOpen = !this.mobileMenuOpen;
+            } else {
+                this.sidebarOpen = !this.sidebarOpen;
+            }
         }
-    }
-}">
+    }">
 
     <!-- Mobile Drawer Navigation Sheet -->
-    <div x-show="mobileMenuOpen" class="relative z-50 md:hidden" role="dialog" aria-modal="true"
-        style="display: none;">
+    <div x-show="mobileMenuOpen" class="relative z-50 md:hidden" role="dialog" aria-modal="true" style="display: none;">
 
         <!-- Backdrop Overlay -->
         <div x-show="mobileMenuOpen" x-transition:enter="transition-opacity ease-linear duration-300"
@@ -89,7 +89,8 @@
     <div class="flex-1 flex flex-col min-h-0 overflow-hidden transition-all duration-300">
 
         <!-- Header / Top navigation bar -->
-        <header class="h-14 border-b border-[var(--sidebar-border)] flex items-center px-4 justify-between shrink-0 bg-[var(--sidebar)]">
+        <header
+            class="h-14 border-b border-[var(--sidebar-border)] flex items-center px-4 justify-between shrink-0 bg-[var(--sidebar)]">
             <div class="flex items-center gap-2">
                 <!-- Sidebar Toggle Button -->
                 <button @click="toggleSidebar()"
@@ -107,7 +108,24 @@
 
             <!-- Right-side actions -->
             <div class="flex items-center gap-3">
-                <button class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors">
+                <button x-data="{
+                    toggleTheme() {
+                        const isDark = document.documentElement.classList.contains('dark');
+                        if (isDark) {
+                            document.documentElement.classList.remove('dark');
+                            localStorage.theme = 'light';
+                        } else {
+                            document.documentElement.classList.add('dark');
+                            localStorage.theme = 'dark';
+                        }
+                    }
+                }" @click="toggleTheme()"
+                    class="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-md hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
+                    <i data-lucide="sun" class="h-4 w-4 hidden dark:block"></i>
+                    <i data-lucide="moon" class="h-4 w-4 block dark:hidden"></i>
+                </button>
+                <button
+                    class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors">
                     <i data-lucide="bell" height="16" width="16"></i>
                 </button>
             </div>

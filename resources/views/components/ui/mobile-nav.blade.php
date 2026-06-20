@@ -1,4 +1,4 @@
-<div class="fixed bottom-0 inset-x-0 md:hidden z-40 bg-white/95 backdrop-blur-md border-t border-gray-100 safe-area-pb">
+<div class="fixed bottom-0 inset-x-0 md:hidden z-40 bg-background backdrop-blur-md border-t border-gray-100 dark:border-gray-800 safe-area-pb">
     <div class="flex justify-around items-center py-2 px-2">
 
         <a href="{{ route('index') }}" 
@@ -7,7 +7,7 @@
             <span class="text-[10px] font-medium">Accueil</span>
         </a>
 
-        <a href="#"
+        <a href="{{ route('property.index') }}"
             class="flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl text-gray-400 hover:text-primary transition">
             <i data-lucide="warehouse" class="w-5 h-5"></i>
             <span class="text-[10px] font-medium">Maison</span>

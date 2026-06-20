@@ -1,5 +1,5 @@
 <nav x-data="{ isOpen: false, scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })" :class="scrolled ? 'bg-background/95 shadow-sm' : 'bg-background/80'"
-    class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-100 transition-all duration-200">
+    class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200">
 
     {{-- Desktop --}}
     <div class="hidden md:flex justify-between items-center max-w-7xl mx-auto px-6 h-16">
@@ -12,28 +12,28 @@
         {{-- Nav links --}}
         <div class="flex items-center gap-1">
             <a href="{{ route('index') }}" @class([
-                'px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition',
-                'text-primary bg-primary/5' => request()->route()->getName() === 'index',
+                'px-3 py-2 text-sm font-medium hover:text-primary hover:bg-primary/5 rounded-lg transition',
+                'text-primary bg-primary/5 dark:bg-primary/8' => request()->route()->getName() === 'index',
             ])>
                 Accueil
             </a>
             <a href="{{ route('property.index') }}" @class([
-                'px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition',
-                'text-primary bg-primary/5' =>
+                'px-3 py-2 text-sm font-medium hover:text-primary hover:bg-primary/5 rounded-lg transition',
+                'text-primary bg-primary/5 dark:bg-primary/8' =>
                     request()->route()->getName() === 'property.index',
             ])>
                 Maisons
             </a>
             <a href="{{ route('parcelles.index') }}" @class([
-                'px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition',
-                'text-primary bg-primary/5' =>
+                'px-3 py-2 text-sm font-medium hover:text-primary hover:bg-primary/5 rounded-lg transition',
+                'text-primary bg-primary/5 dark:bg-primary/8' =>
                     request()->route()->getName() === 'parcelles.index',
             ])>
                 Parcelles à vendre
             </a>
             <a href="{{ route('artisans.index') }}" @class([
-                'px-3 py-2 text-sm font-medium text-gray-600 hover:text-primary hover:bg-primary/5 rounded-lg transition',
-                'text-primary bg-primary/5' =>
+                'px-3 py-2 text-sm font-medium hover:text-primary hover:bg-primary/5 rounded-lg transition',
+                'text-primary bg-primary/5 dark:bg-primary/8' =>
                     request()->route()->getName() === 'artisans.index',
             ])>
                 Services
@@ -50,6 +50,22 @@
 
         {{-- CTA + Auth --}}
         <div class="flex items-center gap-3">
+            <button x-data="{
+                toggleTheme() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    if (isDark) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.theme = 'light';
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.theme = 'dark';
+                    }
+                }
+            }" @click="toggleTheme()"
+                class="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-md hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
+                <i data-lucide="sun" class="h-4 w-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="h-4 w-4 block dark:hidden"></i>
+            </button>
 
             @if (auth()->user())
                 @if (auth()->user()?->is_staff)
@@ -114,7 +130,7 @@
                     </div>
                 </div>
             @else
-                <a href="{{ route('login') }}" class="text-sm font-medium text-gray-700 hover:text-primary transition">
+                <a href="{{ route('login') }}" class="text-sm font-medium hover:text-primary transition">
                     Se connecter
                 </a>
                 <a href="{{ route('register') }}"
@@ -133,7 +149,28 @@
         </a>
 
         <div class="flex items-center gap-2">
+            <button x-data="{
+                toggleTheme() {
+                    const isDark = document.documentElement.classList.contains('dark');
+                    if (isDark) {
+                        document.documentElement.classList.remove('dark');
+                        localStorage.theme = 'light';
+                    } else {
+                        document.documentElement.classList.add('dark');
+                        localStorage.theme = 'dark';
+                    }
+                }
+            }" @click="toggleTheme()"
+                class="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-md hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
+                <i data-lucide="sun" class="h-4 w-4 hidden dark:block"></i>
+                <i data-lucide="moon" class="h-4 w-4 block dark:hidden"></i>
+            </button>
+
             @if (auth()->user())
+                @if (auth()->user()?->is_staff)
+                    <x-btn href="{{ route('admin.index') }}" style="outline">Dashboard</x-btn>
+                @endif
+
                 @if (auth()->user()->profile_image)
                     <img src="{{ auth()->user()->profileUrl() }}" alt="{{ auth()->user()->name }}"
                         class="w-7 h-7 rounded-full object-cover border border-gray-200">
@@ -145,13 +182,13 @@
                 @endif
             @else
                 <a href="{{ route('login') }}"
-                    class="text-xs font-medium text-gray-700 border border-gray-200 px-3 py-1.5 rounded-full hover:border-primary hover:text-primary transition">
+                    class="text-xs font-medium border border-gray-200 px-3 py-1.5 rounded-full hover:border-primary hover:text-primary transition">
                     Se connecter
                 </a>
             @endif
 
             <button @click="isOpen = !isOpen"
-                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-gray-100 transition">
+                class="w-8 h-8 flex items-center justify-center rounded-lg hover:bg-primary/45 transition">
                 <i x-show="!isOpen" data-lucide="menu" class="w-4 h-4 text-gray-700"></i>
                 <i x-show="isOpen" x-cloak data-lucide="x" class="w-4 h-4 text-gray-700"></i>
             </button>

@@ -19,8 +19,8 @@
         <img x-show="photoPreview" :src="photoPreview" class="w-full h-full object-cover" x-cloak>
 
         <!-- Current Photo -->
-        @if ($user->profile_photo_url)
-            <img x-show="!photoPreview" src="{{ $user->profile_photo_url }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
+        @if ($user->profile_image)
+            <img x-show="!photoPreview" src="{{ $user->profileUrl() }}" alt="{{ $user->name }}" class="w-full h-full object-cover">
         @else
             <!-- Initials Fallback -->
             <span x-show="!photoPreview" class="text-3xl font-semibold text-[var(--muted-foreground)]">

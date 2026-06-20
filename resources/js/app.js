@@ -104,7 +104,14 @@ import {
     Images,
     Navigation,
     LayoutPanelLeft,
-    UtensilsCrossed
+    UtensilsCrossed,
+    CalendarClock,
+    Printer,
+    Percent,
+    FileCheck2,
+    Headphones,
+    List,
+    Activity
 } from "lucide";
 
 createIcons({
@@ -213,6 +220,15 @@ createIcons({
         Navigation,
         LayoutPanelLeft,
         UtensilsCrossed,
+        CalendarClock,
+        Clock,
+        Printer,
+        Percent,
+        FileCheck2,
+        Headphones,
+        Inbox,
+        List,
+        Activity,
     },
 });
 

@@ -11,7 +11,7 @@
             <span class="flex-1 h-px bg-[#ECE8E1]"></span>
         </div>
 
-        <div class="grid gap-2 grid-cols-1 md:grid-cols-5">
+        <div class="grid gap-2 grid-cols-2 md:grid-cols-5">
             @foreach ($properties as $property)
                 <x-ui.property-card :property="$property" />
             @endforeach

@@ -157,7 +157,7 @@
                 
                 <a href="{{ route('passes.create') }}" class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-blue-50 transition group">
                     <div class="bg-blue-100 rounded-lg p-2 group-hover:bg-blue-200 transition">
-                        <i data-lucide="ticket-plus" class="w-5 h-5 text-blue-600"></i>
+                        <i data-lucide="ticket" class="w-5 h-5 text-blue-600"></i>
                     </div>
                     <div>
                         <p class="font-medium text-gray-800 text-sm">Créer un Pass</p>

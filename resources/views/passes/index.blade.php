@@ -39,7 +39,7 @@
         </div>
 
         <!-- Filtres -->
-        <div class="bg-sidebar rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
+        {{-- <div class="bg-sidebar rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
             <form method="GET" class="flex flex-wrap gap-4">
                 <div class="flex-1 min-w-[150px]">
                     <select name="status" class="w-full rounded-lg border-gray-300 text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
@@ -60,7 +60,7 @@
                 </div>
                 <x-btn type="submit">
                     <x-slot:prefix>
-                        <i data-lucide="filter"></i>
+                        <i data-lucide="funnel"></i>
                     </x-slot:prefix>
                     Filtrer
                 </x-btn>
@@ -70,7 +70,7 @@
                     </a>
                 @endif
             </form>
-        </div>
+        </div> --}}
 
         <x-container-dashed>
             <div x-data="passActions()" @keydown.escape="closeModal()">
