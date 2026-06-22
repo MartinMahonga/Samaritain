@@ -7,16 +7,16 @@
         <div class="flex h-screen w-full flex-col justify-center sm:p-0 lg:flex-row">
             <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center">
                 <div class="mb-5 sm:mb-8">
-                    <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800">
+                    <h1 class="text-title-sm sm:text-title-md mb-2 font-semibold text-gray-800 dark:text-white/90">
                         Se connecter
                     </h1>
-                    <p class="text-sm text-gray-500">
+                    <p class="text-sm text-gray-500 dark:text-gray-400">
                         Entrez votre adresse mail ainsi que votre mot de passe afin de vous connecter
                     </p>
                 </div>
                 <div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-                        <x-btn href="{{ route('auth.redirect', 'google') }}" style="outline" class="md:text-xs">
+                        <x-btn href="{{ route('auth.redirect', 'google') }}" style="outline" class="md:text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -34,7 +34,7 @@
                             </svg>
                             Se connecter avec Google
                         </x-btn>
-                        <x-btn href="{{ route('auth.redirect', 'facebook') }}" style="outline" class="md:text-xs">
+                        <x-btn href="{{ route('auth.redirect', 'facebook') }}" style="outline" class="md:text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
                             <svg width="21" class="fill-current" height="24" xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                                 <path fill="rgb(14, 136, 232)"
@@ -46,10 +46,10 @@
                     </div>
                     <div class="relative py-3 sm:py-5">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200"></div>
+                            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2">Ou</span>
+                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2 dark:text-primary-400">Ou</span>
                         </div>
                     </div>
                     <form action="{{ route('login') }}" method="POST">
@@ -57,12 +57,12 @@
                         <div class="space-y-5">
                             <!-- Email -->
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Adresse mail
                                 </label>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}"
                                     placeholder="Entrez votre adresse mail"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden"
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary"
                                     autofocus />
                                 @error('email')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
@@ -71,32 +71,17 @@
                             <!-- Password -->
                             <div>
                                 <div class="flex items-center justify-between">
-                                    <label class="mb-1.5 block text-sm font-medium text-gray-700">
+                                    <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                         Mot de passe
                                     </label>
-                                    <a href="{{ route('password.request') }}" class="text-sm text-gray-500 hover:text-primary underline">
+                                    <a href="{{ route('password.request') }}" class="text-sm text-gray-500 hover:text-primary underline dark:text-gray-400 dark:hover:text-primary-400">
                                         Mot de passe oublié?
                                     </a>
                                 </div>
                                 <input type="password" name="password" placeholder="Entrez votre mot de passe"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden" />
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
 
-                                @error('password')                                <input
-                                    type="checkbox"
-                                    name="remember"
-                                    id="remember"
-                                    value="1"
-                                    {{ old('remember') ? 'checked' : '' }}
-                                    class="size-5 cursor-pointer rounded border-gray-300 accent-primary
-                                        transition duration-200
-                                        focus:ring-2 focus:ring-primary/20 focus:ring-offset-0">
-
-                                <label
-                                    for="remember"
-                                    class="text-sm font-medium text-gray-700 cursor-pointer">
-                                    Se souvenir de moi
-                                </label>
-                            </div>
+                                @error('password')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
@@ -109,24 +94,26 @@
                                     {{ old('remember') ? 'checked' : '' }}
                                     class="size-4 cursor-pointer rounded-md border-gray-300 accent-primary
                                         transition duration-200
-                                        focus:ring-2 focus:ring-primary/20 focus:ring-offset-0">
+                                        focus:ring-2 focus:ring-primary/20 focus:ring-offset-0
+                                        dark:border-gray-600 dark:bg-gray-700 dark:checked:bg-primary
+                                        dark:focus:ring-primary/40">
 
                                 <label
                                     for="remember"
-                                    class="text-sm font-medium text-gray-700 cursor-pointer">
+                                    class="text-sm font-medium text-gray-700 cursor-pointer dark:text-gray-300">
                                     Se souvenir de moi
                                 </label>
                             </div>
                             <div>
-                                <x-btn type="submit" class="w-full">
+                                <x-btn type="submit" class="w-full dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
                                     Se connecter
                                 </x-btn>
                             </div>
                     </form>
                     <div class="mt-5">
-                        <p class="text-center text-sm font-normal text-gray-700 sm:text-start">
+                        <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
                             Vous n'avez pas de compte?
-                            <a href="{{ route('register') }}" class="hover:text-primary underline">
+                            <a href="{{ route('register') }}" class="text-primary hover:text-primary underline dark:text-primary-400 dark:hover:text-primary-300">
                                 Créer un compte
                             </a>
                         </p>

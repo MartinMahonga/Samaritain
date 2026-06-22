@@ -4,7 +4,7 @@
 
 <div class="flex flex-col gap-2 mb-10" id="gallery">
     {{-- Hero image --}}
-    <div class="relative rounded-2xl overflow-hidden bg-[#ECE8E1] group">
+    <div class="relative rounded-2xl overflow-hidden bg-[#ECE8E1] dark:bg-gray-800 group">
         <img id="main-img" src="{{ $property->images->first()?->image_url }}" alt="{{ $property->title }}"
             class="w-full md:h-[420px] h-64 object-cover block transition-transform duration-700 ease-[cubic-bezier(.25,.46,.45,.94)] group-hover:scale-[1.03]">
 
@@ -44,7 +44,7 @@
                     class="g-thumb relative rounded-lg overflow-hidden aspect-[4/3]
                         transition-transform duration-200 hover:-translate-y-0.5
                         ring-2 ring-transparent ring-offset-0
-                        {{ $i === 0 ? 'ring-primary' : 'hover:ring-primary' }}">
+                        {{ $i === 0 ? 'ring-primary dark:ring-primary-400' : 'hover:ring-primary dark:hover:ring-primary-400' }}">
                     <img src="{{ $image->image_url }}" alt="" loading="{{ $i > 0 ? 'lazy' : 'eager' }}"
                         class="w-full h-full object-cover block">
                 </button>
@@ -63,11 +63,11 @@
             img.style.opacity = '1';
         }, 180);
         document.querySelectorAll('.g-thumb').forEach(t => {
-            t.classList.remove('ring-primary');
+            t.classList.remove('ring-primary', 'dark:ring-primary-400');
             t.classList.add('ring-transparent');
         });
         thumb.classList.remove('ring-transparent');
-        thumb.classList.add('ring-primary');
+        thumb.classList.add('ring-primary', 'dark:ring-primary-400');
     }
 
     document.querySelectorAll('.g-thumb').forEach(thumb => {

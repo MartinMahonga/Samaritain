@@ -16,7 +16,7 @@
                 </div>
                 <div>
                     <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-                        <x-btn href="{{ route('auth.redirect', 'google') }}" style="outline" class="md:text-xs">
+                        <x-btn href="{{ route('auth.redirect', 'google') }}" style="outline" class="md:text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
                             <svg width="20" height="20" viewBox="0 0 20 20" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -34,7 +34,7 @@
                             </svg>
                             Se connecter avec Google
                         </x-btn>
-                        <x-btn href="{{ route('auth.redirect', 'facebook') }}" style="outline" class="md:text-xs">
+                        <x-btn href="{{ route('auth.redirect', 'facebook') }}" style="outline" class="md:text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-700">
                             <svg width="21" class="fill-current" height="24" xmlns="http://www.w3.org/2000/svg"
                                 viewBox="0 0 640 640"><!--!Font Awesome Free v7.2.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free Copyright 2026 Fonticons, Inc.-->
                                 <path fill="rgb(14, 136, 232)"
@@ -46,10 +46,10 @@
                     </div>
                     <div class="relative py-3 sm:py-5">
                         <div class="absolute inset-0 flex items-center">
-                            <div class="w-full border-t border-gray-200"></div>
+                            <div class="w-full border-t border-gray-200 dark:border-gray-700"></div>
                         </div>
                         <div class="relative flex justify-center text-sm">
-                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2">Ou</span>
+                            <span class="bg-background p-2 text-primary sm:px-5 sm:py-2 dark:text-primary-400">Ou</span>
                         </div>
                     </div>
                     <form action="{{ route('register') }}" method="POST">
@@ -57,55 +57,54 @@
                         <div class="space-y-5">
                             <!-- Name -->
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Nom
                                 </label>
                                 <input type="text" id="name" name="name" value="{{ old('name') }}"
                                     placeholder="Entrez votre nom"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden"
-                                    autofocus />
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                                 @error('name')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
                             <!-- Email -->
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Adresse mail
                                 </label>
                                 <input type="email" id="email" name="email" value="{{ old('email') }}"
                                     placeholder="Entrez votre adresse mail"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden" />
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                                 @error('email')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
                             <!-- Password -->
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Mot de passe
                                 </label>
                                 <input type="password" name="password" placeholder="Entrez votre mot de passe"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden" />
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
 
                                 @error('password')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div>
-                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-400">
+                                <label class="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                                     Confirmer mot de passe
                                 </label>
                                 <input type="password" name="password_confirmation"
                                     placeholder="Confirmer votre mot de passe"
-                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden" />
+                                    class="shadow-theme-xs focus:border-primary focus:ring-primary/10 h-9 w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 text-sm text-gray-800 focus:ring-3 focus:outline-hidden dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:focus:border-primary" />
                                 @error('password_confirmation')
                                     <span class="text-red-400 text-sm">{{ $message }}</span>
                                 @enderror
                             </div>
                             <!-- Button -->
                             <div>
-                                <x-btn type="submit" class="w-full">
+                                <x-btn type="submit" class="w-full dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
                                     Créer un compte
                                 </x-btn>
                             </div>
@@ -113,7 +112,7 @@
                     <div class="mt-5">
                         <p class="text-center text-sm font-normal text-gray-700 sm:text-start dark:text-gray-400">
                             Vous avez déjà un compte?
-                            <a href="{{ route('login') }}" class="hover:text-primary">
+                            <a href="{{ route('login') }}" class="text-primary underline hover:text-primary dark:text-primary-400 dark:hover:text-primary-300">
                                 Se connecter
                             </a>
                         </p>

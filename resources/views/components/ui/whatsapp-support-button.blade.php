@@ -5,7 +5,7 @@
 <div class="fixed bottom-14 right-6 z-50 flex flex-col items-end gap-3" x-data="{ open: false }" @click.away="open = false">
 
     <!-- Tooltip -->
-    <div x-show="open" x-transition:enter="transition ease-out duration-200"
+    <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-200"
         x-transition:enter-start="opacity-0 translate-y-2 scale-95"
         x-transition:enter-end="opacity-100 translate-y-0 scale-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-end="opacity-0 translate-y-2 scale-95"

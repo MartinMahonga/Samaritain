@@ -1,19 +1,19 @@
 <x-app-layout>
     <!-- Hero Section avec pattern et animation -->
-    <div class="bg-primary text-white">
+    <div class="bg-primary dark:bg-primary-700 text-white">
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
             <div class="max-w-3xl animate-fade-in-up">
                 <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
                     Marketplace Artisans
                 </h1>
-                <p class="text-sm text-white leading-relaxed">
+                <p class="text-sm text-white/90 dark:text-white/90 leading-relaxed">
                     Trouvez les meilleurs artisans pour vos projets immobiliers
                 </p>
                 <div class="flex gap-4 mt-8">
-                    <div class="flex items-center gap-2 text-sm text-white">
+                    <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
                         500+ professionnels
                     </div>
-                    <div class="flex items-center gap-2 text-sm text-white">
+                    <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
                         <i data-lucide="map-pin" class="w-4 h-4"></i>
                         <span>Partout au Congo</span>
                     </div>
@@ -24,24 +24,26 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Filtres - Version améliorée -->
-        <div class="rounded-2xl shadow-sm border border-accent mb-10 overflow-hidden" x-data="{ open: {{ request()->hasAny(['search', 'category', 'city', 'rating']) ? 'true' : 'false' }} }">
+        <div class="rounded-2xl shadow-sm border border-accent dark:border-gray-700 mb-10 overflow-hidden bg-white dark:bg-gray-800"
+            x-data="{ open: {{ request()->hasAny(['search', 'category', 'city', 'rating']) ? 'true' : 'false' }} }">
 
             <!-- En-tête des filtres -->
-            <div class="px-6 py-4 border-b border-accent">
+            <div class="px-6 py-4 border-b border-accent dark:border-gray-700">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-3">
-                        <div class="p-2 bg-accent rounded-lg">
-                            <i data-lucide="funnel" class="text-primary"></i>
+                        <div class="p-2 bg-accent dark:bg-gray-700 rounded-lg">
+                            <i data-lucide="funnel" class="text-primary dark:text-primary-400"></i>
                         </div>
-                        <h2 class="text-lg font-semibold text-gray-900">Filtres avancés</h2>
+                        <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Filtres avancés</h2>
                         @if (request()->hasAny(['search', 'category', 'city', 'rating']))
-                            <span class="px-2 py-1 text-xs font-medium text-primary bg-primary/35 rounded-full">
+                            <span
+                                class="px-2 py-1 text-xs font-medium text-primary dark:text-primary-400 bg-primary/35 dark:bg-primary/20 rounded-full">
                                 Filtres actifs
                             </span>
                         @endif
                     </div>
                     <button @click="open = !open"
-                        class="group flex items-center gap-2 text-gray-500 hover:text-blue-600 transition-all duration-200">
+                        class="group flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
                         <span class="text-sm font-medium" x-text="open ? 'Masquer' : 'Afficher'"></span>
                         <i data-lucide="chevron-down" class="h-4 w-4"></i>
                     </button>
@@ -68,14 +70,15 @@
                     </div>
 
                     <!-- Boutons d'action -->
-                    <div class="mt-6 flex flex-wrap gap-3 pt-4 border-t border-accent">
-                        <x-btn type="submit">
+                    <div class="mt-6 flex flex-wrap gap-3 pt-4 border-t border-accent dark:border-gray-700">
+                        <x-btn type="submit" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
                             <x-slot:prefix>
                                 <i data-lucide="funnel"></i>
                             </x-slot:prefix>
                             Appliquer les filtre
                         </x-btn>
-                        <x-btn href="{{ route('artisans.index') }}" style="outline">
+                        <x-btn href="{{ route('artisans.index') }}" style="outline"
+                            class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                             <x-slot:prefix>
                                 <i data-lucide="repeat"></i>
                             </x-slot:prefix>
@@ -89,10 +92,10 @@
         <!-- En-tête des résultats -->
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900">Artisans disponibles</h2>
-                <p class="text-gray-500 mt-1">{{ $artisans->total() }} professionnels trouvés</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">Artisans disponibles</h2>
+                <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $artisans->total() }} professionnels trouvés</p>
             </div>
-            <div class="text-sm text-gray-500 bg-gray-50 px-3 py-1.5 rounded-full">
+            <div class="text-sm text-gray-500 dark:text-gray-400 bg-gray-50 dark:bg-gray-700 px-3 py-1.5 rounded-full">
                 Tri par pertinence
             </div>
         </div>
@@ -105,16 +108,18 @@
                 </div>
             @empty
                 <div class="col-span-full">
-                    <div class="text-center py-16 bg-gray-50 rounded-2xl border-2 border-dashed border-gray-200">
-                        <div class="inline-flex p-4 bg-gray-100 rounded-full mb-6">
-                            <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor"
+                    <div
+                        class="text-center py-16 bg-gray-50 dark:bg-gray-800/50 rounded-2xl border-2 border-dashed border-gray-200 dark:border-gray-700">
+                        <div class="inline-flex p-4 bg-gray-100 dark:bg-gray-700 rounded-full mb-6">
+                            <svg class="w-12 h-12 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor"
                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
                         </div>
-                        <h3 class="text-xl font-semibold text-gray-600 mb-2">Aucun artisan trouvé</h3>
-                        <p class="text-gray-400">Essayez de modifier vos critères de recherche</p>
+                        <h3 class="text-xl font-semibold text-gray-600 dark:text-gray-300 mb-2">Aucun artisan trouvé
+                        </h3>
+                        <p class="text-gray-400 dark:text-gray-500">Essayez de modifier vos critères de recherche</p>
                     </div>
                 </div>
             @endforelse
@@ -122,13 +127,13 @@
 
         <!-- Pagination stylisée -->
         <div class="mt-12">
-            <div class="p-4">
+            <div class="p-4 text-gray-600 dark:text-gray-400">
                 {{ $artisans->links() }}
             </div>
         </div>
 
         <!-- CTA Devenir artisan amélioré -->
-        <div class="relative mt-16 bg-primary rounded-2xl overflow-hidden shadow-2xl">
+        <div class="relative mt-16 bg-primary dark:bg-primary-800 rounded-2xl overflow-hidden shadow-2xl">
             <!-- Effet de brillance -->
             <div class="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"></div>
 
@@ -141,7 +146,7 @@
                     </svg>
                 </div>
                 <h2 class="text-3xl font-bold text-white mb-3">Vous êtes un professionnel ?</h2>
-                <p class="text-white text-sm mb-8 max-w-xl mx-auto">
+                <p class="text-white/90 dark:text-white/90 text-sm mb-8 max-w-xl mx-auto">
                     Rejoignez notre marketplace et développez votre activité en trouvant de nouveaux clients
                 </p>
                 <div class="flex flex-col sm:flex-row gap-4 justify-center">
