@@ -26,7 +26,7 @@
 
     <x-ui.whatsapp-support-button />
 
-    <div x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+    <div x-cloak x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
         @click.self="closeModal()">
         <div class="relative w-full max-w-md rounded-lg bg-background p-6 shadow-lg m-3 md:m-0 " @click.stop>
             <div class="mb-4">

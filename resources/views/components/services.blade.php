@@ -26,7 +26,7 @@
 <section class="relative overflow-hidden px-6 py-10 lg:px-12 lg:py-16">
     <div class="grid gap-12 lg:grid-cols-2 lg:items-center">
 
-        <!-- Partie gauche -->
+        <!-- Partie droite -->
         <div class="space-y-8">
 
             <div>
