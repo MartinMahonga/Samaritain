@@ -35,9 +35,9 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <x-form.input name="business_name" label="Nom de l'entreprise"
-                                placeholder="Ex: SARL BTP Congo" :value="old('business_name')" icon="building-2" required />
+                                placeholder="Ex: SARL BTP Congo" icon="building-2" required />
                             <x-form.input name="profession" label="Profession"
-                                placeholder="Ex: Maçon, Électricien, Plombier" :value="old('profession')" icon="briefcase"
+                                placeholder="Ex: Maçon, Électricien, Plombier" icon="briefcase"
                                 required />
                         </div>
                     </div>
@@ -56,13 +56,13 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <x-form.input name="phone" label="Téléphone" type="tel" placeholder="06 12 34 56 78"
-                                :value="old('phone')" icon="phone" required />
+                                icon="phone" required />
                             <x-form.input name="whatsapp" label="WhatsApp" type="tel" placeholder="06 12 34 56 78"
-                                :value="old('whatsapp')" icon="message-circle" />
+                                icon="message-circle" />
                             <x-form.input name="website" label="Site web" type="url"
-                                placeholder="https://monsite.com" :value="old('website')" icon="globe" />
+                                placeholder="https://monsite.com" icon="globe" />
                             <x-form.input name="email" label="Email professionnel" type="email"
-                                placeholder="contact@entreprise.com" :value="old('email', auth()->user()->email ?? '')" icon="mail" required />
+                                placeholder="contact@entreprise.com" icon="mail" required />
                         </div>
                     </div>
 
@@ -82,9 +82,9 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <x-form.input name="city" label="Ville" placeholder="Brazzaville, Pointe-Noire..."
-                                :value="old('city')" icon="map-pin" required />
+                                icon="map-pin" required />
                             <x-form.input name="address" label="Adresse" placeholder="Quartier, rue..."
-                                :value="old('address')" icon="home" />
+                                icon="home" />
                         </div>
                     </div>
 
@@ -102,7 +102,7 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <x-form.input name="experience" label="Années d'expérience" type="number"
-                                placeholder="5" :value="old('experience')" icon="award" />
+                                placeholder="5" icon="award" />
                             <x-form.select name="team_size" label="Taille de l'équipe" placeholder="Sélectionnez"
                                 :options="[
                                     '1' => 'Indépendant',
@@ -110,7 +110,7 @@
                                     '6-10' => '6-10 personnes',
                                     '11-20' => '11-20 personnes',
                                     '20+' => 'Plus de 20 personnes',
-                                ]" :value="old('team_size')" icon="users" />
+                                ]" icon="users" />
                         </div>
                     </div>
 
@@ -158,7 +158,7 @@
                         </h2>
                         <x-form.textarea name="bio" label="Description"
                             placeholder="Présentez votre entreprise, vos services, votre savoir-faire..."
-                            rows="5">{{ old('bio') }}</x-form.textarea>
+                            rows="5"></x-form.textarea>
                     </div>
 
                     <!-- Section Médias -->

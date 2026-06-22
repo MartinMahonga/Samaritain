@@ -23,6 +23,10 @@ use App\Http\Controllers\Socialite\ProviderRedirectController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/test', function() {
+    return view('layouts.user-dashboard');
+});
+
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
 // Routes publiques pour les biens (utilisateur)
