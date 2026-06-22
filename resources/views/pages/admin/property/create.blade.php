@@ -49,7 +49,7 @@
             </div>
 
             <div>
-                <x-form.file-input name="images" label="Images" accept="image/*" />
+                <x-form.file-input name="images" label="Images" accept="image/*" multiple="{{ true }}" />
             </div>
 
             <div class="flex justify-end items-center gap-3">

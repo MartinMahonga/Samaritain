@@ -210,7 +210,8 @@
                             label="Description" 
                             placeholder="Présentez votre entreprise, vos services, votre savoir-faire..."
                             rows="5"
-                        >{{ old('bio', $artisan->bio) }}</x-form.textarea>
+                            value="{{ $artisan->bio }}"
+                        ></x-form.textarea>
                     </div>
 
                     <!-- Section Médias -->

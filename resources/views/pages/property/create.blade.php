@@ -90,7 +90,7 @@
                 <!-- Images -->
                 <div class="p-6 border-b border-gray-100">
                     <h2 class="text-lg font-semibold text-gray-900 mb-4">Images du bien</h2>
-                    <x-form.file-input name="images" label="Images" accept="image/*" multiple />
+                    <x-form.file-input name="images" label="Images" accept="image/*" multiple="{{ true }}" />
                     <p class="text-xs text-gray-500 mt-2">
                         Vous pouvez sélectionner plusieurs images. Formats acceptés : JPG, PNG, GIF
                     </p>

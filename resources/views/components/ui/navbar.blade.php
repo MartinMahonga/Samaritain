@@ -103,7 +103,7 @@
                             class="flex items-center mb-2 gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                             <i data-lucide="warehouse" class="w-4 h-4 text-gray-400"></i> Publier un bien
                         </a>
-                        @if (!auth()->user()?->artisan())
+                        @if (!auth()->user()?->artisan)
                             <a href="{{ route('artisan.create') }}" @click="isOpen = false"
                                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-50">
                                 <i data-lucide="drill" class="w-4 h-4 text-gray-400"></i> Devenir artisan
