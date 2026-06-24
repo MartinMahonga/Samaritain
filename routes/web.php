@@ -38,7 +38,7 @@ Route::get('properties/city/{city}', [PropertyController::class, 'byCity'])->nam
 Route::get('properties/category/{category}', [PropertyController::class, 'byCategory'])->name('property.byCategory');
 
 // Routes protégées pour les biens (CRUD utilisateur)
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Profil
     Route::get('/profile', [ProfileController::class, 'show'])->name('profile.show');
     Route::put('/profile/info', [ProfileController::class, 'updateInfo'])->name('profile.update-info');
@@ -62,10 +62,10 @@ Route::get('property/{property}', [PropertyController::class, 'show'])->name('pr
 
 // Favorite system
 Route::post('/properties/{property}/favorite', [FavoriteController::class, 'toggle'])
-    ->middleware('auth')
+    ->middleware(['auth', 'verified'])
     ->name('property.favorite');
 
-Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite')->middleware('auth');
+Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite')->middleware(['auth', 'verified']);
 
 // Admin routes
 Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddleware::class])->name('admin.')->group(function () {
@@ -113,7 +113,7 @@ Route::get('/artisans/{artisan:slug}', [ArtisanController::class, 'show'])->name
 Route::post('/artisans/{artisan:slug}/contact', [ArtisanContactController::class, 'store'])->middleware('throttle:5,1')->name('artisans.contact.store');
 
 // Routes authentifiées pour artisans
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Devenir artisan
     Route::get('/devenir-artisan', [ArtisanController::class, 'create'])->name('artisan.create');
     Route::post('/devenir-artisan', [ArtisanController::class, 'store'])->name('artisan.store');
@@ -140,7 +140,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Routes d'authentification email
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Pass management
     Route::resource('passes', PassController::class);
     Route::get('passes/{pass}/export', [PassController::class, 'export'])->name('passes.export');
@@ -176,7 +176,7 @@ Route::middleware(['auth', 'verified', StaffMiddleware::class])
 
 Route::post('/visit-requests', [VisitRequestController::class, 'store'])->middleware('throttle:5,1')->name('visit-requests.store');
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Notifications
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.api');
     Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
