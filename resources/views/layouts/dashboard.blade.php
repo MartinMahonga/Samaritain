@@ -38,7 +38,7 @@
                     <x-sidebar.sub-item label="Les artisans suspendus" href="#" :active="request()->routeIs('admin.property.pending')" />
                 </x-sidebar.item>
                 <x-sidebar.item icon="ticket" label="Passe visite" href="{{ route('passes.index') }}" :active="request()->routeIs('passes.index')" />
-                <x-sidebar.item icon="inbox" label="Inbox" href="#" />
+                <x-sidebar.item icon="inbox" label="Inbox" href="{{ route('notifications.all') }}" :active="request()->routeIs('notifications.all')" />
                 <x-sidebar.item icon="settings-2" label="Paramètres" href="#" />
             </x-sidebar.group>
 
@@ -56,7 +56,7 @@
             <!-- User Profile Footer -->
             @if (auth()->user()->profile_image)
                 <x-sidebar.footer name="{{ auth()->user()->name }}" email="{{ auth()->user()->email }}"
-                    avatar="{{ auth()->user()->profile_image }}" />
+                    avatar="{{ auth()->user()->profileUrl() }}" />
             @else
                 <x-sidebar.footer name="{{ auth()->user()->name }}" email="{{ auth()->user()->email }}" />
             @endif

@@ -13,6 +13,7 @@ use App\Http\Controllers\ArtisanProjectController;
 use App\Http\Controllers\ArtisanReviewController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\ProfileController;
@@ -20,10 +21,11 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
+use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function() {
+Route::get('/test', function () {
     return view('layouts.user-dashboard');
 });
 
@@ -170,3 +172,16 @@ Route::middleware(['auth', 'verified', StaffMiddleware::class])
         // Rôles et permissions
         Route::resource('roles', RoleController::class);
     });
+
+Route::post('/visit-requests', [VisitRequestController::class, 'store'])->name('visit-requests.store');
+
+Route::middleware(['auth'])->group(function () {
+    // Notifications
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.api');
+    Route::patch('/notifications/{id}/read', [NotificationController::class, 'markAsRead'])->name('notifications.mark-read');
+    Route::patch('/notifications/read-all', [NotificationController::class, 'markAllAsRead'])->name('notifications.mark-all-read');
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy'])->name('notifications.destroy');
+    Route::delete('/notifications/destroy-all', [NotificationController::class, 'destroyAll'])->name('notifications.destroy-all');
+    Route::delete('/notifications/destroy-read', [NotificationController::class, 'destroyRead'])->name('notifications.destroy-read');
+    Route::get('/notifications/all', [NotificationController::class, 'showAll'])->name('notifications.all');
+});

@@ -1,5 +1,5 @@
 @props([
-    'property' => $property
+    'property' => $property,
 ])
 
 <aside>
@@ -13,7 +13,8 @@
             @if ($property->price)
                 <p class="font-display font-bold text-[2.6rem] text-primary dark:text-primary-400 leading-none mb-1">
                     {{ number_format($property->price, 0, ',', ' ') }}
-                    <sub class="font-body text-[0.75rem] font-normal text-primary/90 dark:text-primary-300 align-middle ml-1">
+                    <sub
+                        class="font-body text-[0.75rem] font-normal text-primary/90 dark:text-primary-300 align-middle ml-1">
                         FCFA{{ $property->price_type === 'monthly' ? '/mois' : '' }}
                     </sub>
                 </p>
@@ -22,14 +23,13 @@
         </div>
 
         {{-- Location --}}
-        <div
-            class="flex items-center gap-2 font-body text-[0.8rem] px-4 py-3 rounded-xl mb-6 dark:text-gray-300">
+        <div class="flex items-center gap-2 font-body text-[0.8rem] px-4 py-3 rounded-xl mb-6 dark:text-gray-300">
             <i data-lucide="map-pin" class="text-primary dark:text-primary-400 w-5 h-5"></i>
             {{ $property->address ?? '' }}{{ $property->address && $property->city ? ', ' : '' }}{{ $property->city->name ?? 'Brazzaville' }}
         </div>
 
         {{-- Map placeholder --}}
-        <div
+        <div id="map"
             class="w-full h-36 border border-secondary/10 dark:border-gray-700 rounded-xl
                 flex flex-col items-center justify-center gap-2
                 font-body text-[0.75rem] mb-6 dark:text-gray-400
@@ -42,7 +42,8 @@
         {{-- CTAs --}}
         <div class="flex flex-col gap-2.5 mb-4">
             <x-btn class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">Contacter l'agence</x-btn>
-            <x-btn style="secondary" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Reserver une visite</x-btn>
+            <x-btn style="secondary" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Reserver une
+                visite</x-btn>
         </div>
 
         {{-- Agent --}}
@@ -77,3 +78,19 @@
         </p>
     @endif
 </aside>
+
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+<script>
+    const map = L.map('map').setView([-4.2634, 15.2429], 13);
+
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map);
+
+    L.marker([-4.2634, 15.2429])
+        .addTo(map)
+        .bindPopup('Bien immobilier');
+</script>

@@ -1,3 +1,4 @@
+<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
 
@@ -21,12 +22,12 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: rgba(63, 63, 70, 0.4);
+            background: var(--muted);
             border-radius: 4px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: rgba(63, 63, 70, 0.7);
+            background: var(--muted-foreground);
         }
     </style>
 </head>
@@ -34,18 +35,17 @@
     $sidebarHtml = (string) $sidebar;
 @endphp
 
-<body class="bg-[var(--background)] text-[var(--foreground)] font-sans antialiased h-screen flex overflow-hidden"
-    x-data="{
-        sidebarOpen: true,
-        mobileMenuOpen: false,
-        toggleSidebar() {
-            if (window.innerWidth < 768) {
-                this.mobileMenuOpen = !this.mobileMenuOpen;
-            } else {
-                this.sidebarOpen = !this.sidebarOpen;
-            }
+<body class="bg-background text-foreground font-sans antialiased h-screen flex overflow-hidden" x-data="{
+    sidebarOpen: true,
+    mobileMenuOpen: false,
+    toggleSidebar() {
+        if (window.innerWidth < 768) {
+            this.mobileMenuOpen = !this.mobileMenuOpen;
+        } else {
+            this.sidebarOpen = !this.sidebarOpen;
         }
-    }">
+    }
+}">
 
     <!-- Mobile Drawer Navigation Sheet -->
     <div x-show="mobileMenuOpen" class="relative z-50 md:hidden" role="dialog" aria-modal="true" style="display: none;">
@@ -63,11 +63,11 @@
                 x-transition:enter-start="-translate-x-full" x-transition:enter-end="translate-x-0"
                 x-transition:leave="transition ease-in-out duration-300 transform"
                 x-transition:leave-start="translate-x-0" x-transition:leave-end="-translate-x-full"
-                class="w-64 bg-[var(--sidebar)] flex flex-col h-full border-r border-[var(--sidebar-border)] relative shadow-2xl transition-transform">
+                class="w-64 bg-sidebar flex flex-col h-full border-r border-sidebar-border relative shadow-2xl transition-transform">
 
                 <div class="absolute top-3.5 right-3 z-50">
                     <button @click="mobileMenuOpen = false"
-                        class="p-1 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
+                        class="p-1 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-sidebar-border transition-colors focus:outline-none">
                         <i data-lucide="x" height="16" width="16"></i>
                     </button>
                 </div>
@@ -89,18 +89,17 @@
     <div class="flex-1 flex flex-col min-h-0 overflow-hidden transition-all duration-300">
 
         <!-- Header / Top navigation bar -->
-        <header
-            class="h-14 border-b border-[var(--sidebar-border)] flex items-center px-4 justify-between shrink-0 bg-[var(--sidebar)]">
+        <header class="h-14 border-b border-sidebar-border flex items-center px-4 justify-between shrink-0 bg-sidebar">
             <div class="flex items-center gap-2">
                 <!-- Sidebar Toggle Button -->
                 <button @click="toggleSidebar()"
-                    class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none"
+                    class="p-1.5 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-accent transition-colors"
                     aria-label="Toggle Sidebar">
                     <i data-lucide="panel-left" height="16" width="16"></i>
                 </button>
 
                 <!-- Divider -->
-                <div class="w-px h-4 bg-[var(--sidebar-border)] mx-2"></div>
+                <div class="w-px h-4 bg-sidebar-border mx-2"></div>
 
                 <!-- Breadcrumbs -->
                 {{ $breadcrumbs ?? '' }}
@@ -108,6 +107,7 @@
 
             <!-- Right-side actions -->
             <div class="flex items-center gap-3">
+                <!-- Theme Toggle -->
                 <button x-data="{
                     toggleTheme() {
                         const isDark = document.documentElement.classList.contains('dark');
@@ -120,19 +120,92 @@
                         }
                     }
                 }" @click="toggleTheme()"
-                    class="p-1.5 text-[var(--muted-foreground)] hover:text-[var(--foreground)] rounded-md hover:bg-[var(--sidebar-border)] transition-colors focus:outline-none">
+                    class="p-1.5 text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
                     <i data-lucide="sun" class="h-4 w-4 hidden dark:block"></i>
                     <i data-lucide="moon" class="h-4 w-4 block dark:hidden"></i>
                 </button>
-                <button
-                    class="p-1.5 rounded-md text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] transition-colors">
-                    <i data-lucide="bell" height="16" width="16"></i>
-                </button>
+
+                <!-- Notification Bell avec Dropdown -->
+                <div class="relative" x-data="notificationDropdown()" x-init="init()">
+                    <!-- Cloche -->
+                    <button @click="toggle" @click.away="close"
+                        class="relative p-1.5 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-accent"
+                        aria-label="Notifications">
+                        <i data-lucide="bell" height="16" width="16"></i>
+                        <!-- Badge -->
+                        <span x-show="unreadCount > 0" x-text="unreadCount"
+                            class="absolute -top-0.5 -right-0.5 inline-flex items-center justify-center px-1.5 py-0.5 text-[10px] font-bold leading-none text-primary-foreground bg-destructive rounded-full min-w-[18px] min-h-[18px]">
+                        </span>
+                    </button>
+
+                    <!-- Dropdown -->
+                    <div x-cloak x-show="open" @click.away="close"
+                        class="absolute right-0 mt-2 w-80 md:w-96 bg-sidebar rounded-md shadow-lg overflow-hidden z-50 border border-sidebar-border"
+                        x-transition:enter="transition ease-out duration-200"
+                        x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+
+                        <!-- Header -->
+                        <div class="p-3 border-b border-sidebar-border flex justify-between items-center">
+                            <h3 class="text-sm font-semibold text-foreground">Notifications</h3>
+                            <button @click="markAllAsRead"
+                                class="text-xs text-primary hover:underline transition-colors">
+                                Tout marquer comme lu
+                            </button>
+                        </div>
+
+                        <!-- Liste des notifications -->
+                        <div class="max-h-96 overflow-y-auto divide-y divide-sidebar-border p-2">
+                            <template x-for="notif in notifications" :key="notif.id">
+                                <a :href="notif.data.property_id ? `/properties/${notif.data.property_id}` : '#'"
+                                    @click.prevent="markAsRead(notif.id, $event)"
+                                    class="block px-4 py-3 hover:bg-sidebar-border transition-colors cursor-pointer rounded-2xl"
+                                    :class="{ 'bg-primary/5': !notif.read_at }">
+                                    <div class="flex items-start gap-3">
+                                        <div class="flex-1 min-w-0">
+                                            <!-- Nom complet -->
+                                            <p class="text-sm font-medium text-foreground"
+                                                x-text="notif.data.full_name">
+                                            </p>
+
+                                            <!-- Type de demande -->
+                                            <p class="text-xs text-muted-foreground mt-0.5">
+                                                <span x-text="'Demande de visite'"></span>
+                                                <span x-show="notif.data.property_category"
+                                                    x-text="notif.data.property_category"></span>
+                                            </p>
+
+                                            <!-- Date relative -->
+                                            <p class="text-xs text-muted-foreground mt-1 opacity-70"
+                                                x-text="notif.created_at">
+                                            </p>
+                                        </div>
+                                        <span x-show="!notif.read_at"
+                                            class="inline-block w-2 h-2 bg-primary rounded-full shrink-0 mt-1.5">
+                                        </span>
+                                    </div>
+                                </a>
+                            </template>
+                            <div x-show="notifications.length === 0"
+                                class="p-6 text-center text-sm text-muted-foreground">
+                                <i data-lucide="bell-off" class="h-8 w-8 mx-auto mb-2 opacity-50"></i>
+                                <p>Aucune notification</p>
+                            </div>
+                        </div>
+
+                        <!-- Footer -->
+                        <div class="p-2 border-t border-sidebar-border text-center">
+                            <a href="{{ route('notifications.all') }}"
+                                class="text-sm text-primary hover:underline transition-colors">
+                                Voir toutes les notifications
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </header>
 
         <!-- Main Panel Content -->
-        <main class="flex-1 overflow-y-auto min-h-0 p-3 sm:p-4 bg-[var(--background)] flex flex-col gap-4">
+        <main class="flex-1 overflow-y-auto min-h-0 p-3 sm:p-4 bg-background flex flex-col gap-4">
             {{ $slot }}
         </main>
     </div>

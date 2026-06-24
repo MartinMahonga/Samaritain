@@ -1,3 +1,4 @@
+<!-- resources/views/layouts/app.blade.php -->
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -17,6 +18,7 @@
         @yield('content')
     </main>
 
+    <!-- Bouton Visite rapide -->
     <button @click="isOpen=true"
         class="fixed flex items-center gap-2 bottom-28 md:right-8 right-4 px-4 py-2 rounded-4xl bg-primary text-white cursor-pointer z-50"
         aria-label="Demander une visite rapide">
@@ -26,6 +28,7 @@
 
     <x-ui.whatsapp-support-button />
 
+    <!-- Modal Visite rapide -->
     <div x-cloak x-show="isOpen"
         class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70"
         @click.self="closeModal()">
@@ -41,32 +44,31 @@
                         class="w-4 h-4 cursor-pointer text-muted-foreground dark:text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"></i>
                 </div>
                 <p class="text-muted-foreground dark:text-gray-400 text-sm">Laissez-nous vos coordonnées, nous vous
-                    rappelons sous 5
-                    minutes.</p>
+                    rappelons sous 5 minutes.</p>
             </div>
-            <form action="" method="POST">
+            <form id="visit-request-form" action="{{ route('visit-requests.store') }}" method="POST">
                 @csrf
                 <div class="flex flex-col gap-3">
-                    <x-form.input label="Nom complet" name="fullname" icon="user" placeholder="Jean Dupont" />
+                    <x-form.input label="Nom complet" name="full_name" icon="user" placeholder="Jean Dupont" />
                     <x-form.input label="Téléphone" name="phone" icon="phone" placeholder="06 800 71 38" />
                     <x-form.select label="Ville" name="city" icon="map-pin" placeholder="Sélectionnez une ville"
                         :options="[
-                            '1' => 'Brazzaville',
-                            '2' => 'Pointe-Noire',
+                            'Brazzaville' => 'Brazzaville',
+                            'Pointe-Noire' => 'Pointe-Noire',
                         ]" />
-                    <x-form.select label="Bien souhaité" name="property" icon="home"
+                    <x-form.select label="Bien souhaité" name="property_category" icon="home"
                         placeholder="Sélectionnez un bien" :options="[
-                            '1' => 'Studio',
-                            '2' => 'Appartement',
-                            '3' => 'Villa',
-                            '4' => 'Chambre salon',
+                            'Studio' => 'Studio',
+                            'Appartement' => 'Appartement',
+                            'Villa' => 'Villa',
+                            'Chambre salon' => 'Chambre salon',
                         ]" />
-                    <x-form.select label="Créneau préféré" name="time" icon="clock"
+                    <x-form.select label="Créneau préféré" name="preferred_date" icon="clock"
                         placeholder="Choisissez un créneau" :options="[
-                            '1' => 'Matin (8h - 12h)',
-                            '2' => 'Après-midi (13h - 17h)',
-                            '3' => 'Soirée (17h - 19h)',
-                            '4' => 'Week-end',
+                            'Matin (8h - 12h)' => 'Matin (8h - 12h)',
+                            'Après-midi (13h - 17h)' => 'Après-midi (13h - 17h)',
+                            'Soirée (17h - 19h)' => 'Soirée (17h - 19h)',
+                            'Week-end' => 'Week-end',
                         ]" />
                 </div>
 
@@ -88,6 +90,7 @@
 
     <x-ui.footer />
     <x-ui.mobile-nav />
+
     <script>
         function openModal() {
             return {
@@ -97,6 +100,54 @@
                 }
             }
         }
+
+        // Gestion du formulaire avec Alpine.js et fetch
+        document.addEventListener('alpine:init', () => {
+            Alpine.data('visitRequestForm', () => ({
+                isSubmitting: false,
+                successMessage: '',
+                errorMessage: '',
+
+                async submitForm(event) {
+                    event.preventDefault();
+                    this.isSubmitting = true;
+                    this.successMessage = '';
+                    this.errorMessage = '';
+
+                    const form = event.target;
+                    const formData = new FormData(form);
+
+                    try {
+                        const response = await fetch(form.action, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Accept': 'application/json',
+                            },
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                            this.successMessage = data.message || 'Demande envoyée avec succès !';
+                            form.reset();
+                            // Fermer la modal après 2 secondes
+                            setTimeout(() => {
+                                this.closeModal();
+                                this.successMessage = '';
+                            }, 2000);
+                        } else {
+                            this.errorMessage = data.message || 'Une erreur est survenue. Veuillez réessayer.';
+                        }
+                    } catch (error) {
+                        this.errorMessage = 'Erreur de connexion. Veuillez réessayer.';
+                    } finally {
+                        this.isSubmitting = false;
+                    }
+                }
+            }));
+        });
     </script>
 </body>
 

@@ -11,32 +11,32 @@ class Property extends Model
     use SoftDeletes;
 
     protected $fillable = [
-        'created_by',
-        'title',
-        'description',
-        'price',
-        'surface',
-        'rooms',
-        'bedrooms',
-        'bathrooms',
-        'floor',
-        'furnished',
-        'address',
-        'category_id',
-        'city_id',
-        'arrondissement_id',
-        'status',
-        'is_verify',
-        'is_active',
+        "created_by",
+        "title",
+        "description",
+        "price",
+        "surface",
+        "rooms",
+        "bedrooms",
+        "bathrooms",
+        "floor",
+        "furnished",
+        "address",
+        "category_id",
+        "city_id",
+        "arrondissement_id",
+        "status",
+        "is_verify",
+        "is_active",
     ];
 
     protected $casts = [
-        'status' => PropertyStatus::class,
+        "status" => PropertyStatus::class,
     ];
 
     public function creator()
     {
-        return $this->belongsTo(User::class, 'created_by');
+        return $this->belongsTo(User::class, "created_by");
     }
 
     public function category()
@@ -56,7 +56,7 @@ class Property extends Model
 
     public function amenities()
     {
-        return $this->belongsToMany(Amenity::class, 'amenity_property');
+        return $this->belongsToMany(Amenity::class, "amenity_property");
     }
 
     public function images()
@@ -66,16 +66,13 @@ class Property extends Model
 
     public function getCoverImageUrlAttribute()
     {
-        $coverImage = $this->images()->where('cover_image', true)->first();
+        $coverImage = $this->images()->where("cover_image", true)->first();
         return $coverImage ? $coverImage->image_url : null;
     }
 
     public function favoritedBy()
     {
-        return $this->belongsToMany(
-            User::class,
-            'favorites'
-        )->withTimestamps();
+        return $this->belongsToMany(User::class, "favorites")->withTimestamps();
     }
 
     public function isFavorited(): bool
@@ -87,12 +84,17 @@ class Property extends Model
         return auth()
             ->user()
             ->favorites()
-            ->where('property_id', $this->id)
+            ->where("property_id", $this->id)
             ->exists();
     }
 
     public function incrementViews(): void
     {
-        $this->increment('views');
+        $this->increment("views");
+    }
+
+    public function visitRequests()
+    {
+        return $this->hasMany(VisitRequest::class);
     }
 }

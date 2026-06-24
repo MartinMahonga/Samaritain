@@ -12,7 +12,7 @@
                         <p class="text-white/90 dark:text-white/90 mt-1">Gérez votre profil et suivez votre activité</p>
                     </div>
                 </div>
-                <x-btn href="{{ route('artisan.edit', $artisan) }}" style="secondary" class="dark:bg-white dark:text-primary-700 dark:hover:bg-gray-100">
+                <x-btn href="{{ route('artisan.edit', $artisan) }}" style="secondary">
                     <x-slot:prefix>
                         <i data-lucide="user"></i>
                     </x-slot:prefix>
