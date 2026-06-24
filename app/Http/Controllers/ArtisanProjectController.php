@@ -5,26 +5,31 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArtisanProjectRequest;
 use App\Models\Artisan;
 use App\Models\ArtisanProject;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ArtisanProjectController extends Controller
 {
     public function index(Artisan $artisan)
-    {   
+    {
         $projects = $artisan->projects()->latest()->paginate(12);
-        
+
         return view('pages.artisan.projects.index', compact('artisan', 'projects'));
     }
 
     public function create(Artisan $artisan)
-    {   
+    {
+        Gate::authorize('update', $artisan);
+
         return view('pages.artisan.projects.create', compact('artisan'));
     }
 
     public function store(StoreArtisanProjectRequest $request, Artisan $artisan)
     {
+        Gate::authorize('update', $artisan);
+
         $data = $request->validated();
-        
+
         if ($request->hasFile('image')) {
             $data['image'] = $request->file('image')->store('artisans/projects', 'public');
         }
@@ -36,12 +41,16 @@ class ArtisanProjectController extends Controller
     }
 
     public function edit(Artisan $artisan, ArtisanProject $project)
-    {   
+    {
+        Gate::authorize('update', $project);
+
         return view('pages.artisan.projects.edit', compact('artisan', 'project'));
     }
 
     public function update(StoreArtisanProjectRequest $request, Artisan $artisan, ArtisanProject $project)
     {
+        Gate::authorize('update', $project);
+
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
@@ -49,7 +58,7 @@ class ArtisanProjectController extends Controller
                 Storage::disk('public')->delete($project->image);
             }
             $data['image'] = $request->file('image')->store('artisans/projects', 'public');
-        } elseif (!$request->hasFile('image') && $project->image) {
+        } elseif (! $request->hasFile('image') && $project->image) {
             unset($data['image']);
         }
 
@@ -61,6 +70,8 @@ class ArtisanProjectController extends Controller
 
     public function destroy(Artisan $artisan, ArtisanProject $project)
     {
+        Gate::authorize('delete', $project);
+
         if ($project->image) {
             Storage::disk('public')->delete($project->image);
         }

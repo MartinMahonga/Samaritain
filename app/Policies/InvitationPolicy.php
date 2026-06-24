@@ -2,8 +2,8 @@
 
 namespace App\Policies;
 
-use App\Models\User;
 use App\Models\AgencyInvitation;
+use App\Models\User;
 
 class InvitationPolicy
 {
@@ -19,13 +19,19 @@ class InvitationPolicy
 
     public function delete(User $user, AgencyInvitation $invitation): bool
     {
-        if ($invitation->isAccepted()) return false;
+        if ($invitation->isAccepted()) {
+            return false;
+        }
+
         return $user->can('manage-members');
     }
 
     public function resend(User $user, AgencyInvitation $invitation): bool
     {
-        if ($invitation->isAccepted()) return false;
+        if ($invitation->isAccepted()) {
+            return false;
+        }
+
         return $user->can('manage-members');
     }
 }

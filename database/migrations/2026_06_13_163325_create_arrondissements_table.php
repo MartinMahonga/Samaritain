@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->foreignId('city_id')->constrained()->onDelete('cascade');
             $table->timestamps();
-            
+
             // Optionnel : empêcher un doublon dans la même ville
             $table->unique(['city_id', 'name']);
         });

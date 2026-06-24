@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\AcceptInvitationRequest;
 use App\Http\Requests\Admin\StoreInvitationRequest;
 use App\Models\AgencyInvitation;
-use App\Models\User;
 use App\Services\InvitationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
@@ -37,6 +36,7 @@ class InvitationController extends Controller
         Gate::authorize('create', AgencyInvitation::class);
 
         $roles = Role::where('name', '!=', 'owner')->get();
+
         return view('admin.team.invitations.create', compact('roles'));
     }
 
@@ -85,7 +85,7 @@ class InvitationController extends Controller
         $token = $request->query('token');
         $invitation = AgencyInvitation::where('token', $token)->first();
 
-        if (!$invitation || $invitation->isExpired() || $invitation->isAccepted()) {
+        if (! $invitation || $invitation->isExpired() || $invitation->isAccepted()) {
             abort(404, 'Invitation invalide ou expirée.');
         }
 
@@ -96,7 +96,7 @@ class InvitationController extends Controller
     {
         $invitation = AgencyInvitation::where('token', $request->token)->first();
 
-        if (!$invitation || $invitation->isExpired() || $invitation->isAccepted()) {
+        if (! $invitation || $invitation->isExpired() || $invitation->isAccepted()) {
             return back()->withErrors(['token' => 'Invitation invalide ou expirée.']);
         }
 

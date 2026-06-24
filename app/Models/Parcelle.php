@@ -8,16 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 
 class Parcelle extends Model
 {
-
     protected $fillable = [
         'titre', 'description', 'localisation', 'quartier',
         'ville', 'superficie', 'prix', 'statut',
-        'reference', 'viabilisee', 'titre_foncier'
+        'reference', 'viabilisee', 'titre_foncier',
     ];
 
     protected $casts = [
         'viabilisee' => 'boolean',
-        'prix'       => 'float',
+        'prix' => 'float',
         'superficie' => 'float',
     ];
 

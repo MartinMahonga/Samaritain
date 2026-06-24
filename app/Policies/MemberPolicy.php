@@ -14,21 +14,34 @@ class MemberPolicy
 
     public function view(User $user, User $member): bool
     {
-        if (!$member->is_staff) return false;
+        if (! $member->is_staff) {
+            return false;
+        }
+
         return $user->hasRole('owner') || $user->can('manage-members');
     }
 
     public function update(User $user, User $member): bool
     {
-        if (!$member->is_staff) return false;
-        if ($member->id === $user->id) return false;
+        if (! $member->is_staff) {
+            return false;
+        }
+        if ($member->id === $user->id) {
+            return false;
+        }
+
         return $user->hasRole('owner') || $user->can('manage-members');
     }
 
     public function delete(User $user, User $member): bool
     {
-        if (!$member->is_staff) return false;
-        if ($member->id === $user->id) return false;
+        if (! $member->is_staff) {
+            return false;
+        }
+        if ($member->id === $user->id) {
+            return false;
+        }
+
         return $user->hasRole('owner');
     }
 

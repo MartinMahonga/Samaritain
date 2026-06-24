@@ -33,7 +33,7 @@ class MemberController extends Controller
     {
         Gate::authorize('view', $member);
 
-        if (!$member->is_staff) {
+        if (! $member->is_staff) {
             abort(404);
         }
 
@@ -44,11 +44,12 @@ class MemberController extends Controller
     {
         Gate::authorize('update', $member);
 
-        if (!$member->is_staff) {
+        if (! $member->is_staff) {
             abort(404);
         }
 
         $roles = Role::where('name', '!=', 'owner')->get();
+
         return view('admin.team.edit', compact('member', 'roles'));
     }
 

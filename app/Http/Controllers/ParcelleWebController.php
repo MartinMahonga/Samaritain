@@ -21,14 +21,16 @@ class ParcelleWebController extends Controller
     {
         return view('parcelles.create');
     }
+
     public function store()
-{
-    // Le formulaire envoie directement à l'API via Alpine.js
-    // Cette route existe juste pour éviter l'erreur
-    return redirect()->route('parcelles.index');
-}
-public function edit($id)
-{
-    return view('parcelles.edit', compact('id'));
-}
+    {
+        // Le formulaire envoie directement à l'API via Alpine.js
+        // Cette route existe juste pour éviter l'erreur
+        return redirect()->route('parcelles.index');
+    }
+
+    public function edit($id)
+    {
+        return view('parcelles.edit', compact('id'));
+    }
 }

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('comment')->nullable();
             $table->unique([
                 'artisan_id',
-                'user_id'
+                'user_id',
             ]);
             $table->timestamps();
         });

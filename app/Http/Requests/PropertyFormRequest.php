@@ -20,12 +20,12 @@ class PropertyFormRequest extends FormRequest
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
-    {   
+    {
         $imageRules = $this->isMethod('POST')
         ? ['required', 'array', 'min:1']
         : ['nullable', 'array'];
 
-        return [
+        $rules = [
             'title' => ['required', 'min:8'],
             'description' => ['nullable', 'min:8'],
             'price' => ['required', 'integer', 'min:0'],
@@ -37,8 +37,6 @@ class PropertyFormRequest extends FormRequest
             'furnished' => ['nullable', 'boolean'],
             'address' => ['required', 'min:8'],
             'status' => ['nullable', 'min:3'],
-            'is_verify' => ['nullable', 'boolean'],
-            'is_active' => ['nullable', 'boolean'],
             'category_id' => ['required', 'exists:categories,id'],
             'city_id' => ['required', 'exists:cities,id'],
             'arrondissement_id' => ['nullable', 'exists:arrondissements,id'],
@@ -46,8 +44,15 @@ class PropertyFormRequest extends FormRequest
             'images' => $imageRules,
             'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:10120'],
             'cover_image' => ['nullable', 'boolean'],
-            'kept_images'   => ['nullable', 'array'],
+            'kept_images' => ['nullable', 'array'],
             'kept_images.*' => ['integer', 'exists:property_images,id'],
         ];
+
+        if ($this->user() && $this->user()->isStaff()) {
+            $rules['is_verify'] = ['nullable', 'boolean'];
+            $rules['is_active'] = ['nullable', 'boolean'];
+        }
+
+        return $rules;
     }
 }

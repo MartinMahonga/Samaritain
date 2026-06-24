@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArtisanReviewRequest;
 use App\Models\Artisan;
 use App\Models\ArtisanReview;
-use Illuminate\Http\Request;
 
 class ArtisanReviewController extends Controller
 {

@@ -14,7 +14,7 @@ class ProviderCallbackController extends Controller
      */
     public function __invoke(string $provider)
     {
-        if (!in_array($provider, ['google', 'facebook'])) {
+        if (! in_array($provider, ['google', 'facebook'])) {
             return redirect()->route('login')->withErrors(['provider' => 'Invalid provider']);
         }
 
@@ -25,7 +25,7 @@ class ProviderCallbackController extends Controller
 
         if ($existingUser) {
             // Mettre à jour le provider_id si l'utilisateur s'authentifie avec une nouvelle méthode
-            if (!$existingUser->provider_id) {
+            if (! $existingUser->provider_id) {
                 $existingUser->update([
                     'provider_id' => $providerUser->id,
                     'provider_name' => $provider,

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\DeleteUserAccount;
-use App\Http\Controllers\Controller;
 use App\Http\Requests\DeleteAccountRequest;
 use App\Http\Requests\UpdateProfilePhotoRequest;
 use Illuminate\Http\RedirectResponse;
@@ -83,7 +82,7 @@ class ProfileController extends Controller
 
         return back()->with('success', 'Mot de passe modifié avec succès.');
     }
-    
+
     /**
      * Delete the user's account.
      */

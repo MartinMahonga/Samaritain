@@ -14,7 +14,7 @@ class ScanRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'uuid' => 'required|string|exists:passes,uuid'
+            'uuid' => 'required|string|exists:passes,uuid',
         ];
     }
 }

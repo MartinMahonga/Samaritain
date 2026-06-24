@@ -17,9 +17,9 @@ class NotificationController extends Controller
         return response()->json([
             'notifications' => $notifications->map(function ($notification) {
                 return [
-                    'id'         => $notification->id,
-                    'data'       => $notification->data,
-                    'read_at'    => $notification->read_at,
+                    'id' => $notification->id,
+                    'data' => $notification->data,
+                    'read_at' => $notification->read_at,
                     'created_at' => $notification->created_at->diffForHumans(),
                 ];
             }),
@@ -78,6 +78,7 @@ class NotificationController extends Controller
     public function showAll()
     {
         $notifications = Auth::user()->notifications()->paginate(15);
+
         return view('notifications.index', ['notifications' => $notifications]);
     }
 }

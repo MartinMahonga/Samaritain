@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateArtisanRequest;
 use App\Models\Artisan;
 use App\Models\ArtisanCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -64,6 +65,7 @@ class ArtisanController extends Controller
     public function create()
     {
         $categories = ArtisanCategory::orderBy('name')->get();
+
         return view('pages.artisans.create', compact('categories'));
     }
 
@@ -71,7 +73,7 @@ class ArtisanController extends Controller
     {
         $data = $request->validated();
         $data['user_id'] = auth()->id();
-        $data['slug'] = Str::slug($data['business_name']) . '-' . Str::random(6);
+        $data['slug'] = Str::slug($data['business_name']).'-'.Str::random(6);
         $data['verified'] = false;
         $data['is_active'] = false;
 
@@ -95,14 +97,18 @@ class ArtisanController extends Controller
 
     public function edit(Artisan $artisan)
     {
+        Gate::authorize('update', $artisan);
+
         $categories = ArtisanCategory::orderBy('name')->get();
         $selectedCategories = $artisan->categories->pluck('id')->toArray();
-        
+
         return view('pages.artisans.edit', compact('artisan', 'categories', 'selectedCategories'));
     }
 
     public function update(UpdateArtisanRequest $request, Artisan $artisan)
     {
+        Gate::authorize('update', $artisan);
+
         $data = $request->validated();
 
         if ($request->hasFile('avatar')) {
@@ -133,7 +139,7 @@ class ArtisanController extends Controller
     {
         $artisan = auth()->user()->artisan;
 
-        if (!$artisan) {
+        if (! $artisan) {
             return redirect()->route('artisan.create');
         }
 

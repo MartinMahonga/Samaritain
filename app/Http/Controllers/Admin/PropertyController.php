@@ -10,7 +10,6 @@ use App\Models\Arrondissement;
 use App\Models\Category;
 use App\Models\City;
 use App\Models\Property;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -188,14 +187,14 @@ class PropertyController extends Controller
     public function toggleActive(Property $property)
     {
         $property->update([
-            'is_active' => !$property->is_active,
+            'is_active' => ! $property->is_active,
         ]);
 
         if (request()->ajax()) {
             return response()->json([
                 'success' => true,
                 'is_active' => $property->is_active,
-                'message' => 'Le statut a été modifié avec succès.'
+                'message' => 'Le statut a été modifié avec succès.',
             ]);
         }
 
@@ -208,14 +207,14 @@ class PropertyController extends Controller
     public function toggleVerify(Property $property)
     {
         $property->update([
-            'is_verify' => !$property->is_verify,
+            'is_verify' => ! $property->is_verify,
         ]);
 
         if (request()->ajax()) {
             return response()->json([
                 'success' => true,
                 'is_verify' => $property->is_verify,
-                'message' => 'La vérification a été modifiée avec succès.'
+                'message' => 'La vérification a été modifiée avec succès.',
             ]);
         }
 

@@ -68,7 +68,7 @@ Route::post('/properties/{property}/favorite', [FavoriteController::class, 'togg
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite')->middleware('auth');
 
 // Admin routes
-Route::prefix('/admin/dashboard')->middleware('auth')->name('admin.')->group(function () {
+Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddleware::class])->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
     Route::resource('property', AdminPropertyController::class);
 
@@ -97,20 +97,20 @@ Route::get('/auth/{provider}/callback', ProviderCallbackController::class)->name
 
 // Parcelles
 Route::get('/parcelles', [ParcelleWebController::class, 'index'])->name('parcelles.index');
-Route::get('/parcelles/create', [ParcelleWebController::class, 'create'])->name('parcelles.create');
-Route::post('/parcelles', [ParcelleWebController::class, 'store'])->name('parcelles.store');
 Route::get('/parcelles/{id}', [ParcelleWebController::class, 'show'])->name('parcelles.show');
-Route::get('/parcelles/{id}/edit', [ParcelleWebController::class, 'edit'])->name('parcelles.edit');
+
+Route::middleware(['auth', 'verified', StaffMiddleware::class])->group(function () {
+    Route::get('/parcelles/create', [ParcelleWebController::class, 'create'])->name('parcelles.create');
+    Route::post('/parcelles', [ParcelleWebController::class, 'store'])->name('parcelles.store');
+    Route::get('/parcelles/{id}/edit', [ParcelleWebController::class, 'edit'])->name('parcelles.edit');
+});
 
 // Artisans (public)
 Route::get('/artisans', [ArtisanController::class, 'index'])->name('artisans.index');
 Route::get('/artisans/{artisan:slug}', [ArtisanController::class, 'show'])->name('artisans.show');
 
-// Avis
-Route::post('/artisans/{artisan:slug}/reviews', [ArtisanReviewController::class, 'store'])->name('artisans.reviews.store');
-
 // Contact
-Route::post('/artisans/{artisan:slug}/contact', [ArtisanContactController::class, 'store'])->name('artisans.contact.store');
+Route::post('/artisans/{artisan:slug}/contact', [ArtisanContactController::class, 'store'])->middleware('throttle:5,1')->name('artisans.contact.store');
 
 // Routes authentifiées pour artisans
 Route::middleware(['auth'])->group(function () {
@@ -134,6 +134,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/artisan/{artisan}/projects/{project}', [ArtisanProjectController::class, 'destroy'])->name('artisan.projects.destroy');
 
     // Gestion des avis
+    Route::post('/artisans/{artisan:slug}/reviews', [ArtisanReviewController::class, 'store'])->middleware('throttle:10,1')->name('artisans.reviews.store');
     Route::put('/artisans/{artisan:slug}/reviews/{review}', [ArtisanReviewController::class, 'update'])->name('artisans.reviews.update');
     Route::delete('/artisans/{artisan:slug}/reviews/{review}', [ArtisanReviewController::class, 'destroy'])->name('artisans.reviews.destroy');
 });
@@ -173,7 +174,7 @@ Route::middleware(['auth', 'verified', StaffMiddleware::class])
         Route::resource('roles', RoleController::class);
     });
 
-Route::post('/visit-requests', [VisitRequestController::class, 'store'])->name('visit-requests.store');
+Route::post('/visit-requests', [VisitRequestController::class, 'store'])->middleware('throttle:5,1')->name('visit-requests.store');
 
 Route::middleware(['auth'])->group(function () {
     // Notifications

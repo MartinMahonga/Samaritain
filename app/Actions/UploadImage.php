@@ -12,12 +12,12 @@ class UploadImage
 
         foreach ($files as $imageFile) {
             $extension = $imageFile->getClientOriginalExtension();
-            $filename  = uniqid('prop_', true) . '.' . $extension;
+            $filename = uniqid('prop_', true).'.'.$extension;
             $path = $imageFile->storeAs($folder, $filename, 'public');
 
             $property->images()->create([
                 'image_url' => $path,
-                'cover_image'  => false,
+                'cover_image' => false,
             ]);
         }
     }

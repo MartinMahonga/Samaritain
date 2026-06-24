@@ -5,11 +5,11 @@ namespace App\Services;
 use App\Models\AgencyInvitation;
 use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
 use Illuminate\Support\Str;
+use Spatie\Permission\Models\Role;
 
 class InvitationService
 {
@@ -26,7 +26,7 @@ class InvitationService
             ->whereNull('accepted_at')
             ->where('expires_at', '>', Carbon::now())
             ->first();
-            
+
         if ($pendingInvitation) {
             throw new \Exception('Une invitation est déjà en cours pour cet email.');
         }
@@ -56,11 +56,11 @@ class InvitationService
         if ($invitation->isExpired()) {
             throw new \Exception('Cette invitation a expiré.');
         }
-        
+
         if ($invitation->isAccepted()) {
             throw new \Exception('Cette invitation a déjà été acceptée.');
         }
-        
+
         // Vérifier si un utilisateur avec cet email existe déjà
         $existingUser = User::where('email', $invitation->email)->first();
 
@@ -69,7 +69,7 @@ class InvitationService
             if ($existingUser->is_staff) {
                 throw new \Exception('Cet utilisateur est déjà membre de l\'agence.');
             }
-            
+
             // Convertir le client en membre
             $existingUser->update([
                 'name' => $name,
@@ -80,7 +80,7 @@ class InvitationService
 
             // Nettoyer les sessions existantes de cet utilisateur
             DB::table('sessions')->where('user_id', $existingUser->id)->delete();
-            
+
             $user = $existingUser;
         } else {
             // Créer un nouvel utilisateur membre
@@ -97,7 +97,7 @@ class InvitationService
         // Assigner le rôle
         $role = Role::findById($invitation->role_id);
         $user->assignRole($role);
-        
+
         // Marquer l'invitation comme acceptée
         $invitation->update(['accepted_at' => now()]);
 

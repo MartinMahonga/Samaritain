@@ -12,7 +12,7 @@ class ProviderRedirectController extends Controller
      */
     public function __invoke(string $provider)
     {
-        if(!in_array($provider, ['google', 'facebook'])) {
+        if (! in_array($provider, ['google', 'facebook'])) {
             redirect()->route('login')->withErrors(['provider' => 'Invalid provider']);
         }
 

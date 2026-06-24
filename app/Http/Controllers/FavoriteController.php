@@ -3,17 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class FavoriteController extends Controller
 {
-    public function index () {
+    public function index()
+    {
         $properties = auth()->user()
-        ->favorites()
-        ->with('images')
-        ->latest()
-        ->paginate(12);
+            ->favorites()
+            ->with('images')
+            ->latest()
+            ->paginate(12);
 
         return view('pages.favorite', [
             'properties' => $properties,
@@ -35,7 +34,7 @@ class FavoriteController extends Controller
         }
 
         return response()->json([
-            'favorited' => !$exists
+            'favorited' => ! $exists,
         ]);
     }
 }

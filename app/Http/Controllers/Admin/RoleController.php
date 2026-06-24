@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Admin\StoreRoleRequest;
 use App\Http\Requests\Admin\UpdateRoleRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
@@ -85,7 +84,7 @@ class RoleController extends Controller
         if ($role->name === 'owner') {
             return back()->with('error', 'Le rôle owner ne peut pas être supprimé.');
         }
-        
+
         if ($role->users()->count() > 0) {
             return back()->with('error', 'Ce rôle ne peut pas être supprimé car il est utilisé par des membres.');
         }

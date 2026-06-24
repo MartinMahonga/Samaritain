@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-use App\Models\Pass;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePassRequest extends FormRequest
@@ -13,6 +12,7 @@ class UpdatePassRequest extends FormRequest
     public function authorize(): bool
     {
         $pass = $this->route('pass');
+
         return $pass && $this->user()->can('update', $pass);
     }
 

@@ -12,6 +12,7 @@ use App\Models\Property;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
@@ -60,9 +61,9 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'like', '%' . $request->keyword . '%');
+                $q->where('title', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%');
             });
         }
 
@@ -70,22 +71,16 @@ class PropertyController extends Controller
 
         return view('pages.property.index', [
             'properties' => $properties,
-            'cities' => City::select(['id', 'name'])->get()
+            'cities' => City::select(['id', 'name'])->get(),
         ]);
     }
 
     /**
      * Display the specified property.
      */
-    public function show(Request $request,Property $property)
+    public function show(Request $request, Property $property)
     {
-        // Vérifier si l'utilisateur a le droit de voir ce bien
-        // Un bien n'est visible que s'il est actif ET vérifié, OU si c'est le propriétaire
-        if (!$property->is_active || !$property->is_verify) {
-            if (Auth::id() !== $property->created_by) {
-                abort(404);
-            }
-        }
+        Gate::authorize('view', $property);
 
         $this->registerView($request, $property);
 
@@ -95,7 +90,7 @@ class PropertyController extends Controller
             'category',
             'amenities',
             'arrondissement',
-            'creator'
+            'creator',
         ]);
 
         $similarProperties = Property::with([
@@ -159,10 +154,7 @@ class PropertyController extends Controller
      */
     public function edit(Property $property)
     {
-        // Vérifier que l'utilisateur est bien le propriétaire
-        if ($property->created_by !== Auth::id()) {
-            abort(403, 'Vous n\'êtes pas autorisé à modifier ce bien.');
-        }
+        Gate::authorize('update', $property);
 
         $property->load(['amenities', 'images']);
 
@@ -180,10 +172,7 @@ class PropertyController extends Controller
      */
     public function update(PropertyFormRequest $request, Property $property, UploadImage $storeImage)
     {
-        // Vérifier que l'utilisateur est bien le propriétaire
-        if ($property->created_by !== Auth::id()) {
-            abort(403, 'Vous n\'êtes pas autorisé à modifier ce bien.');
-        }
+        Gate::authorize('update', $property);
 
         $property->update($request->validated());
         $property->amenities()->sync($request->validated('amenities'));
@@ -215,10 +204,7 @@ class PropertyController extends Controller
      */
     public function destroy(Property $property)
     {
-        // Vérifier que l'utilisateur est bien le propriétaire
-        if ($property->created_by !== Auth::id()) {
-            abort(403, 'Vous n\'êtes pas autorisé à supprimer ce bien.');
-        }
+        Gate::authorize('delete', $property);
 
         $property->images()
             ->get()
@@ -310,9 +296,9 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'like', '%' . $request->keyword . '%');
+                $q->where('title', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%');
             });
         }
 
@@ -356,14 +342,11 @@ class PropertyController extends Controller
      */
     public function duplicate(Property $property, UploadImage $storeImage)
     {
-        // Vérifier que l'utilisateur est bien le propriétaire
-        if ($property->created_by !== Auth::id()) {
-            abort(403);
-        }
+        Gate::authorize('update', $property);
 
         // Créer une copie
         $newProperty = $property->replicate();
-        $newProperty->title = $property->title . ' (Copie)';
+        $newProperty->title = $property->title.' (Copie)';
         $newProperty->is_verify = false;
         $newProperty->created_by = Auth::id();
         $newProperty->save();
@@ -374,7 +357,7 @@ class PropertyController extends Controller
         // Copier les images
         foreach ($property->images as $image) {
             $oldPath = $image->getRawOriginal('image_url');
-            $newPath = 'properties/' . uniqid() . '.jpg';
+            $newPath = 'properties/'.uniqid().'.jpg';
 
             // Copier le fichier
             if (Storage::disk('public')->exists($oldPath)) {
@@ -397,7 +380,7 @@ class PropertyController extends Controller
      */
     protected function registerView(Request $request, Property $property): void
     {
-        $cacheKey = 'property_view_' . $property->id . '_' . $request->ip();
+        $cacheKey = 'property_view_'.$property->id.'_'.$request->ip();
 
         // Cache::add() retourne true si la clé a été ajoutée (donc n'existait pas)
         if (Cache::add($cacheKey, true, now()->addHours(24))) {

@@ -2,17 +2,18 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use App\Models\User;
+use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\PermissionRegistrar;
 
 class RolesAndPermissionsSeeder extends Seeder
 {
     public function run(): void
     {
         // Reset cached roles and permissions
-        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
         // Créer les permissions
         $permissions = [
@@ -62,7 +63,7 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Créer un utilisateur owner par défaut (optionnel)
-        if (!User::where('email', 'owner@agence.com')->exists()) {
+        if (! User::where('email', 'owner@agence.com')->exists()) {
             $ownerUser = User::create([
                 'name' => 'Owner',
                 'email' => 'owner@agence.com',

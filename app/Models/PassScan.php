@@ -13,11 +13,11 @@ class PassScan extends Model
     protected $table = 'pass_scans';
 
     protected $fillable = [
-        'pass_id', 'user_id', 'scanned_at', 'ip_address', 'user_agent', 'device_info'
+        'pass_id', 'user_id', 'scanned_at', 'ip_address', 'user_agent', 'device_info',
     ];
 
     protected $casts = [
-        'scanned_at' => 'datetime'
+        'scanned_at' => 'datetime',
     ];
 
     public function pass(): BelongsTo

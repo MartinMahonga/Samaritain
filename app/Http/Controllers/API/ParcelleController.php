@@ -1,4 +1,5 @@
 <?php
+
 // app/Http/Controllers/API/ParcelleController.php
 
 namespace App\Http\Controllers\API;
@@ -7,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Parcelle;
 use App\Models\ParcelleImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -19,11 +21,11 @@ class ParcelleController extends Controller
 
         // Filtres
         if ($request->filled('ville')) {
-            $query->where('ville', 'like', '%' . $request->ville . '%');
+            $query->where('ville', 'like', '%'.$request->ville.'%');
         }
 
         if ($request->filled('quartier')) {
-            $query->where('quartier', 'like', '%' . $request->quartier . '%');
+            $query->where('quartier', 'like', '%'.$request->quartier.'%');
         }
 
         if ($request->filled('statut')) {
@@ -51,8 +53,6 @@ class ParcelleController extends Controller
         }
         $parcelles = $query->latest()->paginate($request->input('per_page', 12));
 
-
-
         return response()->json($parcelles);
     }
 
@@ -60,26 +60,29 @@ class ParcelleController extends Controller
     public function show($id)
     {
         $parcelle = Parcelle::with(['images', 'imagePrincipale'])->findOrFail($id);
+
         return response()->json($parcelle);
     }
 
     // ✅ Création avec upload d'images
     public function store(Request $request)
     {
+        Gate::authorize('create', Parcelle::class);
+
         $request->validate([
-            'titre'         => 'required|string|max:255',
-            'localisation'  => 'required|string',
-            'quartier'      => 'required|string',
-            'ville'         => 'required|string',
-            'superficie'    => 'required|numeric|min:1',
-            'prix'          => 'required|numeric|min:0',
-            'statut'        => 'in:disponible,vendu,réservé',
-            'images'        => 'nullable|array',
-            'images.*'      => 'image|mimes:jpeg,png,jpg,webp|max:5120', // 5MB max
+            'titre' => 'required|string|max:255',
+            'localisation' => 'required|string',
+            'quartier' => 'required|string',
+            'ville' => 'required|string',
+            'superficie' => 'required|numeric|min:1',
+            'prix' => 'required|numeric|min:0',
+            'statut' => 'in:disponible,vendu,réservé',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120', // 5MB max
         ]);
 
         // Génération de la référence unique
-        $reference = 'PARC-' . date('Y') . '-' . strtoupper(Str::random(6));
+        $reference = 'PARC-'.date('Y').'-'.strtoupper(Str::random(6));
 
         $parcelle = Parcelle::create([
             ...$request->except('images'),
@@ -90,14 +93,13 @@ class ParcelleController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $index => $image) {
                 $path = $image->store('parcelles', 'public');
-                $url = asset('storage/' . $path);
-
+                $url = asset('storage/'.$path);
 
                 ParcelleImage::create([
                     'parcelle_id' => $parcelle->id,
-                    'path'        => $path,
-                    'url'         => $url,
-                    'principale'  => $index === 0, // La première image est principale
+                    'path' => $path,
+                    'url' => $url,
+                    'principale' => $index === 0, // La première image est principale
                 ]);
             }
         }
@@ -109,14 +111,15 @@ class ParcelleController extends Controller
     public function update(Request $request, $id)
     {
         $parcelle = Parcelle::findOrFail($id);
+        Gate::authorize('update', $parcelle);
 
         $request->validate([
-            'titre'        => 'sometimes|string|max:255',
-            'superficie'   => 'sometimes|numeric|min:1',
-            'prix'         => 'sometimes|numeric|min:0',
-            'statut'       => 'sometimes|in:disponible,vendu,réservé',
-            'images'       => 'nullable|array',
-            'images.*'     => 'image|mimes:jpeg,png,jpg,webp|max:5120',
+            'titre' => 'sometimes|string|max:255',
+            'superficie' => 'sometimes|numeric|min:1',
+            'prix' => 'sometimes|numeric|min:0',
+            'statut' => 'sometimes|in:disponible,vendu,réservé',
+            'images' => 'nullable|array',
+            'images.*' => 'image|mimes:jpeg,png,jpg,webp|max:5120',
         ]);
 
         $parcelle->update($request->except('images'));
@@ -125,13 +128,13 @@ class ParcelleController extends Controller
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $image) {
                 $path = $image->store('parcelles', 'public');
-                $url = asset('storage/' . $path);
+                $url = asset('storage/'.$path);
 
                 ParcelleImage::create([
                     'parcelle_id' => $parcelle->id,
-                    'path'        => $path,
-                    'url'         => $url,
-                    'principale'  => false,
+                    'path' => $path,
+                    'url' => $url,
+                    'principale' => false,
                 ]);
             }
         }
@@ -143,6 +146,7 @@ class ParcelleController extends Controller
     public function destroy($id)
     {
         $parcelle = Parcelle::findOrFail($id);
+        Gate::authorize('delete', $parcelle);
 
         // Supprimer les images du stockage
         foreach ($parcelle->images as $image) {
@@ -158,6 +162,8 @@ class ParcelleController extends Controller
     public function deleteImage($imageId)
     {
         $image = ParcelleImage::findOrFail($imageId);
+        Gate::authorize('deleteImage', $image->parcelle);
+
         Storage::disk('public')->delete($image->path);
         $image->delete();
 

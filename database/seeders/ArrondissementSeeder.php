@@ -12,7 +12,7 @@ class ArrondissementSeeder extends Seeder
     {
         // Arrondissements de Brazzaville
         $brazzaville = City::where('name', 'Brazzaville')->first();
-        
+
         if ($brazzaville) {
             $brazzavilleArrondissements = [
                 'Makélékélé',
@@ -26,9 +26,9 @@ class ArrondissementSeeder extends Seeder
                 'Djiri',
                 'Kintélé',
                 'Ngamaba',
-                'Massina'
+                'Massina',
             ];
-            
+
             foreach ($brazzavilleArrondissements as $arrondissement) {
                 Arrondissement::create([
                     'name' => $arrondissement,
@@ -36,10 +36,10 @@ class ArrondissementSeeder extends Seeder
                 ]);
             }
         }
-        
+
         // Arrondissements de Pointe-Noire
         $pointeNoire = City::where('name', 'Pointe-Noire')->first();
-        
+
         if ($pointeNoire) {
             $pointeNoireArrondissements = [
                 'Patrice Emery Lumumba',
@@ -49,9 +49,9 @@ class ArrondissementSeeder extends Seeder
                 'Ngoyo',
                 'Mongo-Port',
                 'Ngombe',
-                'Indiana'
+                'Indiana',
             ];
-            
+
             foreach ($pointeNoireArrondissements as $arrondissement) {
                 Arrondissement::create([
                     'name' => $arrondissement,

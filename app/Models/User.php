@@ -20,6 +20,7 @@ class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
+
     use HasRoles;
 
     /**
@@ -60,6 +61,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->is_staff === true;
     }
 
+    public function isAdmin(): bool
+    {
+        return $this->isStaff() || $this->hasRole(['admin', 'owner']);
+    }
+
     public function isActive(): bool
     {
         return $this->is_active === true;
@@ -84,7 +90,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return Str::startsWith($this->profile_image, [
             'https://lh3.googleusercontent.com',
             'https://www.google.com',
-            'https://avatars.githubusercontent.com'
+            'https://avatars.githubusercontent.com',
         ]);
     }
 
@@ -93,7 +99,7 @@ class User extends Authenticatable implements MustVerifyEmail
      */
     private function isLocalImage(): bool
     {
-        return !Str::startsWith($this->profile_image, 'http' || 'https');
+        return ! Str::startsWith($this->profile_image, 'http' || 'https');
     }
 
     /**

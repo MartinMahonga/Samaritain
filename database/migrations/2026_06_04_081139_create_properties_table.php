@@ -34,7 +34,7 @@ return new class extends Migration
      * Reverse the migrations.
      */
     public function down(Blueprint $table): void
-    {   
+    {
         $table->dropSoftDeletes();
         Schema::dropIfExists('properties');
     }

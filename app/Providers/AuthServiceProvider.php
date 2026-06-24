@@ -21,10 +21,10 @@ class AuthServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->registerPolicies();
-        
+
         // Vérification supplémentaire
         \Log::info('AuthServiceProvider booted', [
-            'policies' => array_keys($this->policies)
+            'policies' => array_keys($this->policies),
         ]);
     }
 }

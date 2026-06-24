@@ -19,7 +19,7 @@ class ArtisanPolicy
 
     public function create(User $user): bool
     {
-        return !Artisan::where('user_id', $user->id)->exists();
+        return ! Artisan::where('user_id', $user->id)->exists();
     }
 
     public function update(User $user, Artisan $artisan): bool

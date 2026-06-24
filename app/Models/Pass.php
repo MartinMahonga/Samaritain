@@ -18,20 +18,20 @@ class Pass extends Model
     protected $fillable = [
         'uuid', 'holder_name', 'phone', 'email', 'allowed_visits',
         'remaining_visits', 'start_date', 'expiration_date',
-        'qr_code_path', 'status'
+        'qr_code_path', 'status',
     ];
 
     protected $casts = [
         'start_date' => 'datetime',
         'expiration_date' => 'datetime',
         'allowed_visits' => 'integer',
-        'remaining_visits' => 'integer'
+        'remaining_visits' => 'integer',
     ];
 
     protected static function boot()
     {
         parent::boot();
-        
+
         static::creating(function ($model) {
             $model->uuid = $model->uuid ?? (string) Str::uuid();
             $model->remaining_visits = $model->remaining_visits ?? $model->allowed_visits;
@@ -45,8 +45,8 @@ class Pass extends Model
 
     public function isActive(): bool
     {
-        return $this->status === 'actif' 
-            && $this->remaining_visits > 0 
+        return $this->status === 'actif'
+            && $this->remaining_visits > 0
             && $this->expiration_date->isFuture();
     }
 
@@ -78,17 +78,17 @@ class Pass extends Model
         } else {
             $this->status = 'actif';
         }
-        
+
         $this->saveQuietly();
     }
 
     public function getQrCodeUrl(): string
     {
-        return $this->qr_code_path 
-            ? asset('storage/' . $this->qr_code_path) 
+        return $this->qr_code_path
+            ? asset('storage/'.$this->qr_code_path)
             : '';
     }
-    
+
     /**
      * Récupère le QR Code en base64 pour affichage direct
      */
@@ -96,20 +96,23 @@ class Pass extends Model
     {
         if ($this->qr_code_path && Storage::disk('public')->exists($this->qr_code_path)) {
             $qrContent = Storage::disk('public')->get($this->qr_code_path);
-            return 'data:image/png;base64,' . base64_encode($qrContent);
+
+            return 'data:image/png;base64,'.base64_encode($qrContent);
         }
-        
+
         // Génération à la volée si le fichier n'existe pas
         $url = route('scan.show', $this->uuid);
+
         return QrCodeHelper::generate($url);
     }
-    
+
     /**
      * Récupère le QR Code avec label
      */
-    public function getQrCodeWithLabel(string $label = null): string
+    public function getQrCodeWithLabel(?string $label = null): string
     {
         $url = route('scan.show', $this->uuid);
-        return QrCodeHelper::generate($url . '|' . ($label ?? $this->holder_name));
+
+        return QrCodeHelper::generate($url.'|'.($label ?? $this->holder_name));
     }
 }
