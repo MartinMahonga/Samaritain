@@ -189,13 +189,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications/all', [NotificationController::class, 'showAll'])->name('notifications.all');
 });
 
-Route::get('/debug-signature', function (Request $request) {
-    return response()->json([
-        'full_url' => $request->fullUrl(),
-        'has_valid_signature' => $request->hasValidSignature(),
-        'scheme' => $request->getScheme(),
-        'host' => $request->getHost(),
-        'forwarded_proto' => $request->header('X-Forwarded-Proto'),
-        'forwarded_host' => $request->header('X-Forwarded-Host'),
-    ]);
-});
+// Route::get('/debug-signature', function (Request $request) {
+//     return response()->json([
+//         'full_url' => $request->fullUrl(),
+//         'has_valid_signature' => $request->hasValidSignature(),
+//         'scheme' => $request->getScheme(),
+//         'host' => $request->getHost(),
+//         'forwarded_proto' => $request->header('X-Forwarded-Proto'),
+//         'forwarded_host' => $request->header('X-Forwarded-Host'),
+//     ]);
+// });

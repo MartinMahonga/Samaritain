@@ -4,8 +4,8 @@
     <div class="flex items-start justify-between mb-3">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-full bg-muted overflow-hidden flex-shrink-0">
-                @if($review->user->avatar)
-                    <img src="{{ asset('storage/' . $review->user->avatar) }}" alt="{{ $review->user->name }}" class="w-full h-full object-cover">
+                @if($review->user->profile_image)
+                    <img src="{{ $review->user->profileUrl() }}" alt="{{ $review->user->name }}" class="w-full h-full object-cover">
                 @else
                     <div class="w-full h-full flex items-center justify-center bg-primary/10 text-primary font-bold">
                         {{ substr($review->user->name, 0, 1) }}

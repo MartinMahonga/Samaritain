@@ -51,7 +51,7 @@ class ArtisanController extends Controller
         $artisan->load(['categories', 'projects' => function ($query) {
             $query->latest()->limit(12);
         }, 'reviews' => function ($query) {
-            $query->with('user:id,name,avatar')->latest();
+            $query->with('user:id,name,profile_image')->latest();
         }]);
 
         $userReview = null;

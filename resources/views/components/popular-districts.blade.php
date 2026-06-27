@@ -1,4 +1,4 @@
-<section class="max-w-7xl mx-auto px-6 py-16" x-data="cityDistricts()" x-init="init()">
+id: 1, <section class="max-w-7xl mx-auto px-6 py-16" x-data="cityDistricts()" x-init="init()">
     
     <!-- En-tête avec switch de ville intégré -->
     <div class="text-center mb-10">
@@ -38,7 +38,7 @@
         
         <template x-for="arrondissement in filteredDistricts" :key="arrondissement.name">
             <a 
-                :href="`{{ route('property.index') }}?arrondissement=${encodeURIComponent(arrondissement.name)}`"
+                :href="`{{ route('property.index') }}?arrondissement_id=${encodeURIComponent(arrondissement.id)}`"
                 class="group flex flex-col gap-3 p-5 rounded-2xl border border-accent hover:border-primary/30 hover:shadow-sm transition-all duration-200"
             >
                 <div class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -77,22 +77,22 @@
             city: 'brazzaville',
             districts: {
                 brazzaville: [
-                    { name: 'Bacongo', count: 14, icon: 'building-2' },
-                    { name: 'Moungali', count: 9, icon: 'building-2' },
-                    { name: 'Poto-Poto', count: 11, icon: 'store' },
-                    { name: 'Ouenzé', count: 7, icon: 'home' },
-                    { name: 'Talangaï', count: 6, icon: 'home' },
-                    { name: 'Makélékélé', count: 8, icon: 'building' },
-                    { name: 'Mfilou', count: 5, icon: 'landmark' },
-                    { name: 'Djiri', count: 4, icon: 'trees' }
+                    { id: 1, name: 'Bacongo', count: 14, icon: 'building-2' },
+                    { id: 2, name: 'Moungali', count: 9, icon: 'building-2' },
+                    { id: 3, name: 'Poto-Poto', count: 11, icon: 'store' },
+                    { id: 4, name: 'Ouenzé', count: 7, icon: 'home' },
+                    { id: 5, name: 'Talangaï', count: 6, icon: 'home' },
+                    { id: 6, name: 'Makélékélé', count: 8, icon: 'building' },
+                    { id: 7, name: 'Mfilou', count: 5, icon: 'landmark' },
+                    { id: 8, name: 'Djiri', count: 4, icon: 'trees' }
                 ],
                 pointeNoire: [
-                    { name: 'Loandjili', count: 10, icon: 'building-2' },
-                    { name: 'Tié-Tié', count: 12, icon: 'store' },
-                    { name: 'Mvoumvou', count: 8, icon: 'home' },
-                    { name: 'Lumumba', count: 6, icon: 'building' },
-                    { name: 'Ngoyo', count: 5, icon: 'home' },
-                    { name: 'Mongo Mpoukou', count: 4, icon: 'trees' }
+                    { id: 1, name: 'Loandjili', count: 10, icon: 'building-2' },
+                    { id: 2, name: 'Tié-Tié', count: 12, icon: 'store' },
+                    { id: 3, name: 'Mvoumvou', count: 8, icon: 'home' },
+                    { id: 4, name: 'Lumumba', count: 6, icon: 'building' },
+                    { id: 5, name: 'Ngoyo', count: 5, icon: 'home' },
+                    { id: 6, name: 'Mongo Mpoukou', count: 4, icon: 'trees' }
                 ]
             },
             get filteredDistricts() {

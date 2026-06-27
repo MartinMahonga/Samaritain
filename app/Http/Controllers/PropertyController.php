@@ -28,11 +28,15 @@ class PropertyController extends Controller
         $query = Property::query()
             ->where('is_active', true)
             ->where('is_verify', true)
-            ->with(['city', 'category', 'images']);
+            ->with(['city', 'category', 'images', 'arrondissement']);
 
         // Appliquer les filtres si présents
         if ($request->filled('city_id')) {
             $query->where('city_id', $request->city_id);
+        }
+
+        if ($request->filled('arrondissement_id')) {
+            $query->where('arrondissement_id', $request->arrondissement_id);
         }
 
         if ($request->filled('category_id')) {
@@ -63,6 +67,7 @@ class PropertyController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%'.$request->keyword.'%')
                     ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('arrondissement', 'like', '%'.$request->keyword.'%')
                     ->orWhere('address', 'like', '%'.$request->keyword.'%');
             });
         }
