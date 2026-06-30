@@ -4,10 +4,10 @@ namespace App\Services;
 
 use App\Models\Pass;
 use App\Models\PassScan;
+use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
 use Endroid\QrCode\ErrorCorrectionLevel;
-use Endroid\QrCode\QrCode;
 use Endroid\QrCode\RoundBlockSizeMode;
 use Endroid\QrCode\Writer\PngWriter;
 use Illuminate\Support\Facades\DB;
@@ -67,8 +67,9 @@ class PassService
         $url = route('scan.show', $pass->uuid);
 
         try {
-            // Création du QR Code pour Endroid 5.x
-            $qrCode = new QrCode(
+            // Endroid 6.x : Builder n'est plus fluent, on passe tout au constructeur
+            $builder = new Builder(
+                writer: new PngWriter(),
                 data: $url,
                 encoding: new Encoding('UTF-8'),
                 errorCorrectionLevel: ErrorCorrectionLevel::High,
@@ -76,11 +77,10 @@ class PassService
                 margin: 10,
                 roundBlockSizeMode: RoundBlockSizeMode::Margin,
                 foregroundColor: new Color(0, 0, 0),
-                backgroundColor: new Color(255, 255, 255)
+                backgroundColor: new Color(255, 255, 255),
             );
 
-            $writer = new PngWriter;
-            $result = $writer->write($qrCode);
+            $result = $builder->build();
 
             // Sauvegarde du QR Code
             $fileName = 'qrcodes/'.$pass->uuid.'.png';
@@ -100,11 +100,16 @@ class PassService
     private function generateMinimalQrCode(Pass $pass, string $url): void
     {
         try {
-            $qrCode = new QrCode($url);
-            $qrCode->setSize(300);
+            $builder = new Builder(
+                writer: new PngWriter(),
+                data: $url,
+                encoding: new Encoding('UTF-8'),
+                errorCorrectionLevel: ErrorCorrectionLevel::High,
+                size: 300,
+                margin: 10,
+            );
 
-            $writer = new PngWriter;
-            $result = $writer->write($qrCode);
+            $result = $builder->build();
 
             $fileName = 'qrcodes/'.$pass->uuid.'.png';
             Storage::disk('public')->put($fileName, $result->getString());
@@ -130,20 +135,24 @@ class PassService
         $url = route('scan.show', $pass->uuid);
 
         try {
-            $qrCode = new QrCode(
+            $builder = new Builder(
+                writer: new PngWriter(),
                 data: $url,
                 encoding: new Encoding('UTF-8'),
                 errorCorrectionLevel: ErrorCorrectionLevel::High,
                 size: 300,
-                margin: 10
+                margin: 10,
+                roundBlockSizeMode: RoundBlockSizeMode::Margin,
+                foregroundColor: new Color(0, 0, 0),
+                backgroundColor: new Color(255, 255, 255),
             );
 
-            $writer = new PngWriter;
-            $result = $writer->write($qrCode);
+            $result = $builder->build();
 
             return $result->getDataUri();
 
         } catch (\Exception $e) {
+            \Log::error('Erreur génération QR Code Base64: '.$e->getMessage());
             return '';
         }
     }
