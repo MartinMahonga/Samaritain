@@ -51,7 +51,8 @@ RUN install-php-extensions \
     opcache \
     bcmath \
     exif \
-    pcntl
+    pcntl \
+    gd
 
 COPY --from=vendor /app /app
 COPY --from=frontend /app/public/build /app/public/build
