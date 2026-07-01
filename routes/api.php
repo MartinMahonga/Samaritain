@@ -1,19 +1,3 @@
 <?php
 
-use App\Http\Controllers\API\ParcelleController;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
-
-Route::prefix('parcelles')->group(function () {
-    Route::get('/', [ParcelleController::class, 'index']);
-    Route::get('/{id}', [ParcelleController::class, 'show']);
-
-    Route::delete('/images/{imageId}', [ParcelleController::class, 'deleteImage']);
-    Route::post('/', [ParcelleController::class, 'store']);
-    Route::post('/{id}', [ParcelleController::class, 'update']);
-    Route::delete('/{id}', [ParcelleController::class, 'destroy']);
-});
+// API routes are deprecated. All Parcelle functionality now uses web controllers and Blade views.

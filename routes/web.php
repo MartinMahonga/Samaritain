@@ -4,17 +4,16 @@ use App\Http\Controllers\Admin\ArtisanController as AdminArtisanController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\MemberController;
-use App\Http\Controllers\Admin\ParcelleController;
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\ArtisanContactController;
 use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\ArtisanProjectController;
+use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\ArtisanReviewController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
-use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\PropertyController;
@@ -102,10 +101,13 @@ Route::get('/parcelles', [ParcelleWebController::class, 'index'])->name('parcell
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/parcelles/create', [ParcelleWebController::class, 'create'])->name('parcelles.create');
     Route::post('/parcelles', [ParcelleWebController::class, 'store'])->name('parcelles.store');
-    Route::get('/parcelles/{id}/edit', [ParcelleWebController::class, 'edit'])->name('parcelles.edit');
+    Route::get('/parcelles/{parcelle}/edit', [ParcelleWebController::class, 'edit'])->name('parcelles.edit');
+    Route::put('/parcelles/{parcelle}', [ParcelleWebController::class, 'update'])->name('parcelles.update');
+    Route::delete('/parcelles/{parcelle}', [ParcelleWebController::class, 'destroy'])->name('parcelles.destroy');
+    Route::delete('/parcelles/images/{image}', [ParcelleWebController::class, 'deleteImage'])->name('parcelles.images.destroy');
 });
 
-Route::get('/parcelles/{id}', [ParcelleWebController::class, 'show'])->name('parcelles.show');
+Route::get('/parcelles/{parcelle}', [ParcelleWebController::class, 'show'])->name('parcelles.show');
 
 // Artisans (public)
 Route::get('/artisans', [ArtisanController::class, 'index'])->name('artisans.index');

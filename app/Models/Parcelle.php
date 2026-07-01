@@ -9,9 +9,18 @@ use Illuminate\Database\Eloquent\Model;
 class Parcelle extends Model
 {
     protected $fillable = [
-        'titre', 'description', 'localisation', 'quartier',
-        'ville', 'superficie', 'prix', 'statut',
-        'reference', 'viabilisee', 'titre_foncier',
+        'titre',
+        'description',
+        'localisation',
+        'quartier',
+        'ville',
+        'superficie',
+        'prix',
+        'statut',
+        'reference',
+        'viabilisee',
+        'titre_foncier',
+        'created_by'
     ];
 
     protected $casts = [
@@ -30,5 +39,10 @@ class Parcelle extends Model
     public function imagePrincipale()
     {
         return $this->hasOne(ParcelleImage::class)->where('principale', true);
+    }
+
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 }

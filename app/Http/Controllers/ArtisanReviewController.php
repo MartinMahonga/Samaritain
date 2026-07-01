@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArtisanReviewRequest;
 use App\Models\Artisan;
 use App\Models\ArtisanReview;
+use Illuminate\Support\Facades\Gate;
 
 class ArtisanReviewController extends Controller
 {
@@ -29,7 +30,7 @@ class ArtisanReviewController extends Controller
 
     public function update(StoreArtisanReviewRequest $request, Artisan $artisan, ArtisanReview $review)
     {
-        $this->authorize('update', $review);
+        Gate::authorize('update', $review);
 
         $review->update($request->validated());
 
@@ -38,7 +39,7 @@ class ArtisanReviewController extends Controller
 
     public function destroy(Artisan $artisan, ArtisanReview $review)
     {
-        $this->authorize('delete', $review);
+        Gate::authorize('delete', $review);
 
         $review->delete();
 

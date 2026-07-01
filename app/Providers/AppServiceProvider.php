@@ -3,10 +3,12 @@
 namespace App\Providers;
 
 use App\Models\AgencyInvitation;
+use App\Models\Parcelle;
 use App\Models\Property;
 use App\Models\User;
 use App\Policies\InvitationPolicy;
 use App\Policies\MemberPolicy;
+use App\Policies\ParcellePolicy;
 use App\Policies\PropertyPolicy;
 use App\Policies\RolePolicy;
 use Illuminate\Support\Facades\Gate;
@@ -38,5 +40,6 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(User::class, MemberPolicy::class);
         Gate::policy(AgencyInvitation::class, InvitationPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
+        Gate::policy(Parcelle::class, ParcellePolicy::class);
     }
 }
