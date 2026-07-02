@@ -36,7 +36,7 @@ class ParcellePolicy
      */
     public function update(User $user, Parcelle $parcelle): bool
     {
-        return $user->id === $parcelle->created_by || $user->isStaff() || $user->hasRole(['admin', 'owner']) || $user->can('manage-properties');
+        return $user->id === $parcelle->created_by || $user->isAdmin();
     }
 
     /**
@@ -44,7 +44,7 @@ class ParcellePolicy
      */
     public function delete(User $user, Parcelle $parcelle): bool
     {
-        return $user->id === $parcelle->created_by || $user->isStaff() || $user->hasRole(['admin', 'owner']) || $user->can('manage-properties');
+        return $user->id === $parcelle->created_by || $user->isAdmin();
     }
 
     /**

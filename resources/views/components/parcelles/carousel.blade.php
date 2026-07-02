@@ -1,5 +1,3 @@
-{{-- resources/views/components/parcelles/carousel.blade.php --}}
-
 @php $filters = $filters ?? []; @endphp
 
 <div class="w-full">

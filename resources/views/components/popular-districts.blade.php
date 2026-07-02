@@ -1,4 +1,4 @@
-id: 1, <section class="max-w-7xl mx-auto px-6 py-16" x-data="cityDistricts()" x-init="init()">
+<section class="max-w-7xl mx-auto px-6 py-16" x-data="cityDistricts()" x-init="init()">
     
     <!-- En-tête avec switch de ville intégré -->
     <div class="text-center mb-10">

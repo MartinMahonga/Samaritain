@@ -72,6 +72,7 @@ class ParcelleWebController extends Controller
         Gate::authorize('update', $parcelle);
 
         $data = $request->validated();
+
         $data['viabilisee'] = $request->boolean('viabilisee');
 
         $this->parcelleService->updateParcelle($parcelle, $data, $request->file('images', []));

@@ -1,108 +1,286 @@
-{{-- resources/views/parcelles/show.blade.php --}}
-
 @extends('layouts.base')
 
-@section('title', 'Détail parcelle')
+@section('title', $parcelle->titre)
 
 @section('content')
-    <x-blade-components::layout.container>
-        @if (session('success'))
-            <div class="bg-green-50 border border-green-200 text-green-700 rounded-xl px-4 py-3 mb-6">
-                {{ session('success') }}
-            </div>
-        @endif
+    <div class="font-body bg-background dark:bg-gray-950 text-[#0F0E0C] dark:text-white antialiased min-h-screen">
+        <div class="max-w-7xl mx-auto px-6 py-10 pb-20">
 
-        <div class="max-w-4xl mx-auto py-8">
-            <a href="{{ route('parcelles.index') }}" class="flex items-center gap-2 text-gray-500 hover:text-gray-800 mb-6 transition-colors">
-                <i data-lucide="chevron-left" class="w-5 h-5"></i>
-                Retour aux parcelles
-            </a>
+            {{-- Breadcrumb --}}
+            <nav aria-label="Fil d'Ariane"
+                class="flex items-center gap-2 text-xs text-[#6B6660] dark:text-gray-400 mb-10 font-body">
+                <a href="{{ route('index') }}"
+                    class="hover:text-primary dark:hover:text-primary-400 transition-colors">Accueil</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <a href="{{ route('parcelles.index') }}"
+                    class="hover:text-primary dark:hover:text-primary-400 transition-colors">Parcelles</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <span class="dark:text-gray-300">{{ $parcelle->titre }}</span>
+            </nav>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6 rounded-2xl overflow-hidden">
-                @if ($parcelle->imagePrincipale)
-                    <img src="{{ $parcelle->imagePrincipale->url }}" alt="{{ $parcelle->titre }}" class="w-full h-72 object-cover rounded-2xl" />
-                @else
-                    <div class="w-full h-72 bg-gray-100 rounded-2xl flex items-center justify-center text-gray-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 9.75L12 3l9 6.75V21H3V9.75z" />
-                        </svg>
-                    </div>
-                @endif
-            </div>
-
-            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
-                <div class="flex items-start justify-between mb-4">
+            {{-- Header --}}
+            <header class="mb-8">
+                <div class="flex items-start justify-between flex-wrap gap-4">
                     <div>
-                        <h1 class="text-2xl font-bold text-gray-800">{{ $parcelle->titre }}</h1>
-                        <div class="flex items-center gap-1 text-gray-500 text-sm mt-1">
-                            <i data-lucide="map-pin" class="w-4 h-4"></i>
-                            <span>{{ $parcelle->quartier }}, {{ $parcelle->ville }}</span>
+                        {{-- Status --}}
+                        <div class="flex items-center gap-3 mb-3">
+                            @php
+                                $statusStyles = [
+                                    'disponible' =>
+                                        'bg-[#D6F0DC] dark:bg-emerald-900/30 text-[#1E6B35] dark:text-emerald-400',
+                                    'vendu' => 'bg-[#FEE2E2] dark:bg-red-900/30 text-[#991B1B] dark:text-red-400',
+                                    'réservé' => 'bg-[#FEF3C7] dark:bg-amber-900/30 text-[#92400E] dark:text-amber-400',
+                                ];
+                            @endphp
+                            <span
+                                class="inline-flex items-center gap-1.5 text-[0.68rem] font-semibold tracking-widest px-3 py-1 rounded-full {{ $statusStyles[$parcelle->statut] ?? $statusStyles['disponible'] }}">
+                                {{ ucfirst($parcelle->statut) }}
+                            </span>
+                            @if ($parcelle->viabilisee)
+                                <span class="text-[0.68rem] font-medium tracking-widest text-[#6B6660] dark:text-gray-400">
+                                    <i data-lucide="check-circle" class="w-3 h-3 inline text-emerald-500"></i>
+                                    Viabilisée
+                                </span>
+                            @endif
+                            <span class="text-[0.68rem] font-medium tracking-widest text-[#6B6660] dark:text-gray-400">
+                                Réf: {{ $parcelle->reference }}
+                            </span>
+                        </div>
+
+                        {{-- Title --}}
+                        <h1 class="font-display font-semibold leading-[1.1] tracking-tight text-[#0F0E0C] dark:text-white"
+                            style="font-size: clamp(2rem, 4.5vw, 3.5rem); max-width: 28ch;">
+                            {{ $parcelle->titre }}
+                        </h1>
+
+                        {{-- Location --}}
+                        <div class="flex items-center gap-2 mt-3">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-[#6B6660] dark:text-gray-400"></i>
+                            <span class="text-[0.83rem] text-[#6B6660] dark:text-gray-400">
+                                {{ $parcelle->quartier }}, {{ $parcelle->ville }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            {{-- ── Main grid ── --}}
+            <div class="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-12 items-start">
+
+                {{-- ── LEFT COLUMN ── --}}
+                <div class="min-w-0">
+
+                    {{-- Gallery --}}
+                    <div class="mb-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 rounded-2xl overflow-hidden">
+                            @if ($parcelle->imagePrincipale)
+                                <div class="md:col-span-2 relative overflow-hidden bg-gray-100 dark:bg-gray-800"
+                                    style="height: 400px;">
+                                    <img src="{{ $parcelle->imagePrincipale->url }}" alt="{{ $parcelle->titre }}"
+                                        class="w-full h-full object-cover" />
+                                </div>
+                            @endif
+
+                            @if ($parcelle->images->count() > 1)
+                                @foreach ($parcelle->images->skip(1)->take(3) as $image)
+                                    <div class="relative overflow-hidden bg-gray-100 dark:bg-gray-800"
+                                        style="height: 180px;">
+                                        <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}"
+                                            class="w-full h-full object-cover" />
+                                    </div>
+                                @endforeach
+                            @endif
+
+                            @if ($parcelle->images->isEmpty())
+                                <div
+                                    class="md:col-span-2 h-96 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400">
+                                    <div class="text-center">
+                                        <i data-lucide="image" class="w-16 h-16 mx-auto mb-2"></i>
+                                        <span class="text-sm">Aucune image disponible</span>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
 
-                    <span class="text-xs font-semibold px-3 py-1 rounded-full {{ $parcelle->statut === 'vendu' ? 'bg-red-100 text-red-700' : ($parcelle->statut === 'réservé' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700') }}">
-                        {{ ucfirst($parcelle->statut) }}
-                    </span>
+                    {{-- Feature strip --}}
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
+                        <div class="bg-[#F7F6F4] dark:bg-gray-800/50 rounded-xl p-4 text-center">
+                            <i data-lucide="land-plot" class="w-5 h-5 text-[#6B6660] dark:text-gray-400 mx-auto mb-1.5"></i>
+                            <p
+                                class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider">
+                                Superficie</p>
+                            <p class="text-sm font-bold text-[#0F0E0C] dark:text-white">
+                                {{ number_format($parcelle->superficie, 0, ',', ' ') }} m²</p>
+                        </div>
+
+                        <div class="bg-[#F7F6F4] dark:bg-gray-800/50 rounded-xl p-4 text-center">
+                            <i data-lucide="hash" class="w-5 h-5 text-[#6B6660] dark:text-gray-400 mx-auto mb-1.5"></i>
+                            <p
+                                class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider">
+                                Référence</p>
+                            <p class="text-sm font-bold text-[#0F0E0C] dark:text-white">{{ $parcelle->reference }}</p>
+                        </div>
+
+                        <div class="bg-[#F7F6F4] dark:bg-gray-800/50 rounded-xl p-4 text-center">
+                            <i data-lucide="check-circle"
+                                class="w-5 h-5 text-[#6B6660] dark:text-gray-400 mx-auto mb-1.5"></i>
+                            <p
+                                class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider">
+                                Viabilisée</p>
+                            <p
+                                class="text-sm font-bold {{ $parcelle->viabilisee ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">
+                                {{ $parcelle->viabilisee ? 'Oui' : 'Non' }}
+                            </p>
+                        </div>
+
+                        <div class="bg-[#F7F6F4] dark:bg-gray-800/50 rounded-xl p-4 text-center">
+                            <i data-lucide="file-text" class="w-5 h-5 text-[#6B6660] dark:text-gray-400 mx-auto mb-1.5"></i>
+                            <p
+                                class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider">
+                                Titre foncier</p>
+                            <p class="text-sm font-bold text-[#0F0E0C] dark:text-white">
+                                {{ $parcelle->titre_foncier ?: 'N/A' }}</p>
+                        </div>
+                    </div>
+
+                    {{-- Description --}}
+                    @if ($parcelle->description)
+                        <div class="mb-8">
+                            <h2 class="font-display font-semibold text-xl text-[#0F0E0C] dark:text-white mb-3">Description
+                            </h2>
+                            <div class="prose prose-sm max-w-none text-[#6B6660] dark:text-gray-300 leading-relaxed">
+                                {{ $parcelle->description }}
+                            </div>
+                        </div>
+                    @endif
+
+                    {{-- Images supplémentaires --}}
+                    @if ($parcelle->images->count() > 4)
+                        <div>
+                            <h2 class="font-display font-semibold text-xl text-[#0F0E0C] dark:text-white mb-3">Galerie</h2>
+                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                @foreach ($parcelle->images->skip(4) as $image)
+                                    <div class="relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800"
+                                        style="height: 160px;">
+                                        <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}"
+                                            class="w-full h-full object-cover" />
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    @endif
                 </div>
 
-                <p class="text-3xl font-bold text-emerald-600 mb-6">{{ number_format($parcelle->prix, 0, ',', ' ') }} FCFA</p>
+                {{-- ── RIGHT COLUMN ── --}}
+                <div class="lg:sticky lg:top-6 space-y-4">
+                    {{-- Carte d'information --}}
+                    <div
+                        class="border border-accent rounded-2xl p-6">
+                        <div class="space-y-4">
+                            <div>
+                                <p
+                                    class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                    Prix</p>
+                                <p class="text-2xl font-bold font-display text-primary">
+                                    {{ number_format($parcelle->prix, 0, ',', ' ') }} FCFA
+                                </p>
+                            </div>
 
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    <div class="bg-gray-50 rounded-xl p-3 text-center">
-                        <p class="text-xs text-gray-500 mb-1">Superficie</p>
-                        <p class="font-bold text-gray-800">{{ number_format($parcelle->superficie, 0, ',', ' ') }} m²</p>
+                            <hr class="border-accent">
+
+                            <div>
+                                <p
+                                    class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                    Statut</p>
+                                <span
+                                    class="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full {{ $statusStyles[$parcelle->statut] ?? $statusStyles['disponible'] }}">
+                                    {{ ucfirst($parcelle->statut) }}
+                                </span>
+                            </div>
+
+                            <hr class="border-accent">
+
+                            <div>
+                                <p
+                                    class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                    Superficie</p>
+                                <p class="text-sm font-medium text-[#0F0E0C] dark:text-white">
+                                    {{ number_format($parcelle->superficie, 0, ',', ' ') }} m²
+                                </p>
+                            </div>
+
+                            <div>
+                                <p
+                                    class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                    Localisation</p>
+                                <p class="text-sm text-[#6B6660] dark:text-gray-300">
+                                    {{ $parcelle->quartier }}, {{ $parcelle->ville }}
+                                </p>
+                            </div>
+
+                            <div>
+                                <p
+                                    class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                    Référence</p>
+                                <p class="text-sm text-[#6B6660] dark:text-gray-300">{{ $parcelle->reference }}</p>
+                            </div>
+
+                            @if ($parcelle->titre_foncier)
+                                <div>
+                                    <p
+                                        class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
+                                        Titre foncier</p>
+                                    <p class="text-sm text-[#6B6660] dark:text-gray-300">{{ $parcelle->titre_foncier }}</p>
+                                </div>
+                            @endif
+                        </div>
                     </div>
-                    <div class="bg-gray-50 rounded-xl p-3 text-center">
-                        <p class="text-xs text-gray-500 mb-1">Référence</p>
-                        <p class="font-bold text-gray-800">{{ $parcelle->reference }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-xl p-3 text-center">
-                        <p class="text-xs text-gray-500 mb-1">Viabilisée</p>
-                        <p class="font-bold {{ $parcelle->viabilisee ? 'text-emerald-600' : 'text-red-500' }}">{{ $parcelle->viabilisee ? 'Oui' : 'Non' }}</p>
-                    </div>
-                    <div class="bg-gray-50 rounded-xl p-3 text-center">
-                        <p class="text-xs text-gray-500 mb-1">Titre foncier</p>
-                        <p class="font-bold text-gray-800">{{ $parcelle->titre_foncier ?: 'N/A' }}</p>
+
+                    {{-- Actions --}}
+                    <div class="flex flex-col gap-2">
+                        @can('update', $parcelle)
+                            <x-btn href="{{ route('parcelles.edit', $parcelle) }}">
+                                <i data-lucide="pencil" class="w-4 h-4"></i>
+                                Modifier la parcelle
+                            </x-btn>
+                        @endcan
+
+                        @can('delete', $parcelle)
+                            <form action="{{ route('parcelles.destroy', $parcelle) }}" method="POST" class="w-full">
+                                @csrf
+                                @method('DELETE')
+                                <x-btn style="destructive" type="submit"
+                                    class="w-full"
+                                    onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette parcelle ?')">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    Supprimer
+                                </x-btn>
+                            </form>
+                        @endcan
+
+                        <x-btn href="{{ route('parcelles.index') }}" style="link">
+                            <x-slot:prefix>
+                                <i data-lucide="chevron-left"></i>
+                            </x-slot:prefix>
+                            Retour aux parcelles
+                        </x-btn>
                     </div>
                 </div>
             </div>
 
-            @if ($parcelle->description)
-                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-4">
-                    <h2 class="text-lg font-bold text-gray-800 mb-2">Description</h2>
-                    <p class="text-gray-600 text-sm leading-relaxed">{{ $parcelle->description }}</p>
-                </div>
-            @endif
-
-            <div class="flex items-center gap-3 mb-6">
-                @can('update', $parcelle)
-                    <a href="{{ route('parcelles.edit', $parcelle) }}"
-                        class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold px-6 py-2.5 rounded-xl transition-colors duration-200 flex items-center gap-2">
-                        <i data-lucide="pencil" class="w-4 h-4"></i>
-                        Modifier
-                    </a>
-                @endcan
-
-                @can('delete', $parcelle)
-                    <form action="{{ route('parcelles.destroy', $parcelle) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cette parcelle ?');">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit"
-                            class="bg-red-50 hover:bg-red-100 text-red-600 font-semibold px-6 py-2.5 rounded-xl transition-colors duration-200 flex items-center gap-2">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                            Supprimer
-                        </button>
-                    </form>
-                @endcan
-            </div>
-
-            @if($parcelle->images->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    @foreach($parcelle->images as $image)
-                        <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}" class="w-full h-64 object-cover rounded-2xl" />
-                    @endforeach
+            {{-- Parcelles similaires --}}
+            @if (isset($parcellesSimilaires) && $parcellesSimilaires->count() > 0)
+                <div class="mt-16">
+                    <h2 class="font-display font-semibold text-2xl text-[#0F0E0C] dark:text-white mb-6">Parcelles
+                        similaires</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        @foreach ($parcellesSimilaires as $similaire)
+                            <x-parcelle-card :parcelle="$similaire->toArray()" />
+                        @endforeach
+                    </div>
                 </div>
             @endif
         </div>
-    </x-blade-components::layout.container>
+    </div>
 @endsection

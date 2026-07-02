@@ -3,7 +3,7 @@
 ])
 
 <a href="{{ route('property.show', ['property' => $property->id]) }}"
-    class="group shrink-0 sm:42 44 snap-start cursor-pointer">
+    class="group shrink-0 w-44 md:w-52 snap-start cursor-pointer">
 
     {{-- Image --}}
     <div class="relative overflow-hidden rounded-2xl bg-gray-100" style="height: 176px;">
@@ -95,11 +95,6 @@
                 <span class="text-xs font-normal text-gray-400">FCFA / mois</span>
             </p>
             <div class="flex items-center gap-3">
-                {{-- Affichage alternatif des vues dans la partie inférieure --}}
-                <span class="text-xs text-gray-400 flex items-center gap-1">
-                    <i data-lucide="eye" class="w-3 h-3"></i>
-                    {{ number_format($property->views) }}
-                </span>
                 <span
                     class="text-xs text-primary font-medium opacity-0 group-hover:opacity-100 transition flex items-center gap-0.5">
                     Voir
