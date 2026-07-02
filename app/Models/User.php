@@ -9,7 +9,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
@@ -129,11 +128,11 @@ class User extends Authenticatable implements MustVerifyEmail
     /**
      * Obtenir l'URL de l'image locale
      */
-    private function getLocalImageUrl()
+    private function getLocalImageUrl(): ?string
     {
         // Vérifier si le fichier existe
-        if (Storage::disk('public')->exists($this->profile_image)) {
-            return Storage::disk('public')->url($this->profile_image);
+        if (Storage::exists($this->profile_image)) {
+            return Storage::url($this->profile_image);
         }
 
         return null;

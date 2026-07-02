@@ -31,7 +31,7 @@ class ArtisanProjectController extends Controller
         $data = $request->validated();
 
         if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('artisans/projects', 'public');
+            $data['image'] = $request->file('image')->store('artisans/projects');
         }
 
         $artisan->projects()->create($data);
@@ -55,9 +55,9 @@ class ArtisanProjectController extends Controller
 
         if ($request->hasFile('image')) {
             if ($project->image) {
-                Storage::disk('public')->delete($project->image);
+                Storage::delete($project->image);
             }
-            $data['image'] = $request->file('image')->store('artisans/projects', 'public');
+            $data['image'] = $request->file('image')->store('artisans/projects');
         } elseif (! $request->hasFile('image') && $project->image) {
             unset($data['image']);
         }
@@ -73,7 +73,7 @@ class ArtisanProjectController extends Controller
         Gate::authorize('delete', $project);
 
         if ($project->image) {
-            Storage::disk('public')->delete($project->image);
+            Storage::delete($project->image);
         }
 
         $project->delete();

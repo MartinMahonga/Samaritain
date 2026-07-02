@@ -14,9 +14,7 @@ use Illuminate\View\View;
 
 class ParcelleWebController extends Controller
 {
-    public function __construct(protected ParcelleService $parcelleService)
-    {
-    }
+    public function __construct(protected ParcelleService $parcelleService) {}
 
     public function index(Request $request): View
     {

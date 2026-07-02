@@ -43,10 +43,10 @@ class ProfileController extends Controller
 
         // Delete old photo if exists
         if ($user->profile_image && ! str_starts_with($user->profile_image, 'http')) {
-            Storage::disk('public')->delete($user->profile_image);
+            Storage::delete($user->profile_image);
         }
 
-        $path = $request->file('photo')->store('profile-photos', 'public');
+        $path = $request->file('photo')->store('profile-photos');
 
         $user->forceFill([
             'profile_image' => $path,
@@ -63,7 +63,7 @@ class ProfileController extends Controller
         $user = $request->user();
 
         if ($user->profile_image && ! str_starts_with($user->profile_image, 'http')) {
-            Storage::disk('public')->delete($user->profile_image);
+            Storage::delete($user->profile_image);
         }
 
         $user->forceFill([

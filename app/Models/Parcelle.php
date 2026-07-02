@@ -20,7 +20,7 @@ class Parcelle extends Model
         'reference',
         'viabilisee',
         'titre_foncier',
-        'created_by'
+        'created_by',
     ];
 
     protected $casts = [

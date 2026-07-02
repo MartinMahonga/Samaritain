@@ -104,7 +104,7 @@ class PropertyController extends Controller
             ->whereNotIn('id', $keptIds)
             ->get()
             ->each(function ($image) {
-                Storage::disk('public')->delete($image->getRawOriginal('image_url'));
+                Storage::delete($image->getRawOriginal('image_url'));
                 $image->delete();
             });
 
@@ -124,7 +124,7 @@ class PropertyController extends Controller
         $property->images()
             ->get()
             ->each(function ($image) {
-                Storage::disk('public')->delete($image->getRawOriginal('image_url'));
+                Storage::delete($image->getRawOriginal('image_url'));
                 $image->delete();
             });
 

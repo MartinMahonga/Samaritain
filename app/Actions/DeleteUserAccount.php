@@ -24,7 +24,7 @@ class DeleteUserAccount
 
         // Delete profile photo from storage
         if ($user->profile_image && ! str_starts_with($user->profile_image, 'http')) {
-            Storage::disk('public')->delete($user->profile_image);
+            Storage::delete($user->profile_image);
         }
 
         // Detach from agencies

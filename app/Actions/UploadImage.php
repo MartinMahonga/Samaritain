@@ -13,7 +13,7 @@ class UploadImage
         foreach ($files as $imageFile) {
             $extension = $imageFile->getClientOriginalExtension();
             $filename = uniqid('prop_', true).'.'.$extension;
-            $path = $imageFile->storeAs($folder, $filename, 'public');
+            $path = $imageFile->storeAs($folder, $filename);
 
             $property->images()->create([
                 'image_url' => $path,

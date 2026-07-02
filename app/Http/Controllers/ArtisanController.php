@@ -82,11 +82,11 @@ class ArtisanController extends Controller
         $data['is_active'] = false;
 
         if ($request->hasFile('avatar')) {
-            $data['avatar'] = $request->file('avatar')->store('artisans/avatars', 'public');
+            $data['avatar'] = $request->file('avatar')->store('artisans/avatars');
         }
 
         if ($request->hasFile('cover')) {
-            $data['cover'] = $request->file('cover')->store('artisans/covers', 'public');
+            $data['cover'] = $request->file('cover')->store('artisans/covers');
         }
 
         $categories = $data['categories'];
@@ -117,16 +117,16 @@ class ArtisanController extends Controller
 
         if ($request->hasFile('avatar')) {
             if ($artisan->avatar) {
-                Storage::disk('public')->delete($artisan->avatar);
+                Storage::delete($artisan->avatar);
             }
-            $data['avatar'] = $request->file('avatar')->store('artisans/avatars', 'public');
+            $data['avatar'] = $request->file('avatar')->store('artisans/avatars');
         }
 
         if ($request->hasFile('cover')) {
             if ($artisan->cover) {
-                Storage::disk('public')->delete($artisan->cover);
+                Storage::delete($artisan->cover);
             }
-            $data['cover'] = $request->file('cover')->store('artisans/covers', 'public');
+            $data['cover'] = $request->file('cover')->store('artisans/covers');
         }
 
         $categories = $data['categories'];

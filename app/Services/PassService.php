@@ -55,7 +55,7 @@ class PassService
     {
         return DB::transaction(function () use ($pass) {
             if ($pass->qr_code_path) {
-                Storage::disk('public')->delete($pass->qr_code_path);
+                Storage::delete($pass->qr_code_path);
             }
 
             return $pass->delete();
@@ -69,7 +69,7 @@ class PassService
         try {
             // Endroid 6.x : Builder n'est plus fluent, on passe tout au constructeur
             $builder = new Builder(
-                writer: new PngWriter(),
+                writer: new PngWriter,
                 data: $url,
                 encoding: new Encoding('UTF-8'),
                 errorCorrectionLevel: ErrorCorrectionLevel::High,
@@ -84,7 +84,7 @@ class PassService
 
             // Sauvegarde du QR Code
             $fileName = 'qrcodes/'.$pass->uuid.'.png';
-            Storage::disk('public')->put($fileName, $result->getString());
+            Storage::put($fileName, $result->getString());
 
             $pass->qr_code_path = $fileName;
             $pass->saveQuietly();
@@ -101,7 +101,7 @@ class PassService
     {
         try {
             $builder = new Builder(
-                writer: new PngWriter(),
+                writer: new PngWriter,
                 data: $url,
                 encoding: new Encoding('UTF-8'),
                 errorCorrectionLevel: ErrorCorrectionLevel::High,
@@ -112,7 +112,7 @@ class PassService
             $result = $builder->build();
 
             $fileName = 'qrcodes/'.$pass->uuid.'.png';
-            Storage::disk('public')->put($fileName, $result->getString());
+            Storage::put($fileName, $result->getString());
 
             $pass->qr_code_path = $fileName;
             $pass->saveQuietly();
@@ -126,8 +126,8 @@ class PassService
 
     public function generateQrCodeBase64(Pass $pass): string
     {
-        if ($pass->qr_code_path && Storage::disk('public')->exists($pass->qr_code_path)) {
-            $qrContent = Storage::disk('public')->get($pass->qr_code_path);
+        if ($pass->qr_code_path && Storage::exists($pass->qr_code_path)) {
+            $qrContent = Storage::get($pass->qr_code_path);
 
             return 'data:image/png;base64,'.base64_encode($qrContent);
         }
@@ -136,7 +136,7 @@ class PassService
 
         try {
             $builder = new Builder(
-                writer: new PngWriter(),
+                writer: new PngWriter,
                 data: $url,
                 encoding: new Encoding('UTF-8'),
                 errorCorrectionLevel: ErrorCorrectionLevel::High,
@@ -153,6 +153,7 @@ class PassService
 
         } catch (\Exception $e) {
             \Log::error('Erreur génération QR Code Base64: '.$e->getMessage());
+
             return '';
         }
     }

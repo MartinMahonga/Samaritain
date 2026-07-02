@@ -85,17 +85,17 @@ class Pass extends Model
     public function getQrCodeUrl(): string
     {
         return $this->qr_code_path
-            ? asset('storage/'.$this->qr_code_path)
+            ? Storage::url($this->qr_code_path)
             : '';
     }
 
     /**
      * Récupère le QR Code en base64 pour affichage direct
      */
-    public function getQrCodeBase64()
+    public function getQrCodeBase64(): ?string
     {
-        if ($this->qr_code_path && Storage::disk('public')->exists($this->qr_code_path)) {
-            $qrContent = Storage::disk('public')->get($this->qr_code_path);
+        if ($this->qr_code_path && Storage::exists($this->qr_code_path)) {
+            $qrContent = Storage::get($this->qr_code_path);
 
             return 'data:image/png;base64,'.base64_encode($qrContent);
         }

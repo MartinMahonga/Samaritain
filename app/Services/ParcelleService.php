@@ -4,11 +4,10 @@ namespace App\Services;
 
 use App\Models\Parcelle;
 use App\Models\ParcelleImage;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class ParcelleService
 {
@@ -16,15 +15,15 @@ class ParcelleService
     {
         $query = Parcelle::with(['images', 'imagePrincipale']);
 
-        if (!empty($filters['ville'])) {
-            $query->where('ville', 'like', '%' . $filters['ville'] . '%');
+        if (! empty($filters['ville'])) {
+            $query->where('ville', 'like', '%'.$filters['ville'].'%');
         }
 
-        if (!empty($filters['quartier'])) {
-            $query->where('quartier', 'like', '%' . $filters['quartier'] . '%');
+        if (! empty($filters['quartier'])) {
+            $query->where('quartier', 'like', '%'.$filters['quartier'].'%');
         }
 
-        if (!empty($filters['statut'])) {
+        if (! empty($filters['statut'])) {
             $query->where('statut', $filters['statut']);
         }
 
@@ -58,7 +57,7 @@ class ParcelleService
 
     public function createParcelle(array $data, array $images = []): Parcelle
     {
-        $reference = 'PARC-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(3)));
+        $reference = 'PARC-'.date('Y').'-'.strtoupper(bin2hex(random_bytes(3)));
 
         return DB::transaction(function () use ($data, $images, $reference) {
             $parcelle = Parcelle::create([
@@ -78,6 +77,7 @@ class ParcelleService
         return DB::transaction(function () use ($parcelle, $data, $images) {
             $parcelle->update($data);
             $this->storeImages($parcelle, $images);
+
             return $parcelle->load('images');
         });
     }
@@ -93,7 +93,7 @@ class ParcelleService
         $wasPrincipale = $image->principale;
         $parcelleId = $image->parcelle_id;
 
-        app('filesystem')->disk('public')->delete($image->path);
+        Storage::delete($image->path);
         $image->delete();
 
         if ($wasPrincipale) {
@@ -110,11 +110,11 @@ class ParcelleService
                 continue;
             }
 
-            $path = $image->store('parcelles', 'public');
+            $path = $image->store('images/parcelles');
             ParcelleImage::create([
                 'parcelle_id' => $parcelle->id,
                 'path' => $path,
-                'url' => asset('storage/' . $path),
+                'url' => Storage::url($path),
                 'principale' => $index === 0 && ! $parcelle->images()->where('principale', true)->exists(),
             ]);
         }
