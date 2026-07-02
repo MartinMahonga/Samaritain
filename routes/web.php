@@ -23,6 +23,7 @@ use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
 use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AvisController;
 
@@ -104,7 +105,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/parcelles/create', [ParcelleWebController::class, 'create'])->name('parcelles.create');
     Route::post('/parcelles', [ParcelleWebController::class, 'store'])->name('parcelles.store');
     Route::get('/parcelles/{id}/edit', [ParcelleWebController::class, 'edit'])->name('parcelles.edit');
-    });
+});
 
 Route::get('/parcelles/{id}', [ParcelleWebController::class, 'show'])->name('parcelles.show');
 
@@ -171,7 +172,10 @@ Route::middleware(['auth', 'verified', StaffMiddleware::class])
         Route::resource('invitations', InvitationController::class)->except(['show', 'edit', 'update']);
         Route::post('invitations/{invitation}/resend', [InvitationController::class, 'resend'])->name('invitations.resend');
         Route::get('invitations/accept', [InvitationController::class, 'acceptForm'])->name('invitations.accept.form');
-        Route::post('invitations/accept', [InvitationController::class, 'accept'])->name('invitations.accept');
+        Route::post('invitations/{invitation}/accept', [InvitationController::class, 'accept'])
+            ->middleware('throttle:10,60')
+            ->name('invitations.accept');
+        Route::post('invitations/{invitation}/decline', [InvitationController::class, 'decline'])->name('invitations.decline');
 
         // Rôles et permissions
         Route::resource('roles', RoleController::class);
@@ -196,3 +200,13 @@ Route::middleware('auth')->group(function () {
     Route::get('/avis', [AvisController::class, 'index'])->name('avis.index');
     Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
 });
+// Route::get('/debug-signature', function (Request $request) {
+//     return response()->json([
+//         'full_url' => $request->fullUrl(),
+//         'has_valid_signature' => $request->hasValidSignature(),
+//         'scheme' => $request->getScheme(),
+//         'host' => $request->getHost(),
+//         'forwarded_proto' => $request->header('X-Forwarded-Proto'),
+//         'forwarded_host' => $request->header('X-Forwarded-Host'),
+//     ]);
+// });

@@ -66,9 +66,12 @@ class RoleController extends Controller
         }
 
         $role->update(['name' => $request->name]);
+        $permissions = Permission::whereIn('id', $request->permissions ?? [])->get();
+
+        // dd($permissions);
 
         if ($request->has('permissions')) {
-            $role->syncPermissions($request->permissions);
+            $role->syncPermissions($permissions);
         } else {
             $role->syncPermissions([]);
         }

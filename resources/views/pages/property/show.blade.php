@@ -23,18 +23,17 @@
                         {{-- Status + type --}}
                         <div class="flex items-center gap-3 mb-3">
                             @php
-                                $statusMap = ['disponible' => 'available', 'loué' => 'rented', 'vendu' => 'sold'];
-                                $statusKey = $statusMap[strtolower($property->status->value)] ?? 'available';
+                                $statusMap = ['available' => 'disponible', 'rented' => 'loué', 'sold' => 'vendu'];
+                                $statusKey = $statusMap[$property->status->value] ?? 'available';
                                 $statusStyles = [
-                                    'available' => 'bg-[#D6F0DC] dark:bg-emerald-900/30 text-[#1E6B35] dark:text-emerald-400',
-                                    'rented' => 'bg-[#FEF3C7] dark:bg-amber-900/30 text-[#92400E] dark:text-amber-400',
-                                    'sold' => 'bg-[#FEE2E2] dark:bg-red-900/30 text-[#991B1B] dark:text-red-400',
+                                    'disponible' => 'bg-[#D6F0DC] dark:bg-emerald-900/30 text-[#1E6B35] dark:text-emerald-400',
+                                    'loué' => 'bg-[#FEF3C7] dark:bg-amber-900/30 text-[#92400E] dark:text-amber-400',
+                                    'vendu' => 'bg-[#FEE2E2] dark:bg-red-900/30 text-[#991B1B] dark:text-red-400',
                                 ];
                             @endphp
                             <span
                                 class="inline-flex items-center gap-1.5 text-[0.68rem] font-semibold tracking-widest px-3 py-1 rounded-full {{ $statusStyles[$statusKey] }}">
-                                <span class="w-1.5 h-1.5 rounded-full bg-current"></span>
-                                {{ $property->status }}
+                                {{ $statusKey }}
                             </span>
                             @if ($property->category)
                                 <span

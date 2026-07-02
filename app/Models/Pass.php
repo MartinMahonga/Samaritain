@@ -92,7 +92,7 @@ class Pass extends Model
     /**
      * Récupère le QR Code en base64 pour affichage direct
      */
-    public function getQrCodeBase64(): string
+    public function getQrCodeBase64()
     {
         if ($this->qr_code_path && Storage::disk('public')->exists($this->qr_code_path)) {
             $qrContent = Storage::disk('public')->get($this->qr_code_path);

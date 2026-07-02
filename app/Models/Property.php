@@ -98,4 +98,9 @@ class Property extends Model
     {
         return $this->hasMany(VisitRequest::class);
     }
+
+    public function contacts()
+    {
+        return $this->hasMany(PropertyContact::class);
+    }
 }

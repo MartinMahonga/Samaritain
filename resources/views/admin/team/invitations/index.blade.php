@@ -36,6 +36,8 @@
                                     <td class="px-4 py-3">
                                         @if ($inv->accepted_at)
                                             <span class="px-2 py-1 text-xs font-medium text-green-500 dark:text-green-400 bg-green-300 dark:bg-green-900/30 rounded-full">Acceptée</span>
+                                        @elseif ($inv->cancelled_at)
+                                            <span class="px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400 bg-gray-300 dark:bg-gray-900/30 rounded-full">Annulée</span>
                                         @elseif ($inv->isExpired())
                                             <span class="px-2 py-1 text-xs font-medium text-red-500 dark:text-red-400 bg-red-300 dark:bg-red-900/30 rounded-full">Expirée</span>
                                         @else
@@ -44,15 +46,18 @@
                                     </td>
 
                                     <td class="px-4 py-3">
-                                        @if (!$inv->accepted_at && !$inv->isExpired())
+                                        @if ($inv->isValid())
                                             <div class="flex items-center justify-center gap-2">
                                                 <form action="{{ route('admin.invitations.resend', $inv) }}" method="POST" class="inline">
                                                     @csrf
-                                                    <button type="submit" class="block text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition">
+                                                    <button type="submit" class="block text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition"
+                                                        title="Renvoyer l'invitation">
                                                         <i data-lucide="send" class="w-4 h-4"></i>
                                                     </button>
                                                 </form>
-                                                <button @click="openCancelModal('{{ route('admin.invitations.destroy', $inv) }}', '{{ $inv->email }}')" class="block text-destructive dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition">
+                                                <button @click="openCancelModal('{{ route('admin.invitations.destroy', $inv) }}', '{{ $inv->email }}')"
+                                                    class="block text-destructive dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition"
+                                                    title="Annuler l'invitation">
                                                     <i data-lucide="x-circle" class="w-4 h-4"></i>
                                                 </button>
                                             </div>

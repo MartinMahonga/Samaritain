@@ -28,9 +28,9 @@ class DeleteUserAccount
         }
 
         // Detach from agencies
-        $user->agencies()->detach();
+        // $user->agencies()->detach();
 
         // Delete the user
-        $user->delete();
+        $user->delete($user->id);
     }
 }

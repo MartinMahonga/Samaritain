@@ -113,7 +113,8 @@ import {
     Headphones,
     List,
     Activity,
-    AlertTriangle
+    AlertTriangle,
+    ScanLine
 } from "lucide";
 
 createIcons({
@@ -231,7 +232,9 @@ createIcons({
         Inbox,
         List,
         Activity,
-        AlertTriangle
+        AlertTriangle,
+        CircleCheck,
+        ScanLine
     },
 });
 

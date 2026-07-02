@@ -66,9 +66,9 @@
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                             <x-form.input name="phone" label="Téléphone" type="tel" placeholder="06 12 34 56 78" icon="phone" required />
-                            <x-form.input name="whatsapp" label="WhatsApp" type="tel" placeholder="06 12 34 56 78" icon="message-circle" />
-                            <x-form.input name="website" label="Site web" type="url" placeholder="https://monsite.com" icon="globe" />
-                            <x-form.input name="email" label="Email professionnel" type="email" placeholder="contact@entreprise.com" icon="mail" required />
+                            <x-form.input name="whatsapp" label="WhatsApp (optionnel)" type="tel" placeholder="06 12 34 56 78" icon="message-circle" />
+                            <x-form.input name="website" label="Site web (optionnel)" type="url" placeholder="https://monsite.com" icon="globe" />
+                            <x-form.input name="email" label="Email professionnel (optionnel)" type="email" placeholder="contact@entreprise.com" icon="mail" required />
                         </div>
                     </div>
 
@@ -84,7 +84,21 @@
                             Localisation
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <x-form.input name="city" label="Ville" placeholder="Brazzaville, Pointe-Noire..." icon="map-pin" required />
+                            @php
+                                $cities = [
+                                    1 => 'Brazzaville',
+                                    2 => 'Pointe-Noire'
+                                ]
+                            @endphp
+                            <x-form.select
+                                name="city"
+                                label="Ville"
+                                :options="$cities"
+                                placeholder="Choisir une ville"
+                                icon="map-pin" 
+                                required
+                            />
+
                             <x-form.input name="address" label="Adresse" placeholder="Quartier, rue..." icon="home" />
                         </div>
                     </div>
@@ -99,16 +113,8 @@
                             </div>
                             Expérience
                         </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 gap-5">
                             <x-form.input name="experience" label="Années d'expérience" type="number" placeholder="5" icon="award" />
-                            <x-form.select name="team_size" label="Taille de l'équipe" placeholder="Sélectionnez" :options="[
-                                '' => 'Sélectionnez...',
-                                '1' => 'Indépendant',
-                                '2-5' => '2-5 personnes',
-                                '6-10' => '6-10 personnes',
-                                '11-20' => '11-20 personnes',
-                                '20+' => 'Plus de 20 personnes',
-                            ]" icon="users" />
                         </div>
                     </div>
 

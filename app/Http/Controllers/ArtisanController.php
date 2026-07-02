@@ -40,10 +40,14 @@ class ArtisanController extends Controller
             ->paginate(12)
             ->withQueryString();
 
-        $categories = ArtisanCategory::orderBy('name')->get();
+        $categories = ArtisanCategory::orderBy('id')->get();
         $cities = Artisan::verified()->active()->distinct()->pluck('city')->filter();
 
-        return view('pages.artisans.index', compact('artisans', 'categories', 'cities'));
+        return view('pages.artisans.index', [
+            'artisans' => $artisans,
+            'categories' => $categories,
+            'cities' => $cities,
+        ]);
     }
 
     public function show(Artisan $artisan)
@@ -51,7 +55,7 @@ class ArtisanController extends Controller
         $artisan->load(['categories', 'projects' => function ($query) {
             $query->latest()->limit(12);
         }, 'reviews' => function ($query) {
-            $query->with('user:id,name,avatar')->latest();
+            $query->with('user:id,name,profile_image')->latest();
         }]);
 
         $userReview = null;

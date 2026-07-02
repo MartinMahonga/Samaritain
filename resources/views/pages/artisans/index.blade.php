@@ -99,6 +99,34 @@
             </form>
         </div>
 
+        {{-- Filtres rapides par métier --}}
+        <div class="mb-8">
+            @php
+                $serviceIcons = [
+                    'macon' => 'hammer',
+                    'plombier' => 'wrench',
+                    'electricien' => 'zap',
+                    'peintre' => 'paint-roller',
+                    'menuisier' => 'ruler',
+                    'carreleur' => 'grid-3x3',
+                    'jardinier' => 'trees',
+                    'serrurier' => 'key-round',
+                    'climatisation' => 'wind',
+                    'nettoyage' => 'sparkles',
+                    'demenagement' => 'truck',
+                ];
+
+                $pillOptions = collect($categories)->mapWithKeys(
+                    fn($label, $key) => [
+                        $key => ['label' => $label, 'icon' => $serviceIcons[$key] ?? 'briefcase'],
+                    ],
+                );
+            @endphp
+
+            <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Métiers populaires</h3>
+            <x-form.pills name="category" :options="$pillOptions" />
+        </div>
+
         <!-- En-tête des résultats -->
         <div class="flex justify-between items-center mb-6">
             <div>

@@ -37,9 +37,13 @@ class NewVisitRequestNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->line('The introduction to the notification.')
-            ->action('Notification Action', url('/'))
-            ->line('Thank you for using our application!');
+            ->subject('Nouvelle demande de visite')
+            ->greeting('Nouvelle demande de visite')
+            ->line('Une nouvelle demande de visite a été soumise.')
+            ->line('Nom : '.$this->visitRequest->full_name)
+            ->line('Téléphone : '.$this->visitRequest->phone)
+            ->line('Ville : '.$this->visitRequest->city)
+            ->action('Voir les demandes', url('/admin/visits'));
     }
 
     public function toDatabase($notifiable)

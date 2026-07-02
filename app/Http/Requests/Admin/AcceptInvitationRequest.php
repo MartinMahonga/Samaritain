@@ -15,8 +15,6 @@ class AcceptInvitationRequest extends FormRequest
     {
         return [
             'token' => ['required', 'string', 'exists:agency_invitations,token'],
-            'name' => ['required', 'string', 'max:255'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
         ];
     }
 }

@@ -30,7 +30,7 @@
 
         {{-- Map placeholder --}}
         <div id="map"
-            class="w-full h-36 border border-secondary/10 dark:border-gray-700 rounded-xl
+            class="w-full h-36 border border-secondary/10 z-0 dark:border-gray-700 rounded-xl
                 flex flex-col items-center justify-center gap-2
                 font-body text-[0.75rem] mb-6 dark:text-gray-400
                 cursor-pointer transition-colors duration-200
@@ -41,8 +41,11 @@
 
         {{-- CTAs --}}
         <div class="flex flex-col gap-2.5 mb-4">
-            <x-btn class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">Contacter l'agence</x-btn>
-            <x-btn style="secondary" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Reserver une
+            <a href="#"
+                class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] focus:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] active:bg-[var(--primary)] h-9 text-center px-4 py-2">
+                Contacter l'agence
+            </a>
+            <x-btn style="secondary" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Acheter un pass
                 visite</x-btn>
         </div>
 

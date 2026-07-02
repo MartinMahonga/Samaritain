@@ -11,9 +11,9 @@ use Spatie\Permission\Models\Role;
 
 class MemberController extends Controller
 {
-    public function index(Request $request, User $member)
+    public function index(Request $request)
     {
-        Gate::authorize('viewAny', $member);
+        Gate::authorize('viewAny', User::class);
 
         $members = User::where('is_staff', true)
             ->with('roles')

@@ -9,12 +9,12 @@ class RolePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('owner');
+        return $user->hasRole('owner') || $user->hasRole('admin');
     }
 
     public function create(User $user): bool
     {
-        return $user->hasRole('owner');
+        return $user->hasRole('owner') || $user->hasRole('admin');
     }
 
     public function update(User $user, Role $role): bool
@@ -23,7 +23,7 @@ class RolePolicy
             return false;
         }
 
-        return $user->hasRole('owner');
+        return $user->hasRole('owner') || $user->hasRole('admin');
     }
 
     public function delete(User $user, Role $role): bool
@@ -36,6 +36,6 @@ class RolePolicy
             return false;
         }
 
-        return $user->hasRole('owner');
+        return $user->hasRole('owner') || $user->hasRole('admin');
     }
 }

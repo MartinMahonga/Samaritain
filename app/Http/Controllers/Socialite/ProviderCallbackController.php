@@ -40,12 +40,12 @@ class ProviderCallbackController extends Controller
             $user = User::create([
                 'name' => $providerUser->name,
                 'email' => $providerUser->email,
+                'email_verified_at' => now(),
                 'provider_id' => $providerUser->id,
                 'provider_name' => $provider,
                 'provider_token' => $providerUser->token,
                 'provider_refresh_token' => $providerUser->refreshToken,
                 'profile_image' => $providerUser->getAvatar(),
-                'email_verified_at' => now(),
             ]);
         }
 

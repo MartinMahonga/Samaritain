@@ -15,7 +15,8 @@
             <h1 class="text-2xl sm:text-4xl md:text-3xl lg:text-5xl xl:text-6xl font-bold mb-4 md:mb-6 px-2">
                 Trouvez votre <span class="text-primary dark:text-primary-400">bien immobilier</span> idéal
             </h1>
-            <p class="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 dark:text-blue-200 mb-6 md:mb-10 max-w-3xl mx-auto px-4">
+            <p
+                class="text-base sm:text-lg md:text-xl lg:text-2xl text-blue-100 dark:text-blue-200 mb-6 md:mb-10 max-w-3xl mx-auto px-4">
                 Découvrez notre sélection de biens d'exception
             </p>
         </div>
@@ -31,18 +32,20 @@
 
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6 md:py-8">
         <!-- Barre de recherche et filtres améliorée -->
-        <div class="bg-card dark:bg-gray-800 rounded-lg shadow-lg -mt-16 md:-mt-20 lg:-mt-24 relative z-10 p-4 sm:p-6 mb-8 md:mb-12">
+        <div
+            class="bg-card dark:bg-gray-800 rounded-lg shadow-lg -mt-16 md:-mt-20 lg:-mt-24 relative z-10 p-4 sm:p-6 mb-8 md:mb-12">
             <form action="{{ route('property.search') }}" method="GET" id="searchForm">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <!-- Recherche par mot-clé -->
                     <div class="lg:col-span-2">
-                        <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Rechercher</label>
+                        <label
+                            class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Rechercher</label>
                         <div class="relative">
                             <input type="text" name="keyword" id="keyword"
                                 placeholder="Maison, appartement, localisation..." value="{{ request('keyword') }}"
                                 class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white pl-10">
-                            <svg class="absolute left-3 top-3 w-5 h-5 text-muted-foreground dark:text-gray-400" fill="none"
-                                stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="absolute left-3 top-3 w-5 h-5 text-muted-foreground dark:text-gray-400"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                             </svg>
@@ -65,7 +68,8 @@
 
                     <!-- Catégorie -->
                     <div>
-                        <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Type de bien</label>
+                        <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Type de
+                            bien</label>
                         <select name="category_id" id="category_id"
                             class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
                             <option value="">Tous les types</option>
@@ -100,7 +104,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                             <!-- Prix min -->
                             <div>
-                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Prix min (FCFA)</label>
+                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Prix
+                                    min (FCFA)</label>
                                 <input type="number" name="min_price" id="min_price" placeholder="0"
                                     value="{{ request('min_price') }}"
                                     class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 bg-background dark:bg-gray-900 text-foreground dark:text-white">
@@ -108,7 +113,8 @@
 
                             <!-- Prix max -->
                             <div>
-                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Prix max (FCFA)</label>
+                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Prix
+                                    max (FCFA)</label>
                                 <input type="number" name="max_price" id="max_price" placeholder="Illimité"
                                     value="{{ request('max_price') }}"
                                     class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 bg-background dark:bg-gray-900 text-foreground dark:text-white">
@@ -116,7 +122,9 @@
 
                             <!-- Surface min -->
                             <div>
-                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Surface min (m²)</label>
+                                <label
+                                    class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Surface
+                                    min (m²)</label>
                                 <input type="number" name="surface" id="surface" placeholder="0"
                                     value="{{ request('surface') }}"
                                     class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 bg-background dark:bg-gray-900 text-foreground dark:text-white">
@@ -124,7 +132,8 @@
 
                             <!-- Pièces -->
                             <div>
-                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Nombre de pièces</label>
+                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Nombre
+                                    de pièces</label>
                                 <select name="rooms" id="rooms"
                                     class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 bg-background dark:bg-gray-900 text-foreground dark:text-white">
                                     <option value="">Tous</option>
@@ -138,7 +147,8 @@
 
                             <!-- Chambres -->
                             <div>
-                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Nombre de
+                                <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Nombre
+                                    de
                                     chambres</label>
                                 <select name="bedrooms" id="bedrooms"
                                     class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 bg-background dark:bg-gray-900 text-foreground dark:text-white">
@@ -176,9 +186,11 @@
         <div id="properties"
             class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8 mt-4 md:mt-8">
             <div>
-                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-foreground dark:text-white">Nos biens immobiliers</h2>
+                <h2 class="text-xl sm:text-2xl md:text-3xl font-bold text-foreground dark:text-white">Nos biens immobiliers
+                </h2>
                 <p class="text-sm sm:text-base text-muted-foreground dark:text-gray-400 mt-1 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-primary dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-4 h-4 text-primary dark:text-primary-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2">
                         </path>
@@ -201,37 +213,48 @@
                 <div class="flex flex-wrap gap-2">
                     <span class="text-sm text-muted-foreground dark:text-gray-400">Filtres actifs :</span>
                     @if (request('keyword'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Recherche:
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Recherche:
                             {{ request('keyword') }}</span>
                     @endif
                     @if (request('city_id'))
                         @php $city = \App\Models\City::find(request('city_id')); @endphp
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Ville:
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Ville:
                             {{ $city->name ?? '' }}</span>
                     @endif
                     @if (request('category_id'))
                         @php $category = \App\Models\Category::find(request('category_id')); @endphp
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Type:
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Type:
                             {{ $category->name ?? '' }}</span>
                     @endif
                     @if (request('min_price'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Prix ≥
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Prix
+                            ≥
                             {{ number_format(request('min_price'), 0, ',', ' ') }} FCFA</span>
                     @endif
                     @if (request('max_price'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Prix ≤
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Prix
+                            ≤
                             {{ number_format(request('max_price'), 0, ',', ' ') }} FCFA</span>
                     @endif
                     @if (request('surface'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Surface ≥
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Surface
+                            ≥
                             {{ request('surface') }} m²</span>
                     @endif
                     @if (request('rooms'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">{{ request('rooms') }}
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">{{ request('rooms') }}
                             pièce(s)</span>
                     @endif
                     @if (request('bedrooms'))
-                        <span class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">{{ request('bedrooms') }}
+                        <span
+                            class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">{{ request('bedrooms') }}
                             chambre(s)</span>
                     @endif
                 </div>
@@ -239,7 +262,8 @@
         </div>
 
         <!-- Grille des biens -->
-        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 sm:gap-6">
+        <div
+            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 md:gap-8 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4">
             @forelse($properties as $property)
                 <x-ui.property-card :property="$property" />
             @empty
@@ -253,7 +277,8 @@
                         </svg>
                     </div>
                     <p class="text-foreground dark:text-white text-lg sm:text-xl mb-2">Aucun bien trouvé</p>
-                    <p class="text-muted-foreground dark:text-gray-400 text-sm sm:text-base">Aucun bien ne correspond à vos critères de
+                    <p class="text-muted-foreground dark:text-gray-400 text-sm sm:text-base">Aucun bien ne correspond à vos
+                        critères de
                         recherche.</p>
                     <a href="{{ route('property.index') }}"
                         class="inline-block mt-4 px-6 py-2 bg-primary dark:bg-primary-600 text-primary-foreground dark:text-white rounded-lg hover:bg-primary/90 dark:hover:bg-primary-700 transition-colors">
@@ -269,34 +294,6 @@
                 {{ $properties->appends(request()->query())->links() }}
             </div>
         @endif
-
-        <!-- Section newsletter -->
-        <div
-            class="mt-12 sm:mt-16 bg-gradient-to-r from-primary to-secondary dark:from-primary-700 dark:to-secondary-700 rounded-xl p-6 sm:p-8 text-center text-primary-foreground dark:text-white">
-            <h3 class="text-xl sm:text-2xl font-bold mb-2 flex items-center justify-center gap-2">
-                <svg class="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z">
-                    </path>
-                </svg>
-                Ne manquez aucune opportunité
-            </h3>
-            <p class="text-sm sm:text-base mb-4 sm:mb-6 px-2 text-primary-foreground/90 dark:text-white/90">Recevez nos nouvelles annonces directement dans votre boîte
-                mail</p>
-            <form action="#" method="POST" class="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                @csrf
-                <input type="email" name="email" placeholder="Votre adresse email" required
-                    class="flex-1 px-4 py-2.5 rounded-lg bg-background dark:bg-gray-900 text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 border border-border dark:border-gray-700">
-                <button type="submit"
-                    class="px-6 py-2.5 bg-accent dark:bg-gray-800 text-accent-foreground dark:text-white rounded-lg font-semibold hover:bg-accent/90 dark:hover:bg-gray-700 transition-all duration-300 transform hover:scale-105 flex items-center justify-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 5l7 7-7 7M5 5l7 7-7 7"></path>
-                    </svg>
-                    S'abonner
-                </button>
-            </form>
-        </div>
     </div>
 
     <script>

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Admin\AcceptInvitationRequest;
 use App\Http\Requests\Admin\StoreInvitationRequest;
 use App\Models\AgencyInvitation;
 use App\Services\InvitationService;
@@ -13,7 +12,7 @@ use Spatie\Permission\Models\Role;
 
 class InvitationController extends Controller
 {
-    protected $invitationService;
+    protected InvitationService $invitationService;
 
     public function __construct(InvitationService $invitationService)
     {
@@ -64,20 +63,28 @@ class InvitationController extends Controller
     {
         Gate::authorize('delete', $invitation);
 
-        $invitation->delete();
+        try {
+            $this->invitationService->cancelInvitation($invitation);
 
-        return redirect()->route('admin.invitations.index')
-            ->with('success', 'Invitation annulée.');
+            return redirect()->route('admin.invitations.index')
+                ->with('success', 'Invitation annulée. Un email de notification a été envoyé.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function resend(AgencyInvitation $invitation)
     {
         Gate::authorize('resend', $invitation);
 
-        $this->invitationService->sendInvitationEmail($invitation);
+        try {
+            $this->invitationService->resendInvitation($invitation);
 
-        return redirect()->route('admin.invitations.index')
-            ->with('success', 'Invitation renvoyée.');
+            return redirect()->route('admin.invitations.index')
+                ->with('success', 'Invitation renvoyée avec succès.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
     }
 
     public function acceptForm(Request $request)
@@ -85,32 +92,70 @@ class InvitationController extends Controller
         $token = $request->query('token');
         $invitation = AgencyInvitation::where('token', $token)->first();
 
-        if (! $invitation || $invitation->isExpired() || $invitation->isAccepted()) {
-            abort(404, 'Invitation invalide ou expirée.');
+        if (! $invitation) {
+            return view('admin.team.invitations.accept', [
+                'token' => $token,
+                'invitation' => null,
+                'error_message' => 'Cette invitation est invalide ou n\'existe pas.',
+            ]);
         }
 
-        return view('admin.team.invitations.accept', compact('token'));
+        if ($invitation->isExpired()) {
+            return view('admin.team.invitations.accept', [
+                'token' => $token,
+                'invitation' => $invitation,
+                'error_message' => 'Cette invitation a expiré le '.$invitation->expires_at->format('d/m/Y à H:i').'. Veuillez contacter l\'équipe pour une nouvelle invitation.',
+            ]);
+        }
+
+        if ($invitation->isAccepted()) {
+            return view('admin.team.invitations.accept', [
+                'token' => $token,
+                'invitation' => $invitation,
+                'error_message' => 'Cette invitation a déjà été acceptée. Vous pouvez vous connecter à votre compte.',
+            ]);
+        }
+
+        if ($invitation->isCancelled()) {
+            return view('admin.team.invitations.accept', [
+                'token' => $token,
+                'invitation' => $invitation,
+                'error_message' => 'Cette invitation a été annulée. Veuillez contacter l\'équipe pour une nouvelle invitation.',
+            ]);
+        }
+
+        return view('admin.team.invitations.accept', compact('token', 'invitation'));
     }
 
-    public function accept(AcceptInvitationRequest $request)
+    public function decline(Request $request, AgencyInvitation $invitation)
     {
-        $invitation = AgencyInvitation::where('token', $request->token)->first();
+        Gate::authorize('delete', $invitation);
 
-        if (! $invitation || $invitation->isExpired() || $invitation->isAccepted()) {
-            return back()->withErrors(['token' => 'Invitation invalide ou expirée.']);
+        if (! $invitation->isValid()) {
+            return back()->with('error', 'Cette invitation n\'est plus valide.');
         }
 
         try {
-            $user = $this->invitationService->acceptInvitation(
-                $invitation,
-                $request->name,
-                $request->password
-            );
+            $this->invitationService->cancelInvitation($invitation);
 
-            auth()->login($user);
+            return redirect()->route('index')
+                ->with('success', 'Invitation refusée.');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
+        }
+    }
+
+    public function accept(Request $request, AgencyInvitation $invitation)
+    {
+        if (! $invitation->isValid()) {
+            return back()->with('error', 'Cette invitation est invalide, expirée ou a déjà été utilisée.');
+        }
+
+        try {
+            $user = $this->invitationService->acceptInvitation($invitation);
 
             return redirect()->route('admin.index')
-                ->with('success', 'Bienvenue dans l\'équipe ! Votre compte a été créé.');
+                ->with('success', 'Invitation acceptée. Votre compte est maintenant actif.');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }

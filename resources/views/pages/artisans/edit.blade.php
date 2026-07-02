@@ -73,7 +73,7 @@
                             />
                             <x-form.input 
                                 name="whatsapp" 
-                                label="WhatsApp" 
+                                label="WhatsApp (optionnel)" 
                                 type="tel" 
                                 placeholder="06 12 34 56 78"
                                 :value="old('whatsapp', $artisan->whatsapp)" 
@@ -81,7 +81,7 @@
                             />
                             <x-form.input 
                                 name="website" 
-                                label="Site web" 
+                                label="Site web (optionnel)" 
                                 type="url"
                                 placeholder="https://monsite.com"
                                 :value="old('website', $artisan->website)" 
@@ -89,7 +89,7 @@
                             />
                             <x-form.input 
                                 name="email" 
-                                label="Email professionnel" 
+                                label="Email professionnel (optionnel)" 
                                 type="email"
                                 placeholder="contact@entreprise.com"
                                 :value="old('email', $artisan->email ?? auth()->user()->email ?? '')" 
@@ -111,14 +111,22 @@
                             Localisation
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            <x-form.input 
-                                name="city" 
-                                label="Ville" 
-                                placeholder="Brazzaville, Pointe-Noire..."
-                                :value="old('city', $artisan->city)" 
+                            @php
+                                $cities = [
+                                    1 => 'Brazzaville',
+                                    2 => 'Pointe-Noire'
+                                ]
+                            @endphp
+                            <x-form.select
+                                name="city"
+                                label="Ville"
+                                :options="$cities"
+                                placeholder="Choisir une ville"
+                                :value="$artisan->city" 
                                 icon="map-pin" 
-                                required 
+                                required
                             />
+
                             <x-form.input 
                                 name="address" 
                                 label="Adresse" 
@@ -139,7 +147,7 @@
                             </div>
                             Expérience
                         </h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                        <div class="grid grid-cols-1 gap-5">
                             <x-form.input 
                                 name="experience" 
                                 label="Années d'expérience" 
@@ -147,20 +155,6 @@
                                 placeholder="5"
                                 :value="old('experience', $artisan->experience)" 
                                 icon="award" 
-                            />
-                            <x-form.select 
-                                name="team_size" 
-                                label="Taille de l'équipe" 
-                                placeholder="Sélectionnez"
-                                :options="[
-                                    '1' => 'Indépendant',
-                                    '2-5' => '2-5 personnes',
-                                    '6-10' => '6-10 personnes',
-                                    '11-20' => '11-20 personnes',
-                                    '20+' => 'Plus de 20 personnes'
-                                ]"
-                                :value="old('team_size', $artisan->team_size)"
-                                icon="users"
                             />
                         </div>
                     </div>
