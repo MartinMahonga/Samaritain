@@ -1,5 +1,7 @@
 @extends('layouts.base')
 
+@section('title', 'Avis')
+
 @section('content')
     <div class="max-w-4xl mx-auto px-4 py-8">
 
