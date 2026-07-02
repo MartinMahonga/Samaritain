@@ -11,6 +11,7 @@ use App\Http\Controllers\ArtisanContactController;
 use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\ArtisanProjectController;
 use App\Http\Controllers\ArtisanReviewController;
+use App\Http\Controllers\AgencyContactController;
 use App\Http\Controllers\AvisController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
@@ -57,6 +58,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 Route::get('property/{property}', [PropertyController::class, 'show'])->name('property.show');
+
+// Agency contact
+Route::get('property/{property}/contact', [AgencyContactController::class, 'propertyCreate'])->name('property.contact.create');
+Route::post('property/{property}/contact', [AgencyContactController::class, 'propertyStore'])->middleware('throttle:5,1')->name('property.contact.store');
+Route::get('parcelles/{parcelle}/contact', [AgencyContactController::class, 'parcelleCreate'])->name('parcelles.contact.create');
+Route::post('parcelles/{parcelle}/contact', [AgencyContactController::class, 'parcelleStore'])->middleware('throttle:5,1')->name('parcelles.contact.store');
 
 // Favorite system
 Route::post('/properties/{property}/favorite', [FavoriteController::class, 'toggle'])

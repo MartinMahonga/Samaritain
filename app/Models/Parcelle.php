@@ -97,4 +97,9 @@ class Parcelle extends Model
     {
         return $this->belongsTo(User::class, 'created_by');
     }
+
+    public function agencyContacts()
+    {
+        return $this->morphMany(AgencyContact::class, 'contactable');
+    }
 }

@@ -239,6 +239,12 @@
 
                     {{-- Actions --}}
                     <div class="flex flex-col gap-2">
+                        <a href="{{ route('parcelles.contact.create', $parcelle) }}"
+                            class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] focus:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] active:bg-[var(--primary)] h-9 text-center px-4 py-2">
+                            <i data-lucide="mail" class="w-4 h-4"></i>
+                            Contacter l'agence
+                        </a>
+
                         @can('update', $parcelle)
                             <x-btn href="{{ route('parcelles.edit', $parcelle) }}">
                                 <i data-lucide="pencil" class="w-4 h-4"></i>

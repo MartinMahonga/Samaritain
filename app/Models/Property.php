@@ -157,4 +157,9 @@ class Property extends Model
     {
         return $this->hasMany(PropertyContact::class);
     }
+
+    public function agencyContacts()
+    {
+        return $this->morphMany(AgencyContact::class, 'contactable');
+    }
 }
