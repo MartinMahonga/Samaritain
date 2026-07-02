@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\PropertyStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Str;
 
 class Property extends Model
 {
@@ -13,6 +14,7 @@ class Property extends Model
     protected $fillable = [
         'created_by',
         'title',
+        'slug',
         'description',
         'price',
         'surface',
@@ -33,6 +35,58 @@ class Property extends Model
     protected $casts = [
         'status' => PropertyStatus::class,
     ];
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function (Property $property) {
+            if (empty($property->slug)) {
+                $property->slug = static::generateUniqueSlug($property->title);
+            }
+        });
+
+        static::updating(function (Property $property) {
+            if ($property->isDirty('title') && ! $property->isDirty('slug')) {
+                $property->slug = static::generateUniqueSlug($property->title, $property->id);
+            }
+        });
+    }
+
+    /**
+     * Generate a unique slug for a property.
+     */
+    public static function generateUniqueSlug(string $title, ?int $ignoreId = null): string
+    {
+        $base = Str::slug($title);
+        $slug = $base;
+        $counter = 1;
+
+        $query = static::withTrashed()->where('slug', $slug);
+
+        if ($ignoreId !== null) {
+            $query->where('id', '!=', $ignoreId);
+        }
+
+        while ($query->exists()) {
+            $slug = $base.'-'.$counter;
+            $counter++;
+            $query = static::withTrashed()->where('slug', $slug);
+            if ($ignoreId !== null) {
+                $query->where('id', '!=', $ignoreId);
+            }
+        }
+
+        return $slug;
+    }
 
     public function creator()
     {

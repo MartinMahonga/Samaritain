@@ -2,7 +2,7 @@
     'property' => null,
 ])
 
-<a href="{{ route('property.show', ['property' => $property->id]) }}"
+<a href="{{ route('property.show', $property) }}"
     class="group shrink-0 w-44 md:w-52 snap-start cursor-pointer">
 
     {{-- Image --}}
