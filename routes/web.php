@@ -27,11 +27,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AvisController;
 
-
-Route::get('/test', function () {
-    return view('layouts.user-dashboard');
-});
-
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
 // Routes publiques pour les biens (utilisateur)
@@ -83,7 +78,7 @@ Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddlewa
     Route::patch('property/{property}/toggle-active', [AdminPropertyController::class, 'toggleActive'])->name('property.toggle-active');
     Route::patch('property/{property}/toggle-verify', [AdminPropertyController::class, 'toggleVerify'])->name('property.toggle-verify');
 
-    Route::resource('parcelle', ParcelleController::class)->except('show');
+    Route::resource('parcelle', ParcelleController::class);
 
     // Artisans
     Route::get('/artisans', [AdminArtisanController::class, 'index'])->name('artisans.index');
@@ -108,6 +103,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/parcelles/{parcelle}', [ParcelleWebController::class, 'update'])->name('parcelles.update');
     Route::delete('/parcelles/{parcelle}', [ParcelleWebController::class, 'destroy'])->name('parcelles.destroy');
     Route::delete('/parcelles/images/{image}', [ParcelleWebController::class, 'deleteImage'])->name('parcelles.images.destroy');
+    Route::get('mes-parcelles/dashboard', [ParcelleWebController::class, 'dashboard'])->name('parcelles.dashboard');
 });
 
 Route::get('/parcelles/{parcelle}', [ParcelleWebController::class, 'show'])->name('parcelles.show');

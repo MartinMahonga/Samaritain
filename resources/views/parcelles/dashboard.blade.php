@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Mon tableau de bord')
+@section('title', 'Mon tableau de bord des parcelles')
 
 @section('content')
     <x-ui.user-dashboard-nav />
@@ -9,42 +9,42 @@
             <!-- En-tête -->
             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
                 <div>
-                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Mon tableau de bord</h1>
-                    <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Gérez vos biens immobiliers en un clin d'œil</p>
+                    <h1 class="text-xl md:text-2xl font-bold text-gray-900 dark:text-white">Mon tableau de bord des parcelles</h1>
+                    <p class="text-gray-500 dark:text-gray-400 mt-1 text-sm">Gérez vos parcelles en un clin d'œil</p>
                 </div>
-                <x-btn href="{{ route('property.create') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
+                <x-btn href="{{ route('parcelles.create') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
                     <x-slot:prefix>
                         <i data-lucide="plus"></i>
                     </x-slot:prefix>
-                    Ajouter un bien
+                    Ajouter une parcelle
                 </x-btn>
             </div>
     
             <!-- Statistiques avec cartes améliorées -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                <!-- Total des biens -->
+                <!-- Total des parcelles -->
                 <div
                     class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total des biens</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Total des parcelles</p>
                             <p class="text-3xl font-bold text-gray-900 dark:text-white mt-1">{{ $stats['total'] }}</p>
                         </div>
                         <div
                             class="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
-                            <i data-lucide="building-2" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
+                            <i data-lucide="land-plot" class="w-6 h-6 text-blue-600 dark:text-blue-400"></i>
                         </div>
                     </div>
                     @if ($stats['total'] > 0)
                         <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                             <p class="text-xs text-gray-400 dark:text-gray-500">
-                                <span class="text-green-600 dark:text-green-400 font-medium">{{ $stats['active'] }} actifs</span>
+                                <span class="text-green-600 dark:text-green-400 font-medium">{{ $stats['active'] }} viabilisées</span>
                             </p>
                         </div>
                     @endif
                 </div>
     
-                <!-- En attente -->
+                <!-- En attente de viabilisation -->
                 <div
                     class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
                     <div class="flex items-center justify-between">
@@ -59,17 +59,17 @@
                     </div>
                     @if ($stats['pending'] > 0)
                         <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <p class="text-xs text-amber-600 dark:text-amber-400">En attente de validation</p>
+                            <p class="text-xs text-amber-600 dark:text-amber-400">En attente de viabilisation</p>
                         </div>
                     @endif
                 </div>
     
-                <!-- Vérifiés -->
+                <!-- Viabilisées -->
                 <div
                     class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Vérifiés</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Viabilisées</p>
                             <p class="text-3xl font-bold text-emerald-600 dark:text-emerald-400 mt-1">{{ $stats['verified'] }}</p>
                         </div>
                         <div
@@ -79,17 +79,17 @@
                     </div>
                     @if ($stats['verified'] > 0)
                         <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
-                            <p class="text-xs text-emerald-600 dark:text-emerald-400">Validés par l'administrateur</p>
+                            <p class="text-xs text-emerald-600 dark:text-emerald-400">Parcelles viabilisées</p>
                         </div>
                     @endif
                 </div>
     
-                <!-- Actifs -->
+                <!-- Actives -->
                 <div
                     class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <div>
-                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Actifs</p>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Actives</p>
                             <p class="text-3xl font-bold text-teal-600 dark:text-teal-400 mt-1">{{ $stats['active'] }}</p>
                         </div>
                         <div
@@ -105,22 +105,22 @@
                 </div>
             </div>
     
-            <!-- Liste des biens -->
+            <!-- Liste des parcelles -->
             <div class="rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800">
                     <div class="flex items-center justify-between">
                         <div>
-                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mes biens</h2>
-                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Gérez et suivez l'état de vos annonces</p>
+                            <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Mes parcelles</h2>
+                            <p class="text-sm text-gray-500 dark:text-gray-400 mt-0.5">Gérez et suivez l'état de vos parcelles</p>
                         </div>
-                        @if ($properties->count() > 0)
-                            <span class="text-sm text-gray-400 dark:text-gray-500">{{ $properties->total() }} bien(s) au total</span>
+                        @if ($parcelles->count() > 0)
+                            <span class="text-sm text-gray-400 dark:text-gray-500">{{ $parcelles->total() }} parcelle(s) au total</span>
                         @endif
                     </div>
                 </div>
     
                 <div class="px-2 py-2 bg-white dark:bg-gray-900">
-                    @if (!$properties->isEmpty())
+                    @if (!$parcelles->isEmpty())
                         <x-container-dashed>
                             <div x-data="deleteModal()" @keydown.escape="closeModal()">
                                 <div class="overflow-x-auto bg-sidebar dark:bg-gray-800 rounded-lg shadow-sm">
@@ -129,45 +129,27 @@
                                             <tr>
                                                 <th class="px-4 py-3 text-left">ID</th>
                                                 <th class="px-4 py-3 text-left">Titre</th>
+                                                <th class="px-4 py-3 text-left">Superficie</th>
                                                 <th class="px-4 py-3 text-left">Prix</th>
-                                                <th class="px-4 py-3 text-left">Pièces</th>
-                                                <th class="px-4 py-3 text-left">Ville</th>
-                                                <th class="px-4 py-3 text-left">Statut</th>
-                                                <th class="px-4 py-3 text-left">Vérifié</th>
-                                                <th class="px-4 py-3 text-left">Actif</th>
+                                                <th class="px-4 py-3 text-left">Localisation</th>
+                                                <th class="px-4 py-3 text-left">Viabilisée</th>
+                                                <th class="px-4 py-3 text-left">Active</th>
                                                 <th class="px-4 py-3 text-center">Actions</th>
                                             </tr>
                                         </thead>
         
                                         <tbody class="divide-y divide-gray-100 dark:divide-gray-700">
-                                            @foreach ($properties as $property)
+                                            @foreach ($parcelles as $parcelle)
                                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                                     <td class="px-4 py-3">#{{ $loop->iteration }}</td>
                                                     <td class="px-4 py-3 font-medium hover:text-blue-600 dark:hover:text-blue-400">
-                                                        <a href="{{ route('property.show', $property) }}" class="text-gray-800 dark:text-white">{{ $property->title }}</a>
+                                                        <a href="{{ route('parcelles.show', $parcelle) }}" class="text-gray-800 dark:text-white">{{ $parcelle->titre }}</a>
                                                     </td>
-                                                    <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }}</td>
-                                                    <td class="px-4 py-3">{{ $property->rooms }}</td>
-                                                    <td class="px-4 py-3">{{ $property->city->name ?? '-' }}</td>
+                                                    <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($parcelle->superficie, 2) }} m²</td>
+                                                    <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($parcelle->prix, 0, ',', ' ') }} FCFA</td>
+                                                    <td class="px-4 py-3">{{ $parcelle->localisation ?? '-' }}</td>
                                                     <td class="px-4 py-3">
-                                                        @switch($property->status->value)
-                                                            @case('available')
-                                                                <span
-                                                                    class="px-2 py-1 text-xs font-medium text-green-500 dark:text-green-400 bg-green-300 dark:bg-green-900/30 rounded-full">disponible</span>
-                                                            @break
-        
-                                                            @case('sold')
-                                                                <span
-                                                                    class="px-2 py-1 text-xs font-medium text-red-500 dark:text-red-400 bg-red-300 dark:bg-red-900/30 rounded-full">vendu</span>
-                                                            @break
-        
-                                                            @default
-                                                                <span
-                                                                    class="px-2 py-1 text-xs font-medium text-blue-500 dark:text-blue-400 bg-blue-300 dark:bg-blue-900/30 rounded-full">loué</span>
-                                                        @endswitch
-                                                    </td>
-                                                    <td class="px-4 py-3">
-                                                        @if ($property->is_verify)
+                                                        @if ($parcelle->viabilisee)
                                                             <span
                                                                 class="px-2 py-1 text-xs font-medium text-green-500 dark:text-green-400 bg-green-300 dark:bg-green-900/30 rounded-full">
                                                                 <i data-lucide="check-circle" class="inline w-3 h-3"></i> Oui
@@ -180,7 +162,7 @@
                                                         @endif
                                                     </td>
                                                     <td class="px-4 py-3">
-                                                        @if ($property->is_active)
+                                                        @if ($parcelle->is_active ?? true)
                                                             <span
                                                                 class="px-2 py-1 text-xs font-medium text-green-500 dark:text-green-400 bg-green-300 dark:bg-green-900/30 rounded-full">
                                                                 <i data-lucide="eye" class="inline w-3 h-3"></i> Actif
@@ -194,25 +176,16 @@
                                                     </td>
                                                     <td class="px-4 py-3">
                                                         <div class="flex items-center justify-center gap-2">
-                                                            <a href="{{ route('property.show', $property) }}"
+                                                            <a href="{{ route('parcelles.show', $parcelle) }}"
                                                                 class="block text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300" title="Voir">
                                                                 <i data-lucide="eye" class="w-4 h-4"></i>
                                                             </a>
-                                                            <a href="{{ route('property.edit', $property) }}"
+                                                            <a href="{{ route('parcelles.edit', $parcelle) }}"
                                                                 class="block text-yellow-500 dark:text-yellow-400 hover:text-yellow-700 dark:hover:text-yellow-300" title="Modifier">
                                                                 <i data-lucide="edit" class="w-4 h-4"></i>
                                                             </a>
-                                                            <form action="{{ route('property.duplicate', $property) }}"
-                                                                method="POST" class="inline">
-                                                                @csrf
-                                                                <button type="submit"
-                                                                    class="block text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300"
-                                                                    title="Dupliquer">
-                                                                    <i data-lucide="copy" class="w-4 h-4"></i>
-                                                                </button>
-                                                            </form>
                                                             <button
-                                                                @click="openModal('{{ route('property.destroy', $property) }}', '{{ $property->title }}')"
+                                                                @click="openModal('{{ route('parcelles.destroy', $parcelle) }}', '{{ $parcelle->titre }}')"
                                                                 class="block text-destructive dark:text-red-400 hover:text-red-700 dark:hover:text-red-300" title="Supprimer">
                                                                 <i data-lucide="trash" class="w-4 h-4"></i>
                                                             </button>
@@ -224,7 +197,7 @@
                                     </table>
                                 </div>
                                 <div class="mt-2 mb-2 text-xs text-gray-600 dark:text-gray-400">
-                                    {{ $properties->links() }}
+                                    {{ $parcelles->links() }}
                                 </div>
         
                                 <!-- Modal de confirmation de suppression -->
@@ -236,7 +209,7 @@
                                                 <i data-lucide="alert-octagon" class="h-6 w-6 text-red-600 dark:text-red-400"></i>
                                             </div>
                                             <div class="flex-1">
-                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer le bien</h3>
+                                                <h3 class="text-lg font-semibold text-gray-900 dark:text-white">Supprimer la parcelle</h3>
                                                 <p class="mt-2 text-sm text-gray-600 dark:text-gray-300">
                                                     Êtes-vous sûr de vouloir supprimer <strong x-text="propertyTitle" class="text-gray-800 dark:text-white"></strong> ?
                                                     Cette action est irréversible.
@@ -281,9 +254,9 @@
                             }
                         </script>
                     @else
-                        <x-empty title="Aucun bien trouvé" description="Créer un premier bien pour commencer" class="dark:text-gray-400">
+                        <x-empty title="Aucune parcelle trouvée" description="Créer une première parcelle pour commencer" class="dark:text-gray-400">
                             <x-slot:icon>
-                                <i data-lucide="building" class="text-gray-400 dark:text-gray-500"></i>
+                                <i data-lucide="land-plot" class="text-gray-400 dark:text-gray-500"></i>
                             </x-slot:icon>
                         </x-empty>
                     @endif
@@ -297,10 +270,10 @@
                         <i data-lucide="lightbulb" class="w-5 h-5 text-blue-600 dark:text-blue-400"></i>
                     </div>
                     <div>
-                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Conseils pour maximiser vos ventes</h3>
+                        <h3 class="font-semibold text-gray-900 dark:text-white mb-1">Conseils pour valoriser vos parcelles</h3>
                         <p class="text-sm text-gray-600 dark:text-gray-300">
-                            Ajoutez des photos de qualité, une description détaillée et un prix compétitif.
-                            Les biens vérifiés par notre équipe apparaissent en priorité dans les recherches.
+                            Ajoutez des photos de qualité, une description détaillée et précisez les accès (eau, électricité, route).
+                            Les parcelles viabilisées attirent davantage d'acheteurs potentiels.
                         </p>
                     </div>
                 </div>

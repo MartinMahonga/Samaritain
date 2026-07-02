@@ -9,6 +9,7 @@ use App\Models\ParcelleImage;
 use App\Services\ParcelleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -96,5 +97,24 @@ class ParcelleWebController extends Controller
         $this->parcelleService->deleteImage($image->id);
 
         return back()->with('success', 'L’image a été supprimée avec succès.');
+    }
+
+    public function dashboard()
+    {
+        $parcelles = Parcelle::where('created_by', Auth::id())
+            ->latest()
+            ->paginate(10);
+
+        $stats = [
+            'total' => Parcelle::where('created_by', Auth::id())->count(),
+            'verified' => Parcelle::where('created_by', Auth::id())->where('viabilisee', true)->count(),
+            'pending' => Parcelle::where('created_by', Auth::id())->where('viabilisee', false)->count(),
+            'active' => Parcelle::where('created_by', Auth::id())->where('viabilisee', true)->count(),
+        ];
+
+        return view('parcelles.dashboard', [
+            'parcelles' => $parcelles,
+            'stats' => $stats,
+        ]);
     }
 }

@@ -225,3 +225,13 @@
     -ms-overflow-style: none;
     scrollbar-width: none;
 }
+
+/* Pour cacher la scrollbar sur tous les navigateurs */
+.scrollbar-hide {
+    -ms-overflow-style: none;  /* IE et Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;  /* Chrome, Safari et Opera */
+}
