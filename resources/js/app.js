@@ -1,6 +1,6 @@
 import Alpine from "alpinejs";
-import collapse from '@alpinejs/collapse';
-import './notificationDropdown'
+import collapse from "@alpinejs/collapse";
+import "./notificationDropdown";
 import {
     createIcons,
     Search,
@@ -114,7 +114,18 @@ import {
     List,
     Activity,
     AlertTriangle,
-    ScanLine
+    ScanLine,
+    UserRoundPlus,
+    MailCheck,
+    ClockAlert,
+    CheckCircle2,
+    Tag,
+    ArrowLeft,
+    ShieldPlus,
+    Shield,
+    CheckCheck,
+    QrCode,
+    Hash,
 } from "lucide";
 
 createIcons({
@@ -234,7 +245,18 @@ createIcons({
         Activity,
         AlertTriangle,
         CircleCheck,
-        ScanLine
+        ScanLine,
+        UserRoundPlus,
+        MailCheck,
+        ClockAlert,
+        CheckCircle2,
+        Tag,
+        ArrowLeft,
+        ShieldPlus,
+        Shield,
+        CheckCheck,
+        QrCode,
+        Hash
     },
 });
 

@@ -43,7 +43,7 @@
                             @foreach ($members as $member)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition">
                                     <td class="px-4 py-3">
-                                        <img src="{{ $member->profile_photo_url ?? 'https://ui-avatars.com/api/?name=' . urlencode($member->name) . '&background=3b82f6&color=fff' }}"
+                                        <img src="{{ $member->profileUrl() ?? 'https://ui-avatars.com/api/?name=' . urlencode($member->name) . '&background=3b82f6&color=fff' }}"
                                             class="w-8 h-8 rounded-full object-cover">
                                     </td>
                                     <td class="px-4 py-3 font-medium dark:text-white">{{ $member->name }}</td>
