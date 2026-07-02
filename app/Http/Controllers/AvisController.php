@@ -9,7 +9,6 @@ class AvisController extends Controller
 {
     // Afficher tous les avis
 
-
     public function index()
     {
         $avis = collect(); // liste vide par défaut
@@ -20,7 +19,7 @@ class AvisController extends Controller
 
         return view('avis.index', compact('avis'));
     }
-    
+
     // Enregistrer un nouvel avis
     public function store(Request $request)
     {
@@ -38,9 +37,9 @@ class AvisController extends Controller
         return redirect()->back()->with('success', 'Votre avis a été transmis avec succès. Nous vous remercions pour votre contribution');
     }
 
-        public function destroy(Avis $avis)
+    public function destroy(Avis $avis)
     {
-        if (!auth()->user()->is_staff) {
+        if (! auth()->user()->is_staff) {
             abort(403);
         }
 

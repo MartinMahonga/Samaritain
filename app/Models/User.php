@@ -138,7 +138,7 @@ class User extends Authenticatable implements MustVerifyEmail
         return null;
     }
 
-        // Un utilisateur peut avoir plusieurs avis
+    // Un utilisateur peut avoir plusieurs avis
     public function avis()
     {
         return $this->hasMany(Avis::class);

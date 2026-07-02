@@ -26,6 +26,8 @@ class UpdateParcelleRequest extends FormRequest
             'viabilisee' => ['nullable', 'boolean'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'kept_images' => ['nullable', 'array'],
+            'kept_images.*' => ['integer', 'exists:parcelle_images,id'],
         ];
     }
 }

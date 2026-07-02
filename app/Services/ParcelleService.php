@@ -76,6 +76,18 @@ class ParcelleService
     {
         return DB::transaction(function () use ($parcelle, $data, $images) {
             $parcelle->update($data);
+
+            // Supprimer uniquement les images non conservées
+            $keptIds = request()->input('kept_images', []);
+
+            $parcelle->images()
+                ->whereNotIn('id', $keptIds)
+                ->get()
+                ->each(function ($image) {
+                    Storage::delete($image->path);
+                    $image->delete();
+                });
+
             $this->storeImages($parcelle, $images);
 
             return $parcelle->load('images');
@@ -84,7 +96,14 @@ class ParcelleService
 
     public function deleteParcelle(Parcelle $parcelle): void
     {
-        $parcelle->delete();
+        DB::transaction(function () use ($parcelle) {
+            $parcelle->images()->get()->each(function ($image) {
+                Storage::delete($image->path);
+                $image->delete();
+            });
+
+            $parcelle->delete();
+        });
     }
 
     public function deleteImage(int $imageId): void

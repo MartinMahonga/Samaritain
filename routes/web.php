@@ -11,6 +11,7 @@ use App\Http\Controllers\ArtisanContactController;
 use App\Http\Controllers\ArtisanController;
 use App\Http\Controllers\ArtisanProjectController;
 use App\Http\Controllers\ArtisanReviewController;
+use App\Http\Controllers\AvisController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\NotificationController;
@@ -25,7 +26,6 @@ use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\AvisController;
 
 Route::get('/', [HomeController::class, 'index'])->name('index');
 
@@ -192,7 +192,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/notifications/destroy-read', [NotificationController::class, 'destroyRead'])->name('notifications.destroy-read');
     Route::get('/notifications/all', [NotificationController::class, 'showAll'])->name('notifications.all');
 });
-
 
 Route::middleware('auth')->group(function () {
     Route::post('/avis', [AvisController::class, 'store'])->name('avis.store');
