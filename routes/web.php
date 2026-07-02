@@ -25,6 +25,8 @@ use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AvisController;
+
 
 Route::get('/test', function () {
     return view('layouts.user-dashboard');
@@ -195,6 +197,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications/all', [NotificationController::class, 'showAll'])->name('notifications.all');
 });
 
+
+Route::middleware('auth')->group(function () {
+    Route::post('/avis', [AvisController::class, 'store'])->name('avis.store');
+    Route::get('/avis', [AvisController::class, 'index'])->name('avis.index');
+    Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
+});
 // Route::get('/debug-signature', function (Request $request) {
 //     return response()->json([
 //         'full_url' => $request->fullUrl(),

@@ -5,7 +5,7 @@
 @section('content')
     <!-- Hero Header avec image de fond -->
     <div
-        class="relative bg-gradient-to-r from-blue-600 via-blue-700 to-blue-900 dark:from-blue-800 dark:via-blue-900 dark:to-blue-950 text-white min-h-[90vh] md:min-h-[80vh] lg:min-h-[90vh] flex items-center">
+        class="relative bg-gradient-to-r from-black via-black to-black dark:from-blue-800 dark:via-blue-900 dark:to-blue-950 text-white min-h-[90vh] md:min-h-[80vh] lg:min-h-[90vh] flex items-center">
         <div class="absolute inset-0 overflow-hidden">
             <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80"
                 alt="Background" class="w-full h-full object-cover opacity-20 dark:opacity-30">

@@ -1,25 +1,36 @@
 <x-app-layout>
     <!-- Hero Section avec pattern et animation -->
-    <div class="bg-primary dark:bg-primary-700 text-white">
-        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 md:py-24">
-            <div class="max-w-3xl animate-fade-in-up">
-                <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 tracking-tight">
-                    Marketplace Artisans
+
+        <div class="relative w-full h-96 pt-20">
+            {{-- Image de fond --}}
+            <img src="{{ asset('/artis/ar1.jpg') }}" alt="Background"
+                class="absolute inset-0 w-full h-full object-cover">
+
+            {{-- Overlay sombre pour rendre le texte lisible --}}
+            <div class="absolute inset-0 bg-black/50"></div>
+
+            {{-- Contenu par dessus --}}
+            <div class="relative z-10 flex flex-col items-center justify-center text-white ">
+                <h1 class="relative flex items-center justify-center h-full text-primary text-6xl font-bold">
+                    Marketplace <span class="text-white ml-5">Artisans</span>
                 </h1>
-                <p class="text-sm text-white/90 dark:text-white/90 leading-relaxed">
+
+                <p class="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-lg italic mt-5">
                     Trouvez les meilleurs artisans pour vos projets immobiliers
                 </p>
-                <div class="flex gap-4 mt-8">
+
+                <div class="relative z-10 flex  items-center justify-center h-full text-white px-4 mt-5">
                     <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
                         500+ professionnels
                     </div>
                     <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
-                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                        <i data-lucide="map-pin" class="w-4 h-4 "></i>
                         <span>Partout au Congo</span>
                     </div>
                 </div>
+                
             </div>
-        </div>
+
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -55,18 +66,17 @@
                 <div class="p-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
                         <!-- Champ recherche -->
-                        <x-form.input name="search" label="Recherche rapide" placeholder="Nom, métier"
-                            icon="search" />
+                        <x-form.input name="search" label="Recherche rapide" placeholder="Nom, métier" icon="search" />
                         <x-form.select name="category" label="Catégorie" placeholder="Toutes les catégories"
                             icon="drill" :options="$categories" :value="request('category')" />
                         <x-form.select name="city" label="Ville" placeholder="Toutes les villes" icon="building-2"
                             :options="$cities" :value="request('city')" />
                         <x-form.select name="rating" label="Note minimum" placeholder="Toutes les notes" icon="star"
                             :options="[
-                                '4' => '4+ étoiles',
-                                '3' => '3+ étoiles',
-                                '2' => '2+ étoiles',
-                            ]" :value="request('rating')" />
+        '4' => '4+ étoiles',
+        '3' => '3+ étoiles',
+        '2' => '2+ étoiles',
+    ]" :value="request('rating')" />
                     </div>
 
                     <!-- Boutons d'action -->
