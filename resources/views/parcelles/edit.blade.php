@@ -9,8 +9,8 @@
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Modifier la parcelle</h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $parcelle->titre }}</p>
             </div>
-            <a href="{{ route('parcelles.show', $parcelle) }}"
-                class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <a href="{{ route('parcelles.dashboard', $parcelle) }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 Retour
             </a>

@@ -9,8 +9,8 @@
                 <h1 class="text-2xl font-bold text-gray-900 dark:text-white">Ajouter une parcelle</h1>
                 <p class="text-gray-600 dark:text-gray-400 mt-1">Remplissez tous les champs pour publier votre parcelle</p>
             </div>
-            <a href="{{ route('parcelles.index') }}"
-                class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors">
+            <a href="{{ route('parcelles.dashboard') }}"
+                class="inline-flex items-center gap-2 px-4 py-2 text-gray-600 dark:text-gray-400 hover:text-primary transition-colors">
                 <i data-lucide="chevron-left" class="w-4 h-4"></i>
                 Retour
             </a>
@@ -111,15 +111,15 @@
                 <!-- Action buttons -->
                 <div
                     class="p-6 bg-gray-50 dark:bg-gray-700/50 flex justify-end items-center gap-3 border-t border-gray-200 dark:border-gray-700">
-                    <a href="{{ route('parcelles.index') }}"
-                        class="px-6 py-2.5 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium transition-colors">
+                    <x-btn style="outline" href="{{ route('parcelles.index') }}">
                         Annuler
-                    </a>
-                    <button type="submit"
-                        class="px-6 py-2.5 bg-emerald-600 hover:bg-emerald-700 dark:bg-emerald-700 dark:hover:bg-emerald-600 text-white font-semibold rounded-lg transition-colors flex items-center gap-2">
-                        <i data-lucide="check" class="w-4 h-4"></i>
+                    </x-btn>
+                    <x-btn type="submit">
+                        <x-slot:prefix>
+                            <i data-lucide="check"></i>
+                        </x-slot:prefix>
                         Publier la parcelle
-                    </button>
+                    </x-btn>
                 </div>
             </form>
         </div>
