@@ -6,6 +6,7 @@ use App\Http\Requests\StoreAgencyContactRequest;
 use App\Models\AgencyContact;
 use App\Models\Parcelle;
 use App\Models\Property;
+use App\Models\User;
 use App\Notifications\AgencyContactNotification;
 use Illuminate\Support\Facades\Notification;
 
@@ -51,7 +52,7 @@ class AgencyContactController extends Controller
             'user_agent' => $request->userAgent(),
         ]);
 
-        $users = \App\Models\User::permission('manage-properties')->get();
+        $users = User::permission('manage-properties')->get();
 
         if ($users->isNotEmpty()) {
             Notification::send($users, new AgencyContactNotification($contact));

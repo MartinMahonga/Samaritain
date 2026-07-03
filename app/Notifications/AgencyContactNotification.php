@@ -3,6 +3,7 @@
 namespace App\Notifications;
 
 use App\Models\AgencyContact;
+use App\Models\Property;
 use Illuminate\Bus\Queueable;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
@@ -21,11 +22,11 @@ class AgencyContactNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $contactable = $this->contact->contactable;
-        $type = $contactable instanceof \App\Models\Property ? 'Bien immobilier' : 'Parcelle';
+        $type = $contactable instanceof Property ? 'Bien immobilier' : 'Parcelle';
         $title = $contactable->title ?? $contactable->titre;
         $location = $contactable->address ?? $contactable->localisation ?? ($contactable->quartier.', '.$contactable->ville);
 
-        $url = $contactable instanceof \App\Models\Property
+        $url = $contactable instanceof Property
             ? route('property.show', $contactable)
             : route('parcelles.show', $contactable);
 
@@ -36,7 +37,7 @@ class AgencyContactNotification extends Notification
             ->line('---')
             ->line("**De :** {$this->contact->name}")
             ->line("**Email :** {$this->contact->email}")
-            ->line("**Téléphone :** ".($this->contact->phone ?: 'Non renseigné'))
+            ->line('**Téléphone :** '.($this->contact->phone ?: 'Non renseigné'))
             ->line('---')
             ->line("**Sujet :** {$this->contact->subject}")
             ->line('**Message :**')
@@ -66,7 +67,7 @@ class AgencyContactNotification extends Notification
             'phone' => $this->contact->phone,
             'subject' => $this->contact->subject,
             'message' => $this->contact->message,
-            'contactable_type' => $contactable instanceof \App\Models\Property ? 'property' : 'parcelle',
+            'contactable_type' => $contactable instanceof Property ? 'property' : 'parcelle',
             'contactable_id' => $contactable->id,
             'contactable_title' => $contactable->title ?? $contactable->titre,
             'created_at' => $this->contact->created_at->toDateTimeString(),

@@ -67,8 +67,13 @@ class PropertyController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%'.$request->keyword.'%')
                     ->orWhere('description', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('arrondissement', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('address', 'like', '%'.$request->keyword.'%');
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
+                    ->orWhereHas('city', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    })
+                    ->orWhereHas('arrondissement', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    });
             });
         }
 
@@ -279,6 +284,10 @@ class PropertyController extends Controller
             $query->where('category_id', $request->category_id);
         }
 
+        if ($request->filled('arrondissement_id')) {
+            $query->where('arrondissement_id', $request->arrondissement_id);
+        }
+
         if ($request->filled('min_price')) {
             $query->where('price', '>=', $request->min_price);
         }
@@ -303,11 +312,17 @@ class PropertyController extends Controller
             $query->where(function ($q) use ($request) {
                 $q->where('title', 'like', '%'.$request->keyword.'%')
                     ->orWhere('description', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('address', 'like', '%'.$request->keyword.'%');
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
+                    ->orWhereHas('city', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    })
+                    ->orWhereHas('arrondissement', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    });
             });
         }
 
-        $properties = $query->with(['city', 'category'])
+        $properties = $query->with(['city', 'category', 'arrondissement', 'images'])
             ->latest()
             ->paginate(21)
             ->withQueryString();
