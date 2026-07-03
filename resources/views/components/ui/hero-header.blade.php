@@ -36,17 +36,17 @@
             </p>
 
             {{-- Search bar --}}
-            <div class="relative w-full max-w-lg">
+            <form action="{{ route('property.search') }}" method="GET" class="relative w-full max-w-lg">
                 <div class="absolute inset-y-0 left-4 flex items-center pointer-events-none">
                     <i data-lucide="search" class="w-4 h-4 text-gray-400"></i>
                 </div>
-                <input type="text" id="search" placeholder="Ville, quartier, type de bien…"
+                <input type="text" name="keyword" placeholder="Ville, quartier, type de bien…"
                     class="w-full bg-white rounded-full border-0 pl-11 pr-4 py-3.5 text-sm text-gray-800 shadow-lg placeholder-gray-400 focus:ring-2 focus:ring-white/50 focus:outline-none">
-                <button
+                <button type="submit"
                     class="absolute inset-y-0 right-1.5 my-1.5 px-4 bg-primary text-white text-xs font-semibold rounded-full hover:opacity-90 transition">
                     Rechercher
                 </button>
-            </div>
+            </form>
 
             {{-- Micro-stats --}}
             <div class="flex items-center gap-6 pt-2">
