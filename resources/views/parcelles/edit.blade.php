@@ -177,11 +177,13 @@
 
             </form>
 
-            <form id="delete-image-{{ $image->id }}" action="{{ route('parcelles.images.destroy', $image) }}"
-                method="POST">
-                @csrf
-                @method('DELETE')
-            </form>
+            @foreach ($parcelle->images as $image)
+                <form id="delete-image-{{ $image->id }}" action="{{ route('parcelles.images.destroy', $image) }}"
+                    method="POST">
+                    @csrf
+                    @method('DELETE')
+                </form>
+            @endforeach
         </div>
     </div>
 @endsection

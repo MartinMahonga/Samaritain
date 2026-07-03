@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PropertyController extends Controller
 {
@@ -65,14 +66,14 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
+                $q->where('title', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('address', 'like', '%' . $request->keyword . '%')
                     ->orWhereHas('city', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                        $q2->where('name', 'like', '%' . $request->keyword . '%');
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                        $q2->where('name', 'like', '%' . $request->keyword . '%');
                     });
             });
         }
@@ -310,14 +311,14 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
-                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
+                $q->where('title', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
+                    ->orWhere('address', 'like', '%' . $request->keyword . '%')
                     ->orWhereHas('city', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                        $q2->where('name', 'like', '%' . $request->keyword . '%');
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                        $q2->where('name', 'like', '%' . $request->keyword . '%');
                     });
             });
         }
@@ -366,7 +367,8 @@ class PropertyController extends Controller
 
         // Créer une copie
         $newProperty = $property->replicate();
-        $newProperty->title = $property->title.' (Copie)';
+        $newProperty->title = $property->title . ' (Copie)';
+        $newProperty->slug = $this->generateUniqueSlug($newProperty->title);
         $newProperty->is_verify = false;
         $newProperty->created_by = Auth::id();
         $newProperty->save();
@@ -377,7 +379,7 @@ class PropertyController extends Controller
         // Copier les images
         foreach ($property->images as $image) {
             $oldPath = $image->getRawOriginal('image_url');
-            $newPath = 'properties/'.uniqid().'.jpg';
+            $newPath = 'properties/' . uniqid() . '.jpg';
 
             // Copier le fichier
             if (Storage::exists($oldPath)) {
@@ -394,13 +396,27 @@ class PropertyController extends Controller
             ->with('success', 'Bien dupliqué avec succès. Vous pouvez maintenant modifier les informations.');
     }
 
+    private function generateUniqueSlug(string $title): string
+    {
+        $baseSlug = Str::slug($title);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (Property::withTrashed()->where('slug', $slug)->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+
     /**
      * Enregistre une vue si elle n'a pas déjà été comptée dans les dernières 24h
      * pour cet IP et ce bien.
      */
     protected function registerView(Request $request, Property $property): void
     {
-        $cacheKey = 'property_view_'.$property->id.'_'.$request->ip();
+        $cacheKey = 'property_view_' . $property->id . '_' . $request->ip();
 
         // Cache::add() retourne true si la clé a été ajoutée (donc n'existait pas)
         if (Cache::add($cacheKey, true, now()->addHours(24))) {
