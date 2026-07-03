@@ -10,6 +10,7 @@ use App\Services\ParcelleService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\View\View;
 
@@ -34,8 +35,10 @@ class ParcelleWebController extends Controller
         return view('parcelles.index', compact('parcelles', 'filters'));
     }
 
-    public function show(Parcelle $parcelle): View
+    public function show(Request $request, Parcelle $parcelle): View
     {
+        $this->registerView($request, $parcelle);
+
         return view('parcelles.show', compact('parcelle'));
     }
 
@@ -88,6 +91,20 @@ class ParcelleWebController extends Controller
 
         return to_route('parcelles.index')
             ->with('success', 'La parcelle a été supprimée avec succès.');
+    }
+
+    /**
+     * Enregistre une vue si elle n'a pas déjà été comptée dans les dernières 24h
+     * pour cet IP et cette parcelle.
+     */
+    protected function registerView(Request $request, Parcelle $parcelle): void
+    {
+        $cacheKey = 'parcelle_view_'.$parcelle->id.'_'.$request->ip();
+
+        // Cache::add() retourne true si la clé a été ajoutée (donc n'existait pas)
+        if (Cache::add($cacheKey, true, now()->addHours(24))) {
+            $parcelle->incrementViews();
+        }
     }
 
     public function deleteImage(ParcelleImage $image): RedirectResponse

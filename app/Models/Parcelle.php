@@ -102,4 +102,9 @@ class Parcelle extends Model
     {
         return $this->morphMany(AgencyContact::class, 'contactable');
     }
+
+    public function incrementViews(): void
+    {
+        $this->increment('views');
+    }
 }

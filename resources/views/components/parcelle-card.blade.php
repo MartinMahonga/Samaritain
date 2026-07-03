@@ -90,7 +90,7 @@
         <div
             class="absolute bottom-2.5 right-2.5 flex items-center gap-1 bg-black/50 backdrop-blur-sm text-white text-xs font-medium px-2 py-1 rounded-full shadow-sm">
             <i data-lucide="eye" class="w-3 h-3"></i>
-            {{ number_format($parcelle['vues'] ?? 0) }}
+            {{ number_format($parcelle['views'] ?? 0) }}
         </div>
     </div>
 
