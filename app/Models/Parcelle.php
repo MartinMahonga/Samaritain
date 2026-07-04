@@ -103,6 +103,34 @@ class Parcelle extends Model
         return $this->morphMany(AgencyContact::class, 'contactable');
     }
 
+    public function parcelFavorites()
+    {
+        return $this->hasMany(ParcelFavorite::class, 'parcel_id');
+    }
+
+    public function favoritedBy()
+    {
+        return $this->belongsToMany(User::class, 'parcel_favorites', 'parcel_id', 'user_id')->withTimestamps();
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'parcel_favorites', 'parcel_id', 'user_id')->withTimestamps();
+    }
+
+    public function isFavorited(): bool
+    {
+        if (! auth()->check()) {
+            return false;
+        }
+
+        return auth()
+            ->user()
+            ->favoritesParcels()
+            ->where('parcel_id', $this->id)
+            ->exists();
+    }
+
     public function incrementViews(): void
     {
         $this->increment('views');

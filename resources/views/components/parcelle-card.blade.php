@@ -49,9 +49,9 @@
             {{-- Bouton favoris (optionnel) --}}
             @if (auth()->check())
                 <div x-data="{
-                    favorited: {{ auth()->user()?->favorites?->contains($parcelle['id']) ? 'true' : 'false' }},
+                    favorited: {{ $parcelle->isFavorited() ? 'true' : 'false' }},
                     async toggle() {
-                        const response = await fetch('{{ route('property.favorite', $parcelle['id']) }}', {
+                        const response = await fetch('{{ route('parcel.favorite', $parcelle) }}', {
                             method: 'POST',
                             headers: {
                                 'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,

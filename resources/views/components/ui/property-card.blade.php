@@ -15,7 +15,7 @@
             class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition duration-300">
             @if (auth()->check())
                 <div x-data="{
-                    favorited: {{ auth()->user()->favorites->contains($property->id) ? 'true' : 'false' }},
+                    favorited: {{ $property->isFavorited() ? 'true' : 'false' }},
                     async toggle() {
                 
                         const response = await fetch(

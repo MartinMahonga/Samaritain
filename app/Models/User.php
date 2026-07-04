@@ -47,6 +47,21 @@ class User extends Authenticatable implements MustVerifyEmail
         )->withTimestamps();
     }
 
+    public function parcelFavorites()
+    {
+        return $this->hasMany(ParcelFavorite::class, 'user_id');
+    }
+
+    public function favoritesParcels()
+    {
+        return $this->belongsToMany(
+            Parcelle::class,
+            'parcel_favorites',
+            'user_id',
+            'parcel_id'
+        )->withTimestamps();
+    }
+
     public function artisan()
     {
         return $this->hasOne(Artisan::class);

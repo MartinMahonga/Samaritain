@@ -72,6 +72,13 @@ Route::post('/properties/{property}/favorite', [FavoriteController::class, 'togg
 
 Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite')->middleware(['auth', 'verified']);
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/favorites/property/{property}', [FavoriteController::class, 'toggleProperty'])->name('property.favorite.toggle');
+    Route::post('/favorites/parcel/{parcel}', [FavoriteController::class, 'toggleParcel'])->name('parcel.favorite');
+    Route::delete('/favorites/property/{property}', [FavoriteController::class, 'destroyProperty'])->name('property.favorite.destroy');
+    Route::delete('/favorites/parcel/{parcel}', [FavoriteController::class, 'destroyParcel'])->name('parcel.favorite.destroy');
+});
+
 // Admin routes
 Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddleware::class])->name('admin.')->group(function () {
     Route::get('/', [DashboardController::class, 'index'])->name('index');
