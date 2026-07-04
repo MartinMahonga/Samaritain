@@ -71,37 +71,7 @@
                 <div class="min-w-0">
 
                     {{-- Gallery --}}
-                    <div class="mb-8">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 rounded-2xl overflow-hidden">
-                            @if ($parcelle->imagePrincipale)
-                                <div class="md:col-span-2 relative overflow-hidden bg-gray-100 dark:bg-gray-800"
-                                    style="height: 400px;">
-                                    <img src="{{ $parcelle->imagePrincipale->url }}" alt="{{ $parcelle->titre }}"
-                                        class="w-full h-full object-cover" />
-                                </div>
-                            @endif
-
-                            @if ($parcelle->images->count() > 1)
-                                @foreach ($parcelle->images->skip(1)->take(3) as $image)
-                                    <div class="relative overflow-hidden bg-gray-100 dark:bg-gray-800"
-                                        style="height: 180px;">
-                                        <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}"
-                                            class="w-full h-full object-cover" />
-                                    </div>
-                                @endforeach
-                            @endif
-
-                            @if ($parcelle->images->isEmpty())
-                                <div
-                                    class="md:col-span-2 h-96 bg-gray-100 dark:bg-gray-800 rounded-2xl flex items-center justify-center text-gray-400">
-                                    <div class="text-center">
-                                        <i data-lucide="image" class="w-16 h-16 mx-auto mb-2"></i>
-                                        <span class="text-sm">Aucune image disponible</span>
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
-                    </div>
+                    <x-ui.parcelle-gallery :parcelle="$parcelle" />
 
                     {{-- Feature strip --}}
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-8">
@@ -155,21 +125,7 @@
                         </div>
                     @endif
 
-                    {{-- Images supplémentaires --}}
-                    @if ($parcelle->images->count() > 4)
-                        <div>
-                            <h2 class="font-display font-semibold text-xl text-[#0F0E0C] dark:text-white mb-3">Galerie</h2>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-                                @foreach ($parcelle->images->skip(4) as $image)
-                                    <div class="relative overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800"
-                                        style="height: 160px;">
-                                        <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}"
-                                            class="w-full h-full object-cover" />
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
+
                 </div>
 
                 {{-- ── RIGHT COLUMN ── --}}
