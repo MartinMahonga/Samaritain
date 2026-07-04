@@ -25,74 +25,65 @@
                 </a>
             </div>
         @else
-            <div class="space-y-2">
+            <div class="space-y-3">
                 @foreach ($favoritesProperties as $property)
-                    <a href="{{ route('property.show', $property) }}"
-                        class="group flex flex-col sm:flex-row bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition overflow-hidden
-                               h-auto sm:h-[130px]">
+                    <div x-data="{ removing: false }"
+                         x-show="!removing"
+                         x-transition.duration.200ms
+                         class="group relative flex bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden p-2 gap-3">
 
                         {{-- Image --}}
-                        <div class="w-full h-32 sm:w-40 sm:h-full flex-shrink-0 bg-gray-100 dark:bg-gray-700">
+                        <a href="{{ route('property.show', $property) }}" class="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 relative block">
                             <img
                                 src="{{ $property->images->first()?->image_url }}"
                                 alt="{{ $property->title }}"
                                 class="w-full h-full object-cover">
-                        </div>
+                        </a>
 
                         {{-- Contenu --}}
-                        <div class="flex-1 p-3 sm:px-4 flex flex-col justify-between min-w-0 overflow-hidden">
+                        <a href="{{ route('property.show', $property) }}" class="flex-1 min-w-0 flex flex-col justify-center gap-1.5 py-1 pr-10">
 
-                            {{-- Haut : titre + prix --}}
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="min-w-0">
-                                    <h2 class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-primary-400 transition">
-                                        {{ $property->title }}
-                                    </h2>
-                                    <p class="mt-0.5 flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
-                                        <i data-lucide="map-pin" class="w-3 h-3"></i>
-                                        {{ $property->city->name }}
-                                    </p>
-                                </div>
-                                <div class="text-right flex-shrink-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ number_format($property->price, 0, ',', ' ') }}
-                                    </p>
-                                    <p class="text-[10px] text-gray-400 dark:text-gray-500">FCFA / mois</p>
-                                </div>
-                            </div>
+                            <h2 class="text-[15px] font-semibold text-gray-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-primary-400 transition">
+                                {{ $property->title }}
+                            </h2>
 
-                            {{-- Description (masquée sur mobile) --}}
-                            <p class="hidden sm:block text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-1">
-                                {{ $property->description }}
+                            <p class="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                                <span class="truncate">{{ $property->city->name }}</span>
                             </p>
 
-                            {{-- Bas : badges + lien --}}
-                            <div class="flex items-center justify-between gap-2">
-                                <div class="flex flex-wrap gap-1">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] text-gray-600 dark:text-gray-300">
-                                        <i data-lucide="bed" class="w-3 h-3"></i>
-                                        {{ $property->bedrooms }} ch.
+                            <div class="flex items-center justify-between gap-2 mt-0.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-[10px] font-medium text-gray-600 dark:text-gray-300">
+                                        <i data-lucide="bed" class="w-3 h-3"></i>{{ $property->bedrooms }}
                                     </span>
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] text-gray-600 dark:text-gray-300">
-                                        <i data-lucide="bath" class="w-3 h-3"></i>
-                                        {{ $property->bathrooms }} sdb
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-[10px] font-medium text-gray-600 dark:text-gray-300">
+                                        <i data-lucide="bath" class="w-3 h-3"></i>{{ $property->bathrooms }}
                                     </span>
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] text-gray-600 dark:text-gray-300">
-                                        <i data-lucide="ruler" class="w-3 h-3"></i>
-                                        {{ $property->surface }} m²
-                                    </span>
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-[10px]">
-                                        <i data-lucide="badge-check" class="w-3 h-3"></i>
-                                        {{ $property->status }}
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-[10px] font-medium text-gray-600 dark:text-gray-300">
+                                        <i data-lucide="ruler" class="w-3 h-3"></i>{{ $property->surface }} m²
                                     </span>
                                 </div>
-                                <span class="flex items-center gap-1 text-[11px] text-primary dark:text-primary-400 font-medium flex-shrink-0">
-                                    Voir <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                                </span>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ number_format($property->price, 0, ',', ' ') }} <span class="text-[10px] font-normal text-gray-400 dark:text-gray-500">FCFA/mois</span>
+                                </p>
                             </div>
+                        </a>
 
-                        </div>
-                    </a>
+                        {{-- Bouton favori (cœur) --}}
+                        <form action="{{ route('property.favorite.destroy', $property) }}" method="POST"
+                              @submit.prevent="removing = true; $nextTick(() => $el.submit())"
+                              class="absolute top-3 right-3 z-10">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 hover:scale-110 transition"
+                                title="Retirer des favoris">
+                                <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                            </button>
+                        </form>
+
+                    </div>
                 @endforeach
             </div>
 
@@ -117,76 +108,71 @@
                 </a>
             </div>
         @else
-            <div class="space-y-2">
+            <div class="space-y-3">
                 @foreach ($favoritesParcels as $parcel)
-                    <a href="{{ route('parcelles.show', $parcel) }}"
-                        class="group flex flex-col sm:flex-row bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition overflow-hidden
-                               h-auto sm:h-[130px]">
+                    @php
+                        $mainImage = $parcel->images->firstWhere('principale', true) ?? $parcel->images->first();
+                    @endphp
+                    <div x-data="{ removing: false }"
+                         x-show="!removing"
+                         x-transition.duration.200ms
+                         class="group relative flex bg-white dark:bg-gray-800 rounded-2xl border border-gray-200 dark:border-gray-700 hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden p-2 gap-3">
 
                         {{-- Image --}}
-                        <div class="w-full h-32 sm:w-40 sm:h-full flex-shrink-0 bg-gray-100 dark:bg-gray-700">
-                            @php
-                                $mainImage = $parcel->images->firstWhere('principale', true) ?? $parcel->images->first();
-                            @endphp
+                        <a href="{{ route('parcelles.show', $parcel) }}" class="w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 rounded-xl overflow-hidden bg-gray-100 dark:bg-gray-700 relative block">
                             <img
                                 src="{{ $mainImage?->url }}"
                                 alt="{{ $parcel->titre }}"
                                 class="w-full h-full object-cover"
                                 onerror="this.src='/images/placeholder.png'">
-                        </div>
+                        </a>
 
                         {{-- Contenu --}}
-                        <div class="flex-1 p-3 sm:px-4 flex flex-col justify-between min-w-0 overflow-hidden">
+                        <a href="{{ route('parcelles.show', $parcel) }}" class="flex-1 min-w-0 flex flex-col justify-center gap-1.5 py-1 pr-10">
 
-                            {{-- Haut : titre + prix --}}
-                            <div class="flex items-start justify-between gap-2">
-                                <div class="min-w-0">
-                                    <h2 class="text-sm font-medium text-gray-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-primary-400 transition">
-                                        {{ $parcel->titre }}
-                                    </h2>
-                                    <p class="mt-0.5 flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
-                                        <i data-lucide="map-pin" class="w-3 h-3"></i>
-                                        {{ $parcel->quartier }}, {{ $parcel->ville }}
-                                    </p>
-                                </div>
-                                <div class="text-right flex-shrink-0">
-                                    <p class="text-sm font-medium text-gray-900 dark:text-white whitespace-nowrap">
-                                        {{ number_format($parcel->prix, 0, ',', ' ') }}
-                                    </p>
-                                    <p class="text-[10px] text-gray-400 dark:text-gray-500">FCFA</p>
-                                </div>
-                            </div>
+                            <h2 class="text-[15px] font-semibold text-gray-900 dark:text-white truncate group-hover:text-primary dark:group-hover:text-primary-400 transition">
+                                {{ $parcel->titre }}
+                            </h2>
 
-                            {{-- Description (masquée sur mobile) --}}
-                            <p class="hidden sm:block text-[11px] text-gray-500 dark:text-gray-400 leading-relaxed line-clamp-1">
-                                {{ $parcel->description }}
+                            <p class="flex items-center gap-1 text-xs text-gray-400 dark:text-gray-500">
+                                <i data-lucide="map-pin" class="w-3.5 h-3.5 flex-shrink-0"></i>
+                                <span class="truncate">{{ $parcel->quartier }}, {{ $parcel->ville }}</span>
                             </p>
 
-                            {{-- Bas : badges + lien --}}
-                            <div class="flex items-center justify-between gap-2">
-                                <div class="flex flex-wrap gap-1">
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-gray-100 dark:bg-gray-700 rounded text-[10px] text-gray-600 dark:text-gray-300">
-                                        <i data-lucide="ruler" class="w-3 h-3"></i>
-                                        {{ number_format($parcel->superficie, 0, ',', ' ') }} m²
+                            <div class="flex items-center justify-between gap-2 mt-0.5">
+                                <div class="flex flex-wrap items-center gap-1.5">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 dark:bg-gray-700 rounded-full text-[10px] font-medium text-gray-600 dark:text-gray-300">
+                                        <i data-lucide="ruler" class="w-3 h-3"></i>{{ number_format($parcel->superficie, 0, ',', ' ') }} m²
                                     </span>
                                     @if ($parcel->viabilisee)
-                                        <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded text-[10px]">
-                                            <i data-lucide="check-circle" class="w-3 h-3"></i>
-                                            Viabilisée
+                                        <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-400 rounded-full text-[10px] font-medium">
+                                            <i data-lucide="check-circle" class="w-3 h-3"></i>Viabilisée
                                         </span>
                                     @endif
-                                    <span class="inline-flex items-center gap-1 px-1.5 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded text-[10px]">
-                                        <i data-lucide="badge-check" class="w-3 h-3"></i>
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 bg-green-50 dark:bg-green-900/30 text-green-700 dark:text-green-400 rounded-full text-[10px] font-medium">
                                         {{ $parcel->statut }}
                                     </span>
                                 </div>
-                                <span class="flex items-center gap-1 text-[11px] text-primary dark:text-primary-400 font-medium flex-shrink-0">
-                                    Voir <i data-lucide="arrow-right" class="w-3 h-3"></i>
-                                </span>
+                                <p class="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
+                                    {{ number_format($parcel->prix, 0, ',', ' ') }} <span class="text-[10px] font-normal text-gray-400 dark:text-gray-500">FCFA</span>
+                                </p>
                             </div>
+                        </a>
 
-                        </div>
-                    </a>
+                        {{-- Bouton favori (cœur) --}}
+                        <form action="{{ route('parcel.favorite.destroy', $parcel) }}" method="POST"
+                              @submit.prevent="removing = true; $nextTick(() => $el.submit())"
+                              class="absolute top-3 right-3 z-10">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="flex items-center justify-center w-8 h-8 rounded-full bg-red-50 dark:bg-red-500/10 text-red-500 hover:bg-red-100 dark:hover:bg-red-500/20 hover:scale-110 transition"
+                                title="Retirer des favoris">
+                                <i data-lucide="heart" class="w-4 h-4 fill-current"></i>
+                            </button>
+                        </form>
+
+                    </div>
                 @endforeach
             </div>
 
