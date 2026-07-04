@@ -100,7 +100,7 @@
         </div>
 
         {{-- Filtres rapides par métier --}}
-        <div class="mb-8">
+        <div class="mb-8 max-w-max">
             @php
                 $serviceIcons = [
                     'macon' => 'hammer',
