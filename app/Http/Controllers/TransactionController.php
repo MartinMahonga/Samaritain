@@ -44,8 +44,6 @@ class TransactionController extends Controller
                 ],
             ]);
 
-            dd($result);
-
             $transaction->update([
                 'status' => 'pending',
             ]);
