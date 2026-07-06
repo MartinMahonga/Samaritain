@@ -47,4 +47,9 @@ return [
         'redirect' => env('FACEBOOK_REDIRECT_URI'),
     ],
 
+    'pawapay' => [
+        'base_url' => env('PAWAPAY_API_URL'),
+        'token' => env('PAWAPAY_API_KEY'),
+    ],
+
 ];

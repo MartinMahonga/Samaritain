@@ -23,6 +23,7 @@ use App\Http\Controllers\PropertyController;
 use App\Http\Controllers\ScanController;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Http\Request;
@@ -212,6 +213,14 @@ Route::middleware('auth')->group(function () {
     Route::get('/avis', [AvisController::class, 'index'])->name('avis.index');
     Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
 });
+
+Route::get('/transactions/pay', [TransactionController::class, 'paymentPage'])
+    ->middleware('auth')
+    ->name('transactions.pay');
+
+Route::get('/transactions/{transaction}/callback', [TransactionController::class, 'callback'])
+    ->name('transactions.callback');
+
 // Route::get('/debug-signature', function (Request $request) {
 //     return response()->json([
 //         'full_url' => $request->fullUrl(),
