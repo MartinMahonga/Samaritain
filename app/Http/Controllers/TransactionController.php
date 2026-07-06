@@ -33,10 +33,10 @@ class TransactionController extends Controller
                 'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
-                    'currency' => 'XAF', // ou ta devise
+                    'currency' => 'XAF',
                 ],
                 'language' => 'FR',
-                'country' => 'COG', // à vérifier selon les pays supportés par pawaPay
+                'country' => 'COG',
                 'reason' => 'Paiement du pass visite',
                 'metadata' => [
                     ['transactionId' => $transaction->transaction_id],
