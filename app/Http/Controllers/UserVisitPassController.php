@@ -60,7 +60,7 @@ class UserVisitPassController extends Controller
             $result = $this->pawapay->createPaymentPage([
                 'depositId' => $depositId,
                 'returnUrl' => route('transactions.callback', $transaction),
-                'customerMessage' => 'Samaritain - Pass visite',
+                'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
                     'currency' => 'XAF',
