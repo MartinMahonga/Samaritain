@@ -131,6 +131,10 @@
                                 <i data-lucide="drill" class="w-4 h-4 text-gray-400 dark:text-gray-500"></i> Profil artisan
                             </a>
                         @endif
+                        <a href="{{ route('my-visit-passes.index') }}"
+                            class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
+                            <i data-lucide="ticket" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mes pass visite
+                        </a>
                         <a href="{{ route('favorite') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                             <i data-lucide="heart" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mes favoris

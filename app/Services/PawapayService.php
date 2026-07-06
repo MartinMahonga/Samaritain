@@ -3,11 +3,11 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 
 class PawapayService
 {
     protected string $baseUrl;
+
     protected string $token;
 
     public function __construct()
@@ -24,7 +24,7 @@ class PawapayService
 
         if ($response->failed()) {
             // log l'erreur, lever une exception, etc.
-            throw new \Exception('Erreur pawaPay: ' . $response->body());
+            throw new \Exception('Erreur pawaPay: '.$response->body());
         }
 
         return $response->json();

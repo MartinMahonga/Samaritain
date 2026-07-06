@@ -24,6 +24,7 @@ use App\Http\Controllers\ScanController;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\UserVisitPassController;
 use App\Http\Controllers\VisitRequestController;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Http\Request;
@@ -220,6 +221,22 @@ Route::get('/transactions/pay', [TransactionController::class, 'paymentPage'])
 
 Route::get('/transactions/{transaction}/callback', [TransactionController::class, 'callback'])
     ->name('transactions.callback');
+
+// User visit passes routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/visit-pass/create/{property}', [UserVisitPassController::class, 'create'])
+        ->name('my-visit-passes.create');
+    Route::post('/visit-pass', [UserVisitPassController::class, 'store'])
+        ->name('my-visit-passes.store');
+    Route::get('/my-visit-passes', [UserVisitPassController::class, 'index'])
+        ->name('my-visit-passes.index');
+    Route::get('/my-visit-passes/{visitPass}', [UserVisitPassController::class, 'show'])
+        ->name('my-visit-passes.show');
+    Route::get('/my-visit-passes/{visitPass}/download', [UserVisitPassController::class, 'download'])
+        ->name('my-visit-passes.download');
+    Route::post('/my-visit-passes/{visitPass}/retry-payment', [UserVisitPassController::class, 'retryPayment'])
+        ->name('my-visit-passes.retry-payment');
+});
 
 // Route::get('/debug-signature', function (Request $request) {
 //     return response()->json([

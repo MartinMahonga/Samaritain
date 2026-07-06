@@ -10,11 +10,14 @@ class Transaction extends Model
     use HasUuids;
 
     protected $primaryKey = 'transaction_id';
+
     public $incrementing = false;
+
     protected $keyType = 'string';
 
     protected $fillable = [
         'user_id',
+        'visit_pass_id',
         'status',
         'amount',
     ];
@@ -28,5 +31,10 @@ class Transaction extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function visitPass()
+    {
+        return $this->belongsTo(VisitPass::class);
     }
 }

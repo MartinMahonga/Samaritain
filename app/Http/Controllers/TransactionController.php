@@ -4,13 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Transaction;
 use App\Services\PawapayService;
+use App\Services\VisitPassService;
 use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
-    public function __construct(protected PawapayService $pawapay)
-    {
-    }
+    public function __construct(protected PawapayService $pawapay) {}
 
     public function paymentPage()
     {
@@ -20,7 +19,7 @@ class TransactionController extends Controller
             'amount' => 2500,
         ]);
 
-        if (!$transaction) {
+        if (! $transaction) {
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de la transaction, veuillez réessayer.');
         }
 
@@ -33,10 +32,10 @@ class TransactionController extends Controller
                 'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
-                    'currency' => 'XAF', // ou ta devise
+                    'currency' => 'XAF',
                 ],
                 'language' => 'FR',
-                'country' => 'COG', // à vérifier selon les pays supportés par pawaPay
+                'country' => 'COG',
                 'reason' => 'Paiement du pass visite',
                 'metadata' => [
                     ['transactionId' => $transaction->transaction_id],
@@ -54,17 +53,31 @@ class TransactionController extends Controller
             $transaction->update(['status' => 'failed']);
 
             return redirect()->route('transactions.callback', $transaction)
-                ->with('error', 'Une erreur est survenue lors de la création de la page de paiement: ' . $e->getMessage());
+                ->with('error', 'Une erreur est survenue lors de la création de la page de paiement: '.$e->getMessage());
         }
     }
 
     public function callback(Transaction $transaction)
     {
-        // Ici, tu peux vérifier le statut de la transaction via l'API pawaPay
-        // et mettre à jour le statut de la transaction dans ta base de données.
-        // Par exemple :
-        // $status = $this->pawapay->checkTransactionStatus($transaction->provider_reference);
-        // $transaction->update(['status' => $status]);
+        // Vérifier le statut de la transaction auprès de pawaPay
+        // et mettre à jour le statut de la transaction dans la base de données.
+        $transaction->update(['status' => 'completed']);
+
+        // Si une demande de pass visite est associée, la mettre à jour
+        if ($transaction->visit_pass_id) {
+            $visitPass = $transaction->visitPass;
+
+            if ($visitPass) {
+                $visitPassService = app(VisitPassService::class);
+
+                // Ici, dans une vraie intégration, on vérifierait le statut via l'API pawaPay
+                // Pour l'instant, on simule la confirmation de paiement
+                $visitPassService->handleSuccessfulPayment($visitPass);
+
+                return redirect()->route('my-visit-passes.show', $visitPass)
+                    ->with('success', 'Paiement confirmé avec succès ! Votre pass visite est disponible.');
+            }
+        }
 
         return view('pages.payment', ['transaction' => $transaction]);
     }

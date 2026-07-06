@@ -66,14 +66,14 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'like', '%' . $request->keyword . '%')
+                $q->where('title', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
                     ->orWhereHas('city', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%' . $request->keyword . '%');
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%' . $request->keyword . '%');
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
                     });
             });
         }
@@ -311,14 +311,14 @@ class PropertyController extends Controller
 
         if ($request->filled('keyword')) {
             $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('description', 'like', '%' . $request->keyword . '%')
-                    ->orWhere('address', 'like', '%' . $request->keyword . '%')
+                $q->where('title', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('description', 'like', '%'.$request->keyword.'%')
+                    ->orWhere('address', 'like', '%'.$request->keyword.'%')
                     ->orWhereHas('city', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%' . $request->keyword . '%');
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
-                        $q2->where('name', 'like', '%' . $request->keyword . '%');
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
                     });
             });
         }
@@ -367,7 +367,7 @@ class PropertyController extends Controller
 
         // Créer une copie
         $newProperty = $property->replicate();
-        $newProperty->title = $property->title . ' (Copie)';
+        $newProperty->title = $property->title.' (Copie)';
         $newProperty->slug = $this->generateUniqueSlug($newProperty->title);
         $newProperty->is_verify = false;
         $newProperty->created_by = Auth::id();
@@ -379,7 +379,7 @@ class PropertyController extends Controller
         // Copier les images
         foreach ($property->images as $image) {
             $oldPath = $image->getRawOriginal('image_url');
-            $newPath = 'properties/' . uniqid() . '.jpg';
+            $newPath = 'properties/'.uniqid().'.jpg';
 
             // Copier le fichier
             if (Storage::exists($oldPath)) {
@@ -403,7 +403,7 @@ class PropertyController extends Controller
         $counter = 1;
 
         while (Property::withTrashed()->where('slug', $slug)->exists()) {
-            $slug = $baseSlug . '-' . $counter;
+            $slug = $baseSlug.'-'.$counter;
             $counter++;
         }
 
@@ -416,7 +416,7 @@ class PropertyController extends Controller
      */
     protected function registerView(Request $request, Property $property): void
     {
-        $cacheKey = 'property_view_' . $property->id . '_' . $request->ip();
+        $cacheKey = 'property_view_'.$property->id.'_'.$request->ip();
 
         // Cache::add() retourne true si la clé a été ajoutée (donc n'existait pas)
         if (Cache::add($cacheKey, true, now()->addHours(24))) {
