@@ -45,8 +45,11 @@
                 class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] focus:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] active:bg-[var(--primary)] h-9 text-center px-4 py-2">
                 Contacter l'agence
             </a>
-            <x-btn style="secondary" class="dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-700">Acheter un pass
-                visite</x-btn>
+            <a href="{{ route('my-visit-passes.create', $property) }}"
+                class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] border border-[var(--border)] dark:border-gray-700 text-[var(--foreground)] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 h-9 text-center px-4 py-2">
+                <i data-lucide="ticket" class="w-4 h-4"></i>
+                Acheter un pass visite
+            </a>
         </div>
 
         {{-- Agent --}}
