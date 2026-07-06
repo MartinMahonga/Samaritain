@@ -30,7 +30,7 @@ class TransactionController extends Controller
             $result = $this->pawapay->createPaymentPage([
                 'depositId' => $depositId, // uuid du modèle
                 'returnUrl' => route('transactions.callback', $transaction),
-                'customerMessage' => 'Paiement Samaritain Immobilier',
+                'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
                     'currency' => 'XAF', // ou ta devise
