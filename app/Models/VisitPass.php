@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -26,12 +27,14 @@ class VisitPass extends Model
         'payment_status',
         'status',
         'paid_at',
+        'expires_at',
         'qr_code_path',
         'pdf_path',
     ];
 
     protected $casts = [
         'paid_at' => 'datetime',
+        'expires_at' => 'datetime',
         'amount' => 'integer',
     ];
 
@@ -66,6 +69,7 @@ class VisitPass extends Model
             'payment_status' => 'paid',
             'status' => 'active',
             'paid_at' => now(),
+            'expires_at' => $this->created_at ? $this->created_at->copy()->addDays(3) : now()->addDays(3),
         ]);
     }
 
@@ -94,7 +98,51 @@ class VisitPass extends Model
 
     public function isDownloadable(): bool
     {
-        return $this->isPaid() && $this->status === 'active';
+        return $this->isPaid() && $this->isActive();
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === 'active'
+            && $this->payment_status === 'paid'
+            && $this->expires_at
+            && $this->expires_at->isFuture();
+    }
+
+    public function isExpired(): bool
+    {
+        if ($this->status === 'expired') {
+            return true;
+        }
+
+        return $this->expires_at ? $this->expires_at->isPast() : false;
+    }
+
+    public function updateStatus(): void
+    {
+        if ($this->status === 'cancelled') {
+            return;
+        }
+
+        if ($this->expires_at && $this->expires_at->isPast()) {
+            $this->status = 'expired';
+            $this->saveQuietly();
+        }
+    }
+
+    public function getExpirationDateAttribute()
+    {
+        return $this->expires_at;
+    }
+
+    public function getRemainingVisitsAttribute()
+    {
+        return 1;
+    }
+
+    public function getAllowedVisitsAttribute()
+    {
+        return 1;
     }
 
     public function getQrCodeUrl(): string
@@ -118,5 +166,10 @@ class VisitPass extends Model
     public function getRouteKeyName(): string
     {
         return 'id';
+    }
+
+    public function scans(): HasMany
+    {
+        return $this->hasMany(PassScan::class, 'visit_pass_id');
     }
 }

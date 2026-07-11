@@ -26,4 +26,9 @@ class VisitPassPolicy
     {
         return $user->id === $visitPass->user_id && $visitPass->isPaymentFailed();
     }
+
+    public function delete(User $user, VisitPass $visitPass): bool
+    {
+        return $user->id === $visitPass->user_id;
+    }
 }

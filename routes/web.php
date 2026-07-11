@@ -236,6 +236,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('my-visit-passes.download');
     Route::post('/my-visit-passes/{visitPass}/retry-payment', [UserVisitPassController::class, 'retryPayment'])
         ->name('my-visit-passes.retry-payment');
+    Route::delete('/my-visit-passes/{visitPass}', [UserVisitPassController::class, 'destroy'])
+        ->name('my-visit-passes.destroy');
 });
 
 // Route::get('/debug-signature', function (Request $request) {

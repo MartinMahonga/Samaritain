@@ -21,7 +21,7 @@ class PassController extends Controller
     {
         Gate::authorize('viewAny', Pass::class);
 
-        $filters = $request->only(['status', 'search']);
+        $filters = $request->only(['filter', 'search']);
         $passes = $this->passService->searchPasses($filters);
         $statistics = $this->passService->getStatistics();
 

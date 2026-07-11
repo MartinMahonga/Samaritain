@@ -97,17 +97,34 @@
                                         {{ $visitPass->property->city->name ?? 'Brazzaville' }}
                                     </div>
 
-                                    <div class="flex items-center gap-4 mt-2 text-xs text-gray-600 dark:text-gray-400">
+                                    <div class="flex flex-wrap items-center gap-x-4 gap-y-1 mt-2 text-xs text-gray-600 dark:text-gray-400">
                                         <span class="flex items-center gap-1">
-                                            <i data-lucide="hash" class="w-3 h-3"></i>
+                                            <i data-lucide="hash" class="w-3.5 h-3.5"></i>
                                             {{ $visitPass->reference }}
                                         </span>
                                         <span class="flex items-center gap-1">
-                                            <i data-lucide="calendar" class="w-3 h-3"></i>
-                                            {{ $visitPass->created_at->format('d/m/Y') }}
+                                            <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
+                                            Achat: {{ $visitPass->created_at->format('d/m/Y') }}
                                         </span>
+                                        @if($visitPass->expires_at)
+                                            <span class="flex items-center gap-1 text-gray-500 dark:text-gray-400">
+                                                <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                                Expire: {{ $visitPass->expires_at->format('d/m/Y H:i') }}
+                                                @if($visitPass->isActive())
+                                                    @php
+                                                        $daysLeft = now()->diffInDays($visitPass->expires_at, false);
+                                                        $hoursLeft = now()->diffInHours($visitPass->expires_at, false);
+                                                    @endphp
+                                                    @if($daysLeft > 0)
+                                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold">({{ $daysLeft }} j)</span>
+                                                    @elseif($hoursLeft > 0)
+                                                        <span class="text-amber-600 dark:text-amber-400 font-semibold">({{ $hoursLeft }} h)</span>
+                                                    @endif
+                                                @endif
+                                            </span>
+                                        @endif
                                         @if($visitPass->isPaid())
-                                            <span class="font-medium text-primary dark:text-primary-400">
+                                            <span class="font-semibold text-primary dark:text-primary-400">
                                                 {{ number_format($visitPass->amount, 0, ',', ' ') }} FCFA
                                             </span>
                                         @endif
@@ -115,7 +132,7 @@
                                 </div>
 
                                 {{-- Actions --}}
-                                <div class="flex items-center gap-2 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                                <div class="flex items-center gap-4 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                                     <a href="{{ route('my-visit-passes.show', $visitPass) }}"
                                         class="inline-flex items-center gap-1.5 text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors">
                                         <i data-lucide="eye" class="w-3.5 h-3.5"></i>
@@ -140,6 +157,30 @@
                                             </button>
                                         </form>
                                     @endif
+
+                                    @can('delete', $visitPass)
+                                        <div x-data="{ showConfirm: false }" class="relative inline-block">
+                                            <button @click="showConfirm = true" type="button"
+                                                class="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
+                                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                                Supprimer
+                                            </button>
+                                            <div x-show="showConfirm" @click.away="showConfirm = false" x-cloak
+                                                class="absolute z-10 bottom-full left-0 mb-2 w-48 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 text-xs">
+                                                <p class="mb-2 text-gray-700 dark:text-gray-300 font-medium">Confirmer la suppression ?</p>
+                                                <div class="flex gap-2 justify-end">
+                                                    <button @click="showConfirm = false" type="button"
+                                                        class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-200 transition-colors">Non</button>
+                                                    <form action="{{ route('my-visit-passes.destroy', $visitPass) }}" method="POST" class="inline">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit"
+                                                            class="px-2 py-1 bg-red-600 rounded text-white hover:bg-red-700 transition-colors">Oui</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endcan
                                 </div>
                             </div>
                         </div>

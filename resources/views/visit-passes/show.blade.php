@@ -158,6 +158,52 @@
                         @endif
                     </div>
                 </div>
+
+                {{-- Expiration info --}}
+                @if($visitPass->expires_at)
+                    <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
+                        <h2 class="font-display text-lg font-semibold mb-4 dark:text-white">Validité</h2>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="block text-gray-500 dark:text-gray-400 text-xs">Date d'expiration</span>
+                                <span class="dark:text-white font-medium">{{ $visitPass->expires_at->format('d/m/Y à H:i') }}</span>
+                            </div>
+                            <div>
+                                <span class="block text-gray-500 dark:text-gray-400 text-xs">Temps restant</span>
+                                @if($visitPass->isExpired())
+                                    <span class="text-red-600 dark:text-red-400 font-medium flex items-center gap-1">
+                                        <i data-lucide="calendar-x" class="w-3.5 h-3.5"></i>
+                                        Expiré
+                                    </span>
+                                @elseif($visitPass->isActive())
+                                    @php
+                                        $daysLeft = now()->diffInDays($visitPass->expires_at, false);
+                                        $hoursLeft = now()->diffInHours($visitPass->expires_at, false);
+                                        $minutesLeft = now()->diffInMinutes($visitPass->expires_at, false);
+                                    @endphp
+                                    @if($daysLeft >= 1)
+                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                            {{ $daysLeft }} jour(s) et {{ $hoursLeft % 24 }}h
+                                        </span>
+                                    @elseif($hoursLeft >= 1)
+                                        <span class="text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                            {{ $hoursLeft }}h {{ $minutesLeft % 60 }}min
+                                        </span>
+                                    @else
+                                        <span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-1">
+                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                            {{ $minutesLeft }} min
+                                        </span>
+                                    @endif
+                                @else
+                                    <span class="text-gray-400 dark:text-gray-500 italic">Non activé</span>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                @endif
             </div>
 
             {{-- Right column --}}
@@ -209,6 +255,51 @@
                             </div>
                         @endif
 
+                        @can('delete', $visitPass)
+                            <div x-data="{ showConfirm: false }">
+                                <button @click="showConfirm = true" type="button"
+                                    class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-2.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                    Supprimer ce pass
+                                </button>
+
+                                {{-- Confirmation overlay --}}
+                                <div x-show="showConfirm" x-cloak
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70" @click.self="showConfirm = false">
+                                    <div class="w-full max-w-sm mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" @click.stop>
+                                        <div class="flex items-start gap-3">
+                                            <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 shrink-0">
+                                                <i data-lucide="alert-octagon" class="h-5 w-5 text-red-600 dark:text-red-400"></i>
+                                            </div>
+                                            <div>
+                                                <h3 class="text-base font-semibold text-gray-900 dark:text-white">Supprimer ce pass visite ?</h3>
+                                                <p class="mt-1 text-sm text-gray-600 dark:text-gray-300">
+                                                    Le pass <strong>{{ $visitPass->reference }}</strong> sera définitivement supprimé.
+                                                </p>
+                                                <p class="mt-1 text-xs text-red-600 dark:text-red-400">
+                                                    Cette action est irréversible.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="mt-5 flex items-center justify-end gap-3">
+                                            <button @click="showConfirm = false" type="button"
+                                                class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+                                                Annuler
+                                            </button>
+                                            <form action="{{ route('my-visit-passes.destroy', $visitPass) }}" method="POST">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit"
+                                                    class="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endcan
+
                         <a href="{{ route('my-visit-passes.index') }}"
                             class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 px-4 py-2.5 text-sm font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                             <i data-lucide="arrow-left" class="w-4 h-4"></i>
@@ -233,6 +324,12 @@
                             <span>Créé le</span>
                             <span class="dark:text-gray-200">{{ $visitPass->created_at->format('d/m/Y H:i') }}</span>
                         </div>
+                        @if($visitPass->expires_at)
+                            <div class="flex justify-between">
+                                <span>Expire le</span>
+                                <span class="dark:text-gray-200">{{ $visitPass->expires_at->format('d/m/Y H:i') }}</span>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
