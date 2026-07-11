@@ -7,7 +7,7 @@ use App\Models\VisitPass;
 
 class VisitPassPolicy
 {
-    public function viewAny(User $user): bool
+    public function viewAny(User $user, VisitPass $visitPass): bool
     {
         return true; // Any authenticated user can see their own passes
     }
