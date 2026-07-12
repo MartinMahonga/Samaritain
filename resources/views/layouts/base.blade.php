@@ -16,6 +16,13 @@
     <x-ui.navbar />
 
     <main class="flex-1 mb-3">
+        @if (session('success'))
+            <div class="mx-3 mt-3 md:mx-auto md:max-w-4xl p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-400 text-sm flex items-center gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
+                <span>{{ session('success') }}</span>
+            </div>
+        @endif
+
         @yield('content')
     </main>
 
@@ -101,54 +108,6 @@
                 }
             }
         }
-
-        // Gestion du formulaire avec Alpine.js et fetch
-        document.addEventListener('alpine:init', () => {
-            Alpine.data('visitRequestForm', () => ({
-                isSubmitting: false,
-                successMessage: '',
-                errorMessage: '',
-
-                async submitForm(event) {
-                    event.preventDefault();
-                    this.isSubmitting = true;
-                    this.successMessage = '';
-                    this.errorMessage = '';
-
-                    const form = event.target;
-                    const formData = new FormData(form);
-
-                    try {
-                        const response = await fetch(form.action, {
-                            method: 'POST',
-                            headers: {
-                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                                'Accept': 'application/json',
-                            },
-                            body: formData
-                        });
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                            this.successMessage = data.message || 'Demande envoyée avec succès !';
-                            form.reset();
-                            // Fermer la modal après 2 secondes
-                            setTimeout(() => {
-                                this.closeModal();
-                                this.successMessage = '';
-                            }, 2000);
-                        } else {
-                            this.errorMessage = data.message || 'Une erreur est survenue. Veuillez réessayer.';
-                        }
-                    } catch (error) {
-                        this.errorMessage = 'Erreur de connexion. Veuillez réessayer.';
-                    } finally {
-                        this.isSubmitting = false;
-                    }
-                }
-            }));
-        });
     </script>
 </body>
 
