@@ -41,6 +41,8 @@ class VisitPassService
                 'email' => $data['email'] ?? null,
                 'comment' => $data['comment'] ?? null,
                 'amount' => self::PASS_PRICE,
+                'allowed_visits' => VisitPass::ALLOWED_VISITS,
+                'remaining_visits' => VisitPass::ALLOWED_VISITS,
                 'payment_status' => 'pending',
                 'status' => 'pending_payment',
             ]);

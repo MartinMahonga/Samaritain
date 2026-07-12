@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\Pass;
 use App\Models\PassScan;
+use App\Models\VisitPass;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Color\Color;
 use Endroid\QrCode\Encoding\Encoding;
@@ -160,11 +161,23 @@ class PassService
 
     public function getStatistics(): array
     {
+        $totalManual = Pass::count();
+        $totalVisit = VisitPass::count();
+
+        $activeManual = Pass::where('status', 'actif')->where('expiration_date', '>', now())->count();
+        $activeVisit = VisitPass::where('status', 'active')
+            ->where('expires_at', '>', now())
+            ->where('remaining_visits', '>', 0)
+            ->count();
+
+        $expiredManual = Pass::where('status', 'expiré')->orWhere('expiration_date', '<=', now())->count();
+        $expiredVisit = VisitPass::where('status', 'expired')->orWhere('expires_at', '<=', now())->count();
+
         return [
-            'total' => Pass::count(),
-            'active' => Pass::where('status', 'actif')->count(),
-            'expired' => Pass::where('status', 'expiré')->count(),
-            'used' => Pass::where('status', 'utilisé')->count(),
+            'total' => $totalManual + $totalVisit,
+            'active' => $activeManual + $activeVisit,
+            'expired' => $expiredManual + $expiredVisit,
+            'used' => Pass::where('status', 'utilisé')->count() + VisitPass::where('status', 'used')->count(),
             'suspended' => Pass::where('status', 'suspendu')->count(),
             'total_visits' => PassScan::count(),
         ];
@@ -172,21 +185,139 @@ class PassService
 
     public function searchPasses(array $filters)
     {
-        $query = Pass::query();
+        $filter = $filters['filter'] ?? 'all';
+        $search = $filters['search'] ?? null;
 
-        if (! empty($filters['status'])) {
-            $query->where('status', $filters['status']);
-        }
+        $passesQuery = DB::table('passes')
+            ->select([
+                'id',
+                'uuid',
+                'holder_name',
+                'phone',
+                'email',
+                'status',
+                'created_at',
+                'expiration_date as expires_at',
+                DB::raw('NULL as user_id'),
+                DB::raw('NULL as property_id'),
+                DB::raw('NULL as payment_status'),
+                DB::raw('NULL as amount'),
+                DB::raw('NULL as transaction_id'),
+                DB::raw('NULL as reference'),
+                DB::raw("'manual' as pass_type"),
+            ]);
 
-        if (! empty($filters['search'])) {
-            $search = '%'.$filters['search'].'%';
-            $query->where(function ($q) use ($search) {
-                $q->where('holder_name', 'ilike', $search)
-                    ->orWhere('phone', 'ilike', $search)
-                    ->orWhere('uuid', 'ilike', $search);
+        $visitPassesQuery = DB::table('visit_passes')
+            ->select([
+                'id',
+                'uuid',
+                'holder_name',
+                'phone',
+                'email',
+                'status',
+                'created_at',
+                'expires_at',
+                'user_id',
+                'property_id',
+                'payment_status',
+                'amount',
+                'transaction_id',
+                'reference',
+                DB::raw("'visit_pass' as pass_type"),
+            ]);
+
+        if (! empty($search)) {
+            $searchPattern = '%'.$search.'%';
+            $passesQuery->where(function ($q) use ($searchPattern) {
+                $q->where('holder_name', 'ilike', $searchPattern)
+                    ->orWhere('phone', 'ilike', $searchPattern)
+                    ->orWhere('uuid', 'ilike', $searchPattern);
+            });
+
+            $visitPassesQuery->where(function ($q) use ($searchPattern) {
+                $q->where('holder_name', 'ilike', $searchPattern)
+                    ->orWhere('phone', 'ilike', $searchPattern)
+                    ->orWhere('uuid', 'ilike', $searchPattern)
+                    ->orWhere('reference', 'ilike', $searchPattern);
             });
         }
 
-        return $query->orderBy('created_at', 'desc')->paginate(15);
+        $includeManual = true;
+        $includeVisit = true;
+
+        switch ($filter) {
+            case 'active':
+                $passesQuery->where('status', 'actif')
+                    ->where('expiration_date', '>', now());
+                $visitPassesQuery->where('status', 'active')
+                    ->where('expires_at', '>', now())
+                    ->where('remaining_visits', '>', 0);
+                break;
+            case 'expired':
+                $passesQuery->where(function ($q) {
+                    $q->where('status', 'expiré')
+                        ->orWhere('expiration_date', '<=', now());
+                });
+                $visitPassesQuery->where(function ($q) {
+                    $q->where('status', 'expired')
+                        ->orWhere('expires_at', '<=', now());
+                });
+                break;
+            case 'manual':
+                $includeVisit = false;
+                break;
+            case 'generated':
+                $includeManual = false;
+                break;
+            case 'paid':
+                $includeManual = false;
+                $visitPassesQuery->where('payment_status', 'paid');
+                break;
+            case 'payment_pending':
+                $includeManual = false;
+                $visitPassesQuery->where('payment_status', 'pending');
+                break;
+            case 'payment_failed':
+                $includeManual = false;
+                $visitPassesQuery->where('payment_status', 'failed');
+                break;
+        }
+
+        if ($includeManual && $includeVisit) {
+            $query = DB::table(function ($q) use ($passesQuery, $visitPassesQuery) {
+                $q->from($passesQuery->unionAll($visitPassesQuery), 'unified_passes');
+            });
+        } elseif ($includeManual) {
+            $query = DB::table(function ($q) use ($passesQuery) {
+                $q->from($passesQuery, 'unified_passes');
+            });
+        } else {
+            $query = DB::table(function ($q) use ($visitPassesQuery) {
+                $q->from($visitPassesQuery, 'unified_passes');
+            });
+        }
+
+        $paginator = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        $visitPassIds = collect($paginator->items())->where('pass_type', 'visit_pass')->pluck('id');
+        $visitPasses = VisitPass::with(['user', 'property', 'transaction'])
+            ->whereIn('id', $visitPassIds)
+            ->get()
+            ->keyBy('id');
+
+        $manualPassIds = collect($paginator->items())->where('pass_type', 'manual')->pluck('id');
+        $manualPasses = Pass::whereIn('id', $manualPassIds)
+            ->get()
+            ->keyBy('id');
+
+        $paginator->getCollection()->transform(function ($item) use ($visitPasses, $manualPasses) {
+            if ($item->pass_type === 'visit_pass') {
+                return $visitPasses->get($item->id);
+            }
+
+            return $manualPasses->get($item->id);
+        });
+
+        return $paginator;
     }
 }

@@ -24,6 +24,12 @@
                             'show' => auth()->user()?->artisan,
                         ],
                         [
+                            'route' => 'my-visit-passes.index',
+                            'icon' => 'ticket',
+                            'label' => 'Pass vistite',
+                            'show' => true
+                        ],
+                        [
                             'route' => 'profile.show',
                             'icon' => 'settings',
                             'label' => 'Paramètres',

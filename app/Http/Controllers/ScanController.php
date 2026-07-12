@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\ScanRequest;
 use App\Models\Pass;
+use App\Models\VisitPass;
 use App\Services\PassScanService;
 use Illuminate\Support\Facades\Gate;
 
@@ -41,14 +42,19 @@ class ScanController extends Controller
 
         $pass = $this->scanService->scanPass($result['pass'], auth()->user(), $request);
 
+        $isVisitPass = $pass instanceof VisitPass;
+        $expDate = $isVisitPass ? $pass->expires_at : $pass->expiration_date;
+
         return response()->json([
             'valid' => true,
-            'message' => 'Scan validé avec succès',
+            'message' => $isVisitPass ? 'Pass visite validé avec succès' : 'Scan validé avec succès',
             'pass' => [
                 'holder_name' => $pass->holder_name,
-                'expiration_date' => $pass->expiration_date->format('d/m/Y'),
+                'phone' => $pass->phone,
+                'expiration_date' => $expDate ? $expDate->toIso8601String() : null,
                 'remaining_visits' => $pass->remaining_visits,
-                'total_visits' => $pass->allowed_visits,
+                'allowed_visits' => $pass->allowed_visits,
+                'status' => $pass->status === 'active' ? 'actif' : ($pass->status === 'expired' ? 'expiré' : ($pass->status === 'used' ? 'utilisé' : $pass->status)),
             ],
         ]);
     }
