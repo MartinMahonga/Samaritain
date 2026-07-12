@@ -67,9 +67,9 @@
                     </ul>
                 </div>
 
-                {{-- L'agence --}}
+                {{-- L'entreprise --}}
                 <div>
-                    <h3 class="font-bold text-primary dark:text-accent mb-4 text-sm uppercase tracking-wide">L'agence
+                    <h3 class="font-bold text-primary dark:text-accent mb-4 text-sm uppercase tracking-wide">L'entreprise
                     </h3>
                     <ul class="space-y-2 text-sm">
                         <li><a href="#"

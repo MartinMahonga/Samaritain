@@ -30,7 +30,7 @@
                             </div>
 
                             <div>
-                                <label for="role" class="block text-sm font-medium text-[var(--foreground)] mb-1">Rôle dans l'agence</label>
+                                <label for="role" class="block text-sm font-medium text-[var(--foreground)] mb-1">Rôle dans l'entreprise</label>
                                 <select name="role" id="role" required class="w-full rounded-md border-[var(--input)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] focus:ring-[var(--ring)]">
                                     <option value="{{ \App\Enums\AgencyRole::ADMIN->value }}">Administrateur</option>
                                     <option value="{{ \App\Enums\AgencyRole::AGENT->value }}" selected>Agent immobilier</option>

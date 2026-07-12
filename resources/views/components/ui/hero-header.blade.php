@@ -31,7 +31,7 @@
             </div>
 
             <p class="text-white/80 text-sm md:text-base leading-relaxed max-w-md">
-                Samaritain est l'agence qui ne prélève aucun frais sur la location.
+                Samaritain est l'entreprise qui ne prélève aucun frais sur la location.
                 Vous payez votre caution, rien de plus.
             </p>
 

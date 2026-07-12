@@ -43,7 +43,7 @@
         <div class="flex flex-col gap-2.5 mb-4">
             <a href="{{ route('property.contact.create', $property) }}"
                 class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] focus:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] active:bg-[var(--primary)] h-9 text-center px-4 py-2">
-                Contacter l'agence
+                Contacter l'entreprise
             </a>
             <a href="{{ route('my-visit-passes.create', $property) }}"
                 class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] border border-[var(--border)] dark:border-gray-700 text-[var(--foreground)] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 h-9 text-center px-4 py-2">

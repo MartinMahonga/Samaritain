@@ -5,7 +5,7 @@
         </h2>
 
         <p class="text-muted-foreground text-sm leading-relaxed mb-6 max-w-2xl mx-auto">
-            Nous croyons que l'accès à un logement de qualité ne devrait pas être pénalisé par des frais d'agence injustes. Nous sommes rémunérés par nos partenaires propriétaires.
+            Nous croyons que l'accès à un logement de qualité ne devrait pas être pénalisé par des frais d'entreprise injustes. Nous sommes rémunérés par nos partenaires propriétaires.
         </p>
 
         <div class="text-primary text-sm font-display mb-3">
