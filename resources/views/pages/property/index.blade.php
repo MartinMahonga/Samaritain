@@ -35,7 +35,7 @@
         <div
             class="bg-card dark:bg-gray-800 rounded-lg shadow-lg -mt-16 md:-mt-20 lg:-mt-24 relative z-10 p-4 sm:p-6 mb-8 md:mb-12">
             <form action="{{ route('property.search') }}" method="GET" id="searchForm">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
                     <!-- Recherche par mot-clé -->
                     <div class="lg:col-span-2">
                         <label
@@ -61,6 +61,21 @@
                             @foreach ($cities as $city)
                                 <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
                                     {{ $city->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <div>
+                        <label
+                            class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Arrondissement</label>
+                        <select name="arrondissement_id" id="arrondissement_id"
+                            class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
+                            <option value="">Toutes les Arrondissement</option>
+                            @foreach ($arrondissements as $arrondissement)
+                                <option value="{{ $arrondissement->id }}"
+                                    {{ request('arrondissement_id') == $arrondissement->id ? 'selected' : '' }}>
+                                    {{ $arrondissement->name }}
                                 </option>
                             @endforeach
                         </select>
