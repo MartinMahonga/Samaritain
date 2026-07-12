@@ -154,7 +154,7 @@ class ArtisanController extends Controller
             'contacts_count' => $artisan->contacts()->count(),
         ];
 
-        $recentReviews = $artisan->reviews()->with('user:id,name,avatar')->latest()->limit(5)->get();
+        $recentReviews = $artisan->reviews()->with('user:id,name,profile_image')->latest()->limit(5)->get();
         $recentContacts = $artisan->contacts()->latest()->limit(5)->get();
 
         return view('pages.artisan.dashboard', compact('artisan', 'stats', 'recentReviews', 'recentContacts'));
