@@ -44,6 +44,10 @@ class PassScanService
                 return $this->invalid('Pass visite expiré', 'expired', $visitPass);
             }
 
+            if ($visitPass->isUsed()) {
+                return $this->invalid('Plus aucune visite disponible', 'used', $visitPass);
+            }
+
             if (! $visitPass->isActive()) {
                 return $this->invalid('Pass visite inactif', 'inactive', $visitPass);
             }
@@ -71,6 +75,7 @@ class PassScanService
                     'device_info' => $this->getDeviceInfo($request),
                 ]);
             } else {
+                $pass->remaining_visits--;
                 $pass->updateStatus();
                 $pass->save();
 

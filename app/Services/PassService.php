@@ -165,7 +165,10 @@ class PassService
         $totalVisit = VisitPass::count();
 
         $activeManual = Pass::where('status', 'actif')->where('expiration_date', '>', now())->count();
-        $activeVisit = VisitPass::where('status', 'active')->where('expires_at', '>', now())->count();
+        $activeVisit = VisitPass::where('status', 'active')
+            ->where('expires_at', '>', now())
+            ->where('remaining_visits', '>', 0)
+            ->count();
 
         $expiredManual = Pass::where('status', 'expiré')->orWhere('expiration_date', '<=', now())->count();
         $expiredVisit = VisitPass::where('status', 'expired')->orWhere('expires_at', '<=', now())->count();
@@ -174,7 +177,7 @@ class PassService
             'total' => $totalManual + $totalVisit,
             'active' => $activeManual + $activeVisit,
             'expired' => $expiredManual + $expiredVisit,
-            'used' => Pass::where('status', 'utilisé')->count(),
+            'used' => Pass::where('status', 'utilisé')->count() + VisitPass::where('status', 'used')->count(),
             'suspended' => Pass::where('status', 'suspendu')->count(),
             'total_visits' => PassScan::count(),
         ];
@@ -247,7 +250,8 @@ class PassService
                 $passesQuery->where('status', 'actif')
                     ->where('expiration_date', '>', now());
                 $visitPassesQuery->where('status', 'active')
-                    ->where('expires_at', '>', now());
+                    ->where('expires_at', '>', now())
+                    ->where('remaining_visits', '>', 0);
                 break;
             case 'expired':
                 $passesQuery->where(function ($q) {

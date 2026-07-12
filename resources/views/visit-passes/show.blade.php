@@ -44,6 +44,7 @@
                 $statusConfig = [
                     'pending_payment' => ['color' => 'amber', 'icon' => 'clock', 'label' => 'En attente de paiement'],
                     'active' => ['color' => 'emerald', 'icon' => 'check-circle', 'label' => 'Actif'],
+                    'used' => ['color' => 'amber', 'icon' => 'check', 'label' => 'Utilisé'],
                     'expired' => ['color' => 'red', 'icon' => 'calendar-x', 'label' => 'Expiré'],
                     'cancelled' => ['color' => 'gray', 'icon' => 'ban', 'label' => 'Annulé'],
                     'payment_failed' => ['color' => 'red', 'icon' => 'alert-triangle', 'label' => 'Paiement échoué'],
@@ -164,6 +165,10 @@
                     <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
                         <h2 class="font-display text-lg font-semibold mb-4 dark:text-white">Validité</h2>
                         <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div>
+                                <span class="block text-gray-500 dark:text-gray-400 text-xs">Visites restantes</span>
+                                <span class="dark:text-white font-medium">{{ $visitPass->remaining_visits }} / {{ $visitPass->allowed_visits }}</span>
+                            </div>
                             <div>
                                 <span class="block text-gray-500 dark:text-gray-400 text-xs">Date d'expiration</span>
                                 <span class="dark:text-white font-medium">{{ $visitPass->expires_at->format('d/m/Y à H:i') }}</span>

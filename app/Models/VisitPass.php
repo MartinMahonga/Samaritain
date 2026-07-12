@@ -13,6 +13,8 @@ class VisitPass extends Model
 {
     use HasFactory;
 
+    public const ALLOWED_VISITS = 3;
+
     protected $fillable = [
         'uuid',
         'user_id',
@@ -24,6 +26,8 @@ class VisitPass extends Model
         'comment',
         'reference',
         'amount',
+        'allowed_visits',
+        'remaining_visits',
         'payment_status',
         'status',
         'paid_at',
@@ -36,6 +40,8 @@ class VisitPass extends Model
         'paid_at' => 'datetime',
         'expires_at' => 'datetime',
         'amount' => 'integer',
+        'allowed_visits' => 'integer',
+        'remaining_visits' => 'integer',
     ];
 
     protected static function boot()
@@ -45,6 +51,8 @@ class VisitPass extends Model
         static::creating(function ($model) {
             $model->uuid = $model->uuid ?? (string) Str::uuid();
             $model->reference = $model->reference ?? 'VP-'.strtoupper(Str::random(8));
+            $model->allowed_visits = $model->allowed_visits ?? self::ALLOWED_VISITS;
+            $model->remaining_visits = $model->remaining_visits ?? $model->allowed_visits;
         });
     }
 
@@ -106,7 +114,8 @@ class VisitPass extends Model
         return $this->status === 'active'
             && $this->payment_status === 'paid'
             && $this->expires_at
-            && $this->expires_at->isFuture();
+            && $this->expires_at->isFuture()
+            && $this->remaining_visits > 0;
     }
 
     public function isExpired(): bool
@@ -118,6 +127,11 @@ class VisitPass extends Model
         return $this->expires_at ? $this->expires_at->isPast() : false;
     }
 
+    public function isUsed(): bool
+    {
+        return $this->remaining_visits <= 0 || $this->status === 'used';
+    }
+
     public function updateStatus(): void
     {
         if ($this->status === 'cancelled') {
@@ -126,23 +140,18 @@ class VisitPass extends Model
 
         if ($this->expires_at && $this->expires_at->isPast()) {
             $this->status = 'expired';
-            $this->saveQuietly();
+        } elseif ($this->remaining_visits <= 0) {
+            $this->status = 'used';
+        } elseif ($this->payment_status === 'paid') {
+            $this->status = 'active';
         }
+
+        $this->saveQuietly();
     }
 
     public function getExpirationDateAttribute()
     {
         return $this->expires_at;
-    }
-
-    public function getRemainingVisitsAttribute()
-    {
-        return 1;
-    }
-
-    public function getAllowedVisitsAttribute()
-    {
-        return 1;
     }
 
     public function getQrCodeUrl(): string

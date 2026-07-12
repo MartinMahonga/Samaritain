@@ -132,22 +132,18 @@
 
                                     {{-- Visites --}}
                                     <td class="px-4 py-3">
-                                        @if($isVisit)
-                                            <span class="text-gray-400 dark:text-gray-500 italic">Unique</span>
-                                        @else
-                                            <div class="flex items-center gap-1">
-                                                <span class="font-medium text-gray-800 dark:text-white">{{ $pass->remaining_visits }}</span>
-                                                <span class="text-gray-400 dark:text-gray-500">/</span>
-                                                <span class="text-gray-600 dark:text-gray-400">{{ $pass->allowed_visits }}</span>
-                                                @if($pass->remaining_visits > 0 && $pass->status === 'actif')
-                                                    <span class="text-emerald-500 text-xs ml-1">●</span>
-                                                @endif
-                                            </div>
-                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-1">
-                                                <div class="bg-blue-600 dark:bg-blue-500 rounded-full h-1" 
-                                                     style="width: {{ ($pass->remaining_visits / $pass->allowed_visits) * 100 }}%"></div>
-                                            </div>
-                                        @endif
+                                        <div class="flex items-center gap-1">
+                                            <span class="font-medium text-gray-800 dark:text-white">{{ $pass->remaining_visits }}</span>
+                                            <span class="text-gray-400 dark:text-gray-500">/</span>
+                                            <span class="text-gray-600 dark:text-gray-400">{{ $pass->allowed_visits }}</span>
+                                            @if($pass->remaining_visits > 0 && ($isVisit ? $pass->isActive() : $pass->status === 'actif'))
+                                                <span class="text-emerald-500 text-xs ml-1">●</span>
+                                            @endif
+                                        </div>
+                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1 mt-1">
+                                            <div class="bg-blue-600 dark:bg-blue-500 rounded-full h-1"
+                                                 style="width: {{ ($pass->remaining_visits / $pass->allowed_visits) * 100 }}%"></div>
+                                        </div>
                                     </td>
 
                                     {{-- Période --}}
@@ -218,6 +214,7 @@
                                                 $statusConfig = [
                                                     'pending_payment' => ['color' => 'amber', 'icon' => 'clock', 'label' => 'En attente'],
                                                     'active' => ['color' => 'emerald', 'icon' => 'check-circle', 'label' => 'Actif'],
+                                                    'used' => ['color' => 'amber', 'icon' => 'check', 'label' => 'Utilisé'],
                                                     'expired' => ['color' => 'red', 'icon' => 'calendar-x', 'label' => 'Expiré'],
                                                     'cancelled' => ['color' => 'gray', 'icon' => 'ban', 'label' => 'Annulé'],
                                                     'payment_failed' => ['color' => 'red', 'icon' => 'alert-triangle', 'label' => 'Paiement échoué'],

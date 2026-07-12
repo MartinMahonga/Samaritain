@@ -80,6 +80,7 @@
                                             $statusConfig = [
                                                 'pending_payment' => ['color' => 'amber', 'icon' => 'clock', 'label' => 'En attente de paiement'],
                                                 'active' => ['color' => 'emerald', 'icon' => 'check-circle', 'label' => 'Actif'],
+                                                'used' => ['color' => 'amber', 'icon' => 'check', 'label' => 'Utilisé'],
                                                 'expired' => ['color' => 'red', 'icon' => 'calendar-x', 'label' => 'Expiré'],
                                                 'cancelled' => ['color' => 'gray', 'icon' => 'ban', 'label' => 'Annulé'],
                                                 'payment_failed' => ['color' => 'red', 'icon' => 'alert-triangle', 'label' => 'Paiement échoué'],

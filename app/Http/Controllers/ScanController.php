@@ -52,9 +52,9 @@ class ScanController extends Controller
                 'holder_name' => $pass->holder_name,
                 'phone' => $pass->phone,
                 'expiration_date' => $expDate ? $expDate->toIso8601String() : null,
-                'remaining_visits' => $isVisitPass ? 1 : $pass->remaining_visits,
-                'allowed_visits' => $isVisitPass ? 1 : $pass->allowed_visits,
-                'status' => $pass->status === 'active' ? 'actif' : ($pass->status === 'expired' ? 'expiré' : $pass->status),
+                'remaining_visits' => $pass->remaining_visits,
+                'allowed_visits' => $pass->allowed_visits,
+                'status' => $pass->status === 'active' ? 'actif' : ($pass->status === 'expired' ? 'expiré' : ($pass->status === 'used' ? 'utilisé' : $pass->status)),
             ],
         ]);
     }
