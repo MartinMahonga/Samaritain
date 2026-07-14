@@ -80,6 +80,14 @@
                         <x-ui.property-amenity :property="$property" />
                     @endif
 
+                    {{-- Localisation --}}
+                    <section class="mt-10">
+                        <h2 class="font-display font-semibold text-xl text-[#0F0E0C] dark:text-white mb-4">
+                            Localisation
+                        </h2>
+                        <x-ui.property-map :property="$property" />
+                    </section>
+
                 </div>
 
                 <x-ui.info-aside :property="$property" />

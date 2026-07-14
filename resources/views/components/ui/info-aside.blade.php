@@ -29,7 +29,7 @@
         </div>
 
         {{-- Map placeholder --}}
-        <div id="map"
+        <div
             class="w-full h-36 border border-secondary/10 z-0 dark:border-gray-700 rounded-xl
                 flex flex-col items-center justify-center gap-2
                 font-body text-[0.75rem] mb-6 dark:text-gray-400
@@ -84,19 +84,3 @@
         </p>
     @endif
 </aside>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script>
-    const map = L.map('map').setView([-4.2634, 15.2429], 13);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-
-    L.marker([-4.2634, 15.2429])
-        .addTo(map)
-        .bindPopup('Bien immobilier');
-</script>

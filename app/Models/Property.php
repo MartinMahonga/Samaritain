@@ -25,6 +25,8 @@ class Property extends Model
         'floor',
         'furnished',
         'address',
+        'latitude',
+        'longitude',
         'category_id',
         'city_id',
         'arrondissement_id',

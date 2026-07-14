@@ -49,6 +49,13 @@
             </div>
 
             <div>
+                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Localisation du bien
+                </label>
+                <x-ui.location-picker />
+            </div>
+
+            <div>
                 <x-form.file-input name="images" label="Images" accept="image/*" multiple="{{ true }}" />
             </div>
 
