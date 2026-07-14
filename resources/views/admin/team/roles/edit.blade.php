@@ -54,7 +54,7 @@
                                     <span class="ml-1 text-xs font-normal text-gray-400 dark:text-gray-500"
                                         x-text="'(' + checked.length + '/' + permissions.length + ' sélectionnées)'"></span>
                                 </label>
-                                <button type="button" @click="toggleAll()"
+                                <button type="button" x-on:click="toggleAll()"
                                     class="text-sm font-medium text-primary dark:text-primary-400 hover:underline"
                                     x-text="allChecked ? 'Tout désélectionner' : 'Tout sélectionner'">
                                 </button>

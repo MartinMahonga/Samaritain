@@ -30,7 +30,7 @@ beforeEach(function () {
 test('la page de contact pour une propriété est accessible', function () {
     get(route('property.contact.create', $this->property))
         ->assertOk()
-        ->assertSee('Contacter l\'agence')
+        ->assertSee('Contacter l\'entreprise')
         ->assertSee($this->property->title);
 });
 
@@ -67,7 +67,7 @@ test('la soumission pour une propriété échoue avec des données invalides', f
 test('la page de contact pour une parcelle est accessible', function () {
     get(route('parcelles.contact.create', $this->parcelle))
         ->assertOk()
-        ->assertSee('Contacter l\'agence')
+        ->assertSee('Contacter l\'entreprise')
         ->assertSee($this->parcelle->titre);
 });
 

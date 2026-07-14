@@ -43,7 +43,7 @@
 
                         <div class="flex items-center gap-1">
                             <template x-for="i in 5" :key="i">
-                                <button type="button" @click="note = i" @mouseenter="hover = i"
+                                <button type="button" x-on:click="note = i" @mouseenter="hover = i"
                                     @mouseleave="hover = 0" class="p-0.5">
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"
                                         class="w-7 h-7 transition-colors"

@@ -7,7 +7,7 @@
                     'icon' => 'percent',
                     'color' => 'bg-blue-50 text-blue-600',
                     'title' => 'Zéro commission',
-                    'desc' => 'Pas de frais d\'agence cachés. Vous payez uniquement votre caution.',
+                    'desc' => 'Pas de frais d\'entreprise cachés. Vous payez uniquement votre caution.',
                 ],
                 [
                     'icon' => 'file-check-2',

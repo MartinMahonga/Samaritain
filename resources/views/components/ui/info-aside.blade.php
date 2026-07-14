@@ -29,7 +29,7 @@
         </div>
 
         {{-- Map placeholder --}}
-        <div id="map"
+        <div
             class="w-full h-36 border border-secondary/10 z-0 dark:border-gray-700 rounded-xl
                 flex flex-col items-center justify-center gap-2
                 font-body text-[0.75rem] mb-6 dark:text-gray-400
@@ -43,7 +43,7 @@
         <div class="flex flex-col gap-2.5 mb-4">
             <a href="{{ route('property.contact.create', $property) }}"
                 class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] bg-[var(--primary)] text-[var(--primary-foreground)] hover:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] focus:bg-[color-mix(in_oklab,var(--primary)_90%,transparent)] active:bg-[var(--primary)] h-9 text-center px-4 py-2">
-                Contacter l'agence
+                Contacter l'entreprise
             </a>
             <a href="{{ route('my-visit-passes.create', $property) }}"
                 class="inline-flex w-full items-center justify-center gap-x-1.5 shrink-0 transition-colors duration-100 text-sm/5 font-medium shadow-none rounded-[var(--radius)] border border-[var(--border)] dark:border-gray-700 text-[var(--foreground)] dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 h-9 text-center px-4 py-2">
@@ -84,19 +84,3 @@
         </p>
     @endif
 </aside>
-
-<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css">
-
-<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
-<script>
-    const map = L.map('map').setView([-4.2634, 15.2429], 13);
-
-    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        maxZoom: 19,
-    }).addTo(map);
-
-    L.marker([-4.2634, 15.2429])
-        .addTo(map)
-        .bindPopup('Bien immobilier');
-</script>

@@ -21,7 +21,7 @@ class InvitationNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject("Invitation à rejoindre l'équipe de l'agence")
+            ->subject("Invitation à rejoindre l'équipe de l'entreprise")
             ->markdown('emails.invitation-notification', [
                 'acceptUrl' => $this->acceptUrl,
                 'invitation' => $this->invitation,

@@ -88,6 +88,16 @@
                         <x-form.select name="status" label="Statut *" :options="$statusOptions" placeholder="Choisir un statut"
                             value="{{ $property->status->value ?? 'available' }}" required />
                     </div>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Position sur la carte
+                        </label>
+                        <x-ui.location-picker
+                            :latitude="$property->latitude"
+                            :longitude="$property->longitude"
+                        />
+                    </div>
                 </div>
 
                 <!-- Catégorie et équipements -->

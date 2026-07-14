@@ -23,8 +23,18 @@ class PropertyFactory extends Factory
             'floor' => $this->faker->numberBetween(0, 10),
             'furnished' => $this->faker->boolean(),
             'address' => $this->faker->address(),
+            'latitude' => null,
+            'longitude' => null,
             'status' => 'available',
             'verified' => $this->faker->boolean(),
         ];
+    }
+
+    public function withCoordinates(): static
+    {
+        return $this->state(fn (): array => [
+            'latitude' => $this->faker->latitude(),
+            'longitude' => $this->faker->longitude(),
+        ]);
     }
 }

@@ -37,8 +37,6 @@ class VisitRequestController extends Controller
             Notification::send($admins, new NewVisitRequestNotification($visitRequest));
         }
 
-        return response()->json([
-            'message' => 'Demande envoyée avec succès. Nous vous contacterons sous 5 minutes.',
-        ], 201);
+        return redirect()->back()->with('success', 'Demande envoyée avec succès. Nous vous contacterons sous 5 minutes.');
     }
 }

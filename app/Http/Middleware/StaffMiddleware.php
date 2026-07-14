@@ -17,7 +17,7 @@ class StaffMiddleware
 
         // Vérifier si l'utilisateur est connecté et est staff
         if (! auth()->check() || ! auth()->user()->is_staff) {
-            abort(403, 'Accès réservé aux membres de l\'agence.');
+            abort(403, 'Accès réservé aux membres de l\'entreprise.');
         }
 
         return $next($request);

@@ -42,7 +42,7 @@
                 @foreach($faqs as $faq)
                     <div class="overflow-hidden">
                         <button 
-                            @click="openFaq = openFaq === {{ $faq->id }} ? null : {{ $faq->id }}"
+                            x-on:click="openFaq = openFaq === {{ $faq->id }} ? null : {{ $faq->id }}"
                             class="w-full px-6 py-4 text-left transition flex justify-between items-center"
                         >
                             <span class="font-semibold text-sm font-display text-foreground">{{ $faq->question }}</span>

@@ -4,7 +4,7 @@
     'avatar' => '',
 ])
 
-<div x-data="{ open: false }" @click="open = !open" @keydown.escape="open = false" type="button" aria-haspopup="true"
+<div x-data="{ open: false }" x-on:click="open = !open" @keydown.escape="open = false" type="button" aria-haspopup="true"
     :aria-expanded="open.toString()"
     class="h-14 border-t border-[var(--sidebar-border)] flex items-center px-3 gap-2 justify-between shrink-0 bg-[var(--sidebar)]/80 mt-auto cursor-pointer">
     <div class="flex items-center gap-2 overflow-hidden w-full">
@@ -41,7 +41,7 @@
             <div x-show="open" x-transition:enter="transition ease-out duration-100"
                 x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0"
                 x-transition:leave="transition ease-in duration-75" x-transition:leave-start="opacity-100 translate-y-0"
-                x-transition:leave-end="opacity-0 -translate-y-1" @click.away="open = false"
+                x-transition:leave-end="opacity-0 -translate-y-1" x-on:click.away="open = false"
                 @keydown.escape.window="open = false" x-cloak
                 class="origin-bottom-right absolute right-0 bottom-full mb-2 w-48 bg-[var(--sidebar)] border border-[var(--sidebar-border)] rounded-md shadow-lg z-50 overflow-hidden flex flex-col gap-2 p-1">
                 <a href="#"

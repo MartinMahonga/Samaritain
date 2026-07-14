@@ -36,6 +36,8 @@ class PropertyFormRequest extends FormRequest
             'floor' => ['required', 'integer', 'min:0'],
             'furnished' => ['nullable', 'boolean'],
             'address' => ['required', 'min:8'],
+            'latitude' => ['nullable', 'numeric', 'between:-90,90'],
+            'longitude' => ['nullable', 'numeric', 'between:-180,180'],
             'status' => ['nullable', 'min:3'],
             'category_id' => ['required', 'exists:categories,id'],
             'city_id' => ['required', 'exists:cities,id'],

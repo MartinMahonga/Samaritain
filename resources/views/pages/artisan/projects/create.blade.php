@@ -72,7 +72,7 @@
                                             <template x-if="preview">
                                                 <div class="relative w-full h-full">
                                                     <img :src="preview" class="w-full h-32 object-cover rounded-lg" alt="Aperçu">
-                                                    <button type="button" @click="preview = null; document.getElementById('image').value = ''" class="absolute top-1 right-1 p-1 bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700">
+                                                    <button type="button" x-on:click="preview = null; document.getElementById('image').value = ''" class="absolute top-1 right-1 p-1 bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700">
                                                         <i data-lucide="x" class="w-3 h-3"></i>
                                                     </button>
                                                 </div>

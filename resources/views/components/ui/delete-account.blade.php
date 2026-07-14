@@ -1,5 +1,5 @@
 <div x-data="{ open: false }">
-    <button type="button" @click="open = true"
+    <button type="button" x-on:click="open = true"
         class="inline-flex items-center justify-center rounded-md bg-[var(--destructive)] px-4 py-2 text-sm font-medium text-[var(--destructive-foreground)] hover:bg-[var(--destructive)]/90 transition-colors">
         Supprimer le compte
     </button>
@@ -15,7 +15,7 @@
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
                 <!-- Modal panel -->
-                <div x-show="open" @click.away="open = false" x-transition:enter="ease-out duration-300"
+                <div x-show="open" x-on:click.away="open = false" x-transition:enter="ease-out duration-300"
                     x-transition:enter-start="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
                     x-transition:enter-end="opacity-100 translate-y-0 sm:scale-100"
                     x-transition:leave="ease-in duration-200"
@@ -59,7 +59,7 @@
                                 class="inline-flex w-full justify-center rounded-md bg-[var(--destructive)] px-3 py-2 text-sm font-semibold text-[var(--destructive-foreground)] shadow-sm hover:bg-[var(--destructive)]/90 sm:ml-3 sm:w-auto transition-colors">
                                 Supprimer définitivement
                             </button>
-                            <button type="button" @click="open = false"
+                            <button type="button" x-on:click="open = false"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-[var(--background)] px-3 py-2 text-sm font-semibold text-[var(--foreground)] shadow-sm ring-1 ring-inset ring-[var(--border)] hover:bg-[var(--accent)] sm:mt-0 sm:w-auto transition-colors">
                                 Annuler
                             </button>
