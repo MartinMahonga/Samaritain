@@ -3,9 +3,15 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\AdminStoreArtisanRequest;
+use App\Http\Requests\UpdateArtisanRequest;
 use App\Models\Artisan;
+use App\Models\ArtisanCategory;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class ArtisanController extends Controller
 {
@@ -45,13 +51,93 @@ class ArtisanController extends Controller
         return view('pages.admin.artisans.pending', compact('artisans'));
     }
 
+    public function create()
+    {
+        Gate::authorize('create', Artisan::class);
+
+        $categories = ArtisanCategory::orderBy('name')->get();
+
+        return view('pages.admin.artisans.create', compact('categories'));
+    }
+
+    public function store(AdminStoreArtisanRequest $request)
+    {
+        Gate::authorize('create', Artisan::class);
+
+        $data = $request->validated();
+
+        DB::transaction(function () use ($request, $data) {
+            $data['slug'] = Str::slug($data['business_name']).'-'.Str::random(6);
+            $data['verified'] = true;
+            $data['is_active'] = true;
+            $data['created_by'] = auth()->id();
+
+            if ($request->hasFile('avatar')) {
+                $data['avatar'] = $request->file('avatar')->store('artisans/avatars');
+            }
+
+            if ($request->hasFile('cover')) {
+                $data['cover'] = $request->file('cover')->store('artisans/covers');
+            }
+
+            $categories = $data['categories'];
+            unset($data['categories']);
+
+            $artisan = Artisan::create($data);
+            $artisan->categories()->sync($categories);
+        });
+
+        return redirect()->route('admin.artisans.index')
+            ->with('success', 'Profil artisan créé avec succès.');
+    }
+
     public function show(Artisan $artisan)
     {
         Gate::authorize('view', $artisan);
 
-        $artisan->load(['user', 'categories', 'reviews.user', 'projects', 'contacts']);
+        $artisan->load(['user', 'categories', 'reviews.user', 'projects.images', 'contacts']);
 
         return view('pages.admin.artisans.show', compact('artisan'));
+    }
+
+    public function edit(Artisan $artisan)
+    {
+        Gate::authorize('update', $artisan);
+
+        $categories = ArtisanCategory::orderBy('name')->get();
+        $selectedCategories = $artisan->categories->pluck('id')->toArray();
+
+        return view('pages.admin.artisans.edit', compact('artisan', 'categories', 'selectedCategories'));
+    }
+
+    public function update(UpdateArtisanRequest $request, Artisan $artisan)
+    {
+        Gate::authorize('update', $artisan);
+
+        $data = $request->validated();
+
+        if ($request->hasFile('avatar')) {
+            if ($artisan->avatar) {
+                Storage::delete($artisan->avatar);
+            }
+            $data['avatar'] = $request->file('avatar')->store('artisans/avatars');
+        }
+
+        if ($request->hasFile('cover')) {
+            if ($artisan->cover) {
+                Storage::delete($artisan->cover);
+            }
+            $data['cover'] = $request->file('cover')->store('artisans/covers');
+        }
+
+        $categories = $data['categories'];
+        unset($data['categories']);
+
+        $artisan->update($data);
+        $artisan->categories()->sync($categories);
+
+        return redirect()->route('admin.artisans.show', $artisan)
+            ->with('success', 'Profil artisan mis à jour avec succès.');
     }
 
     public function verify(Artisan $artisan)

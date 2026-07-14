@@ -9,12 +9,20 @@
                 <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-200">Gestion des artisans</h1>
                 <p class="text-gray-500 dark:text-gray-400 text-xs mt-1">{{ $totalCount }} artisan(s) inscrit(s)</p>
             </div>
-            <x-btn href="{{ route('admin.artisans.pending') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
-                <x-slot:prefix>
-                    <i data-lucide="clock"></i>
-                </x-slot:prefix>
-                En attente ({{ $pendingCount }})
-            </x-btn>
+            <div class="flex items-center gap-2">
+                <x-btn href="{{ route('admin.artisans.create') }}" class="dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-700">
+                    <x-slot:prefix>
+                        <i data-lucide="user-plus"></i>
+                    </x-slot:prefix>
+                    Ajouter un artisan
+                </x-btn>
+                <x-btn href="{{ route('admin.artisans.pending') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
+                    <x-slot:prefix>
+                        <i data-lucide="clock"></i>
+                    </x-slot:prefix>
+                    En attente ({{ $pendingCount }})
+                </x-btn>
+            </div>
         </div>
 
         <!-- Filtres -->
@@ -78,7 +86,7 @@
                                             </div>
                                         </div>
                                     </td>
-                                    <td class="px-4 py-3">{{ $artisan->user->email }}</td>
+                                    <td class="px-4 py-3">{{ $artisan->user?->email ?? '—' }}</td>
                                     <td class="px-4 py-3">{{ $artisan->phone }}</td>
                                     <td class="px-4 py-3">
                                         <div class="flex flex-wrap gap-1">
@@ -113,6 +121,10 @@
 
                                             <a href="{{ route('admin.artisans.show', $artisan) }}" class="block text-blue-500 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 transition" title="Voir">
                                                 <i data-lucide="eye" class="w-4 h-4"></i>
+                                            </a>
+
+                                            <a href="{{ route('admin.artisans.edit', $artisan) }}" class="block text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 transition" title="Modifier">
+                                                <i data-lucide="edit" class="w-4 h-4"></i>
                                             </a>
 
                                             <button @click="openModal('{{ route('admin.artisans.destroy', $artisan) }}', '{{ $artisan->business_name }}')"
@@ -170,12 +182,20 @@
                 <h1 class="text-2xl font-bold text-gray-700 dark:text-gray-200">Gestion des artisans</h1>
                 <p class="text-gray-500 dark:text-gray-400 text-xs mt-1">0 artisan(s) inscrit(s)</p>
             </div>
-            <x-btn href="{{ route('admin.artisans.pending') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
-                <x-slot:prefix>
-                    <i data-lucide="clock"></i>
-                </x-slot:prefix>
-                En attente (0)
-            </x-btn>
+            <div class="flex items-center gap-2">
+                <x-btn href="{{ route('admin.artisans.create') }}" class="dark:bg-emerald-600 dark:text-white dark:hover:bg-emerald-700">
+                    <x-slot:prefix>
+                        <i data-lucide="user-plus"></i>
+                    </x-slot:prefix>
+                    Ajouter un artisan
+                </x-btn>
+                <x-btn href="{{ route('admin.artisans.pending') }}" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
+                    <x-slot:prefix>
+                        <i data-lucide="clock"></i>
+                    </x-slot:prefix>
+                    En attente (0)
+                </x-btn>
+            </div>
         </div>
         <x-empty title="Aucun artisan trouvé" description="Aucun artisan n'est actuellement inscrit sur la plateforme" class="dark:text-gray-400">
             <x-slot:icon>

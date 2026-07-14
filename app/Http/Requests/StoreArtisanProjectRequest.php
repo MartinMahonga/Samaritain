@@ -16,7 +16,9 @@ class StoreArtisanProjectRequest extends FormRequest
         return [
             'title' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string', 'max:2000'],
-            'image' => ['required', 'image', 'max:5120', 'mimes:jpeg,png,jpg,webp'],
+            'image' => ['nullable', 'image', 'max:5120', 'mimes:jpeg,png,jpg,webp'],
+            'images' => ['nullable', 'array'],
+            'images.*' => ['image', 'max:5120', 'mimes:jpeg,png,jpg,webp'],
         ];
     }
 }

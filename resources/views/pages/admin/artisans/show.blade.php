@@ -32,6 +32,15 @@
                             {{ $artisan->is_active ? 'Suspendre' : 'Activer' }}
                         </x-btn>
                     </form>
+                    <a href="{{ route('admin.artisans.edit', $artisan) }}"
+                        class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
+                        <x-btn type="button" style="primary" size="sm" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
+                            <x-slot:prefix>
+                                <i data-lucide="edit" class="w-4 h-4"></i>
+                            </x-slot:prefix>
+                            Modifier
+                        </x-btn>
+                    </a>
                     <form action="{{ route('admin.artisans.destroy', $artisan) }}" method="POST"
                         onsubmit="return confirm('Supprimer définitivement cet artisan ? Cette action est irréversible.')">
                         @csrf
@@ -118,18 +127,33 @@
 
                 <!-- Réalisations -->
                 <div class="bg-sidebar dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6">
-                    <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">
-                        Réalisations <span class="text-gray-400 dark:text-gray-500 text-sm">({{ $artisan->projects->count() }})</span>
-                    </h2>
+                    <div class="flex items-center justify-between mb-3">
+                        <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                            Réalisations <span class="text-gray-400 dark:text-gray-500 text-sm">({{ $artisan->projects->count() }})</span>
+                        </h2>
+                        <a href="{{ route('admin.artisans.projects.create', $artisan) }}" class="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium flex items-center gap-1">
+                            <i data-lucide="plus" class="w-3 h-3"></i>
+                            Ajouter
+                        </a>
+                    </div>
                     @if ($artisan->projects->isNotEmpty())
                         <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
                             @foreach ($artisan->projects as $project)
                                 <div class="relative group aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-700">
-                                    @if ($project->image)
-                                        <img src="{{ Storage::url($project->image) }}" alt="{{ $project->title }}"
+                                    @php
+                                        $projectImages = $project->images->pluck('image_path');
+                                        $firstImage = $projectImages->first() ?? $project->image;
+                                    @endphp
+                                    @if ($firstImage)
+                                        <img src="{{ Storage::url($firstImage) }}" alt="{{ $project->title }}"
                                             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300">
                                         <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                                            <span class="text-white text-xs font-medium px-2 py-1 bg-black/70 rounded">{{ $project->title }}</span>
+                                            <div class="text-center">
+                                                <span class="text-white text-xs font-medium px-2 py-1 bg-black/70 rounded">{{ $project->title }}</span>
+                                                @if ($projectImages->count() > 1)
+                                                    <span class="text-white text-xs block mt-1">+{{ $projectImages->count() - 1 }} photos</span>
+                                                @endif
+                                            </div>
                                         </div>
                                     @else
                                         <div class="w-full h-full flex items-center justify-center text-gray-400 dark:text-gray-500">
@@ -150,22 +174,40 @@
 
             <!-- Sidebar -->
             <div class="space-y-6">
-                <!-- Utilisateur -->
+                <!-- Propriétaire / Créateur -->
                 <div class="bg-sidebar dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 p-6">
                     <h2 class="text-lg font-semibold text-gray-700 dark:text-gray-200 mb-3">Propriétaire</h2>
-                    <div class="flex items-center gap-3 mb-3">
-                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 flex items-center justify-center text-white font-bold text-lg">
-                            {{ substr($artisan->user->name, 0, 1) }}
+                    @if ($artisan->user)
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-blue-600 dark:from-blue-600 dark:to-blue-700 flex items-center justify-center text-white font-bold text-lg">
+                                {{ substr($artisan->user->name, 0, 1) }}
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $artisan->user->name }}</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">{{ $artisan->user->email }}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="text-sm font-medium text-gray-700 dark:text-gray-300">{{ $artisan->user->name }}</p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400">{{ $artisan->user->email }}</p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                            <i data-lucide="calendar" class="w-3 h-3"></i>
+                            Membre depuis {{ $artisan->user->created_at->format('d/m/Y') }}
+                        </p>
+                    @else
+                        <div class="flex items-center gap-3 mb-3">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-gray-400 to-gray-500 dark:from-gray-500 dark:to-gray-600 flex items-center justify-center text-white font-bold text-lg">
+                                <i data-lucide="building" class="w-5 h-5"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">Profil administré</p>
+                                <p class="text-xs text-gray-500 dark:text-gray-400">Créé par l'administration</p>
+                            </div>
                         </div>
-                    </div>
-                    <p class="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
-                        <i data-lucide="calendar" class="w-3 h-3"></i>
-                        Membre depuis {{ $artisan->user->created_at->format('d/m/Y') }}
-                    </p>
+                        @if ($artisan->createdBy)
+                            <p class="text-xs text-gray-400 dark:text-gray-500 flex items-center gap-1">
+                                <i data-lucide="user" class="w-3 h-3"></i>
+                                Par {{ $artisan->createdBy->name }}
+                            </p>
+                        @endif
+                    @endif
                 </div>
 
                 <!-- Stats rapides -->
