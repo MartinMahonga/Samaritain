@@ -14,7 +14,7 @@
 
     @if ($hasSubItems)
         <!-- Collapsible Menu Toggle Trigger -->
-        <button @click="open = !open; if(!sidebarOpen) sidebarOpen = true"
+        <button x-on:click="open = !open; if(!sidebarOpen) sidebarOpen = true"
             class="w-full flex items-center px-3 py-2 rounded-md text-xs font-medium transition-all group select-none text-left justify-between focus:outline-none
                 {{ $active ? 'bg-[var(--sidebar-primary)] text-[var(--sidebar-primary-foreground)]' : 'text-[var(--sidebar-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)]' }}">
 

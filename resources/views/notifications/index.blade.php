@@ -12,7 +12,7 @@
                     x-text="unreadCount"></span>
             </div>
             <div class="flex items-center gap-3">
-                <button @click="markAllAsRead()" x-show="unreadCount > 0"
+                <button x-on:click="markAllAsRead()" x-show="unreadCount > 0"
                     class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline transition">
                     <i data-lucide="check-check" class="w-4 h-4"></i>
                     Tout marquer comme lu
@@ -38,19 +38,19 @@
                             class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground"></i>
                         <input type="text" x-model="searchQuery" placeholder="Rechercher..."
                             class="w-full pl-9 pr-9 py-2 text-sm bg-background border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent outline-none transition">
-                        <button x-show="searchQuery.length > 0" @click="searchQuery = ''"
+                        <button x-show="searchQuery.length > 0" x-on:click="searchQuery = ''"
                             class="absolute right-2.5 top-1/2 -translate-y-1/2 p-0.5 rounded-full hover:bg-muted transition">
                             <i data-lucide="x" class="w-3.5 h-3.5 text-muted-foreground"></i>
                         </button>
                     </div>
                     <div class="flex flex-wrap gap-2 mt-3">
-                        <button @click="filter = 'all'"
+                        <button x-on:click="filter = 'all'"
                             :class="{ 'bg-primary/10 text-primary': filter === 'all', 'text-muted-foreground hover:bg-muted': filter !== 'all' }"
                             class="px-3 py-1 text-xs font-medium rounded-full transition">Toutes</button>
-                        <button @click="filter = 'unread'"
+                        <button x-on:click="filter = 'unread'"
                             :class="{ 'bg-primary/10 text-primary': filter === 'unread', 'text-muted-foreground hover:bg-muted': filter !== 'unread' }"
                             class="px-3 py-1 text-xs font-medium rounded-full transition">Non lues</button>
-                        <button @click="filter = 'read'"
+                        <button x-on:click="filter = 'read'"
                             :class="{ 'bg-primary/10 text-primary': filter === 'read', 'text-muted-foreground hover:bg-muted': filter !== 'read' }"
                             class="px-3 py-1 text-xs font-medium rounded-full transition">Lues</button>
                     </div>
@@ -63,7 +63,7 @@
                             <div class="sticky top-0 px-4 py-1.5 bg-card/95 backdrop-blur border-b border-border text-[11px] font-semibold text-muted-foreground uppercase tracking-wider z-[1]"
                                 x-text="group.label"></div>
                             <template x-for="notif in group.items" :key="notif.id">
-                                <div @click="selectNotification(notif)"
+                                <div x-on:click="selectNotification(notif)"
                                     class="px-4 py-3 cursor-pointer transition hover:bg-muted group"
                                     :class="{
                                         'bg-primary/5': selectedId === notif.id,
@@ -95,7 +95,7 @@
                                                     class="text-[10px] text-muted-foreground">Lu</span>
                                             </div>
                                         </div>
-                                        <button @click.stop="confirmDelete(notif.id)"
+                                        <button x-on:click.stop="confirmDelete(notif.id)"
                                             class="opacity-0 group-hover:opacity-100 transition-opacity p-1 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive"
                                             title="Supprimer">
                                             <i data-lucide="x" class="w-4 h-4"></i>
@@ -143,7 +143,7 @@
                         {{-- En-tête avec bouton retour sur mobile --}}
                         <div class="p-5 border-b border-border flex items-start justify-between">
                             <div class="flex items-center gap-3">
-                                <button @click="backToList()" x-show="isMobile"
+                                <button x-on:click="backToList()" x-show="isMobile"
                                     class="md:hidden p-1 rounded-md hover:bg-muted transition">
                                     <i data-lucide="arrow-left" class="w-5 h-5 text-muted-foreground"></i>
                                 </button>
@@ -167,7 +167,7 @@
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">Nouveau</span>
                                 <span x-show="selectedNotification.read_at"
                                     class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">Lu</span>
-                                <button @click="confirmDelete(selectedNotification.id)"
+                                <button x-on:click="confirmDelete(selectedNotification.id)"
                                     class="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition"
                                     title="Supprimer cette notification">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -224,7 +224,7 @@
                             </div>
 
                             <div class="flex flex-wrap gap-3 pt-2 border-t border-border pt-4">
-                                <button @click="markAsRead(selectedNotification.id)"
+                                <button x-on:click="markAsRead(selectedNotification.id)"
                                     x-show="!selectedNotification.read_at"
                                     class="inline-flex items-center gap-2 px-4 py-2 bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium rounded-lg transition shadow-sm">
                                     <i data-lucide="check" class="w-4 h-4"></i>
@@ -236,7 +236,7 @@
                                     <i data-lucide="external-link" class="w-4 h-4"></i>
                                     Voir le bien
                                 </a>
-                                <button @click="confirmDelete(selectedNotification.id)"
+                                <button x-on:click="confirmDelete(selectedNotification.id)"
                                     class="inline-flex items-center gap-2 px-4 py-2 bg-destructive/10 hover:bg-destructive/20 text-destructive text-sm font-medium rounded-lg transition shadow-sm">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     Supprimer
@@ -261,7 +261,7 @@
         <div x-show="deleteTargetId !== null" x-cloak
             class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40"
             x-transition.opacity>
-            <div @click.outside="deleteTargetId = null"
+            <div x-on:click.outside="deleteTargetId = null"
                 class="bg-card rounded-2xl shadow-lg border border-border max-w-sm w-full p-6">
                 <div class="flex items-center justify-center w-11 h-11 rounded-full bg-destructive/10 mb-4">
                     <i data-lucide="trash-2" class="w-5 h-5 text-destructive"></i>
@@ -269,11 +269,11 @@
                 <h3 class="text-base font-semibold text-foreground mb-1">Supprimer cette notification ?</h3>
                 <p class="text-sm text-muted-foreground mb-5">Cette action est irréversible.</p>
                 <div class="flex justify-end gap-3">
-                    <button @click="deleteTargetId = null"
+                    <button x-on:click="deleteTargetId = null"
                         class="px-4 py-2 text-sm font-medium text-foreground rounded-lg hover:bg-muted transition">
                         Annuler
                     </button>
-                    <button @click="deleteNotification(deleteTargetId)"
+                    <button x-on:click="deleteNotification(deleteTargetId)"
                         class="px-4 py-2 text-sm font-medium bg-destructive text-white rounded-lg hover:bg-destructive/90 transition">
                         Supprimer
                     </button>

@@ -54,7 +54,7 @@
         <div x-show="mobileMenuOpen" x-transition:enter="transition-opacity ease-linear duration-300"
             x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
             x-transition:leave="transition-opacity ease-linear duration-300" x-transition:leave-start="opacity-100"
-            x-transition:leave-end="opacity-0" @click="mobileMenuOpen = false"
+            x-transition:leave-end="opacity-0" x-on:click="mobileMenuOpen = false"
             class="fixed inset-0 bg-black/80 backdrop-blur-md transition-opacity"></div>
 
         <!-- Drawer Body -->
@@ -66,7 +66,7 @@
                 class="w-64 bg-sidebar flex flex-col h-full border-r border-sidebar-border relative shadow-2xl transition-transform">
 
                 <div class="absolute top-3.5 right-3 z-50">
-                    <button @click="mobileMenuOpen = false"
+                    <button x-on:click="mobileMenuOpen = false"
                         class="p-1 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-sidebar-border transition-colors focus:outline-none">
                         <i data-lucide="x" height="16" width="16"></i>
                     </button>
@@ -92,7 +92,7 @@
         <header class="h-14 border-b border-sidebar-border flex items-center px-4 justify-between shrink-0 bg-sidebar">
             <div class="flex items-center gap-2">
                 <!-- Sidebar Toggle Button -->
-                <button @click="toggleSidebar()"
+                <button x-on:click="toggleSidebar()"
                     class="p-1.5 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-accent transition-colors"
                     aria-label="Toggle Sidebar">
                     <i data-lucide="panel-left" height="16" width="16"></i>
@@ -119,7 +119,7 @@
                             localStorage.theme = 'dark';
                         }
                     }
-                }" @click="toggleTheme()"
+                }" x-on:click="toggleTheme()"
                     class="p-1.5 text-muted-foreground hover:text-foreground rounded-md hover:bg-accent">
                     <i data-lucide="sun" class="h-4 w-4 hidden dark:block"></i>
                     <i data-lucide="moon" class="h-4 w-4 block dark:hidden"></i>
@@ -128,7 +128,7 @@
                 <!-- Notification Bell avec Dropdown -->
                 <div class="relative" x-data="notificationDropdown()" x-init="init()">
                     <!-- Cloche -->
-                    <button @click="toggle" @click.away="close"
+                    <button x-on:click="toggle" x-on:click.away="close"
                         class="relative p-1.5 rounded-md text-sidebar-foreground hover:text-foreground hover:bg-accent"
                         aria-label="Notifications">
                         <i data-lucide="bell" height="16" width="16"></i>
@@ -139,7 +139,7 @@
                     </button>
 
                     <!-- Dropdown -->
-                    <div x-cloak x-show="open" @click.away="close"
+                    <div x-cloak x-show="open" x-on:click.away="close"
                         class="absolute right-0 mt-2 w-80 md:w-96 bg-sidebar rounded-md shadow-lg overflow-hidden z-50 border border-sidebar-border"
                         x-transition:enter="transition ease-out duration-200"
                         x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
@@ -147,7 +147,7 @@
                         <!-- Header -->
                         <div class="p-3 border-b border-sidebar-border flex justify-between items-center">
                             <h3 class="text-sm font-semibold text-foreground">Notifications</h3>
-                            <button @click="markAllAsRead"
+                            <button x-on:click="markAllAsRead"
                                 class="text-xs text-primary hover:underline transition-colors">
                                 Tout marquer comme lu
                             </button>
@@ -157,7 +157,7 @@
                         <div class="max-h-96 overflow-y-auto divide-y divide-sidebar-border p-2">
                             <template x-for="notif in notifications" :key="notif.id">
                                 <a :href="notif.data.property_id ? `/properties/${notif.data.property_id}` : '#'"
-                                    @click.prevent="markAsRead(notif.id, $event)"
+                                    x-on:click.prevent="markAsRead(notif.id, $event)"
                                     class="block px-4 py-3 hover:bg-sidebar-border transition-colors cursor-pointer rounded-2xl"
                                     :class="{ 'bg-primary/5': !notif.read_at }">
                                     <div class="flex items-start gap-3">

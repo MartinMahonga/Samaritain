@@ -127,7 +127,7 @@
                                                 <i data-lucide="edit" class="w-4 h-4"></i>
                                             </a>
 
-                                            <button @click="openModal('{{ route('admin.artisans.destroy', $artisan) }}', '{{ $artisan->business_name }}')"
+                                            <button x-on:click="openModal('{{ route('admin.artisans.destroy', $artisan) }}', '{{ $artisan->business_name }}')"
                                                     class="block text-destructive dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 transition" title="Supprimer">
                                                 <i data-lucide="trash" class="w-4 h-4"></i>
                                             </button>
@@ -143,8 +143,8 @@
                 </div>
 
                 <!-- Modal de confirmation de suppression -->
-                <div x-cloak x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70" @click.self="closeModal()">
-                    <div class="relative w-full max-w-md rounded-lg bg-background dark:bg-gray-800 p-6 shadow-lg" @click.stop>
+                <div x-cloak x-show="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70" x-on:click.self="closeModal()">
+                    <div class="relative w-full max-w-md rounded-lg bg-background dark:bg-gray-800 p-6 shadow-lg" x-on:click.stop>
                         <div class="flex items-start gap-4">
                             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30">
                                 <i data-lucide="alert-octagon" class="h-6 w-6 text-red-600 dark:text-red-400"></i>
@@ -161,7 +161,7 @@
                         </div>
 
                         <div class="mt-6 flex items-center justify-end gap-3">
-                            <x-btn @click="closeModal()" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                            <x-btn x-on:click="closeModal()" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                                 Annuler
                             </x-btn>
                             <form :action="deleteAction" method="POST" class="inline">

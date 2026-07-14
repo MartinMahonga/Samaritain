@@ -161,16 +161,16 @@
 
                                     @can('delete', $visitPass)
                                         <div x-data="{ showConfirm: false }" class="relative inline-block">
-                                            <button @click="showConfirm = true" type="button"
+                                            <button x-on:click="showConfirm = true" type="button"
                                                 class="inline-flex items-center gap-1.5 text-xs font-medium text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition-colors">
                                                 <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                                 Supprimer
                                             </button>
-                                            <div x-show="showConfirm" @click.away="showConfirm = false" x-cloak
+                                            <div x-show="showConfirm" x-on:click.away="showConfirm = false" x-cloak
                                                 class="absolute z-10 bottom-full left-0 mb-2 w-48 p-3 bg-white dark:bg-gray-800 rounded-lg shadow-lg border border-gray-200 dark:border-gray-700 text-xs">
                                                 <p class="mb-2 text-gray-700 dark:text-gray-300 font-medium">Confirmer la suppression ?</p>
                                                 <div class="flex gap-2 justify-end">
-                                                    <button @click="showConfirm = false" type="button"
+                                                    <button x-on:click="showConfirm = false" type="button"
                                                         class="px-2 py-1 bg-gray-100 dark:bg-gray-700 rounded text-gray-700 dark:text-gray-300 hover:bg-gray-200 transition-colors">Non</button>
                                                     <form action="{{ route('my-visit-passes.destroy', $visitPass) }}" method="POST" class="inline">
                                                         @csrf

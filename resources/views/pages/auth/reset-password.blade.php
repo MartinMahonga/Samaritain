@@ -73,7 +73,7 @@
                                     />
                                     <button
                                         type="button"
-                                        @click="showPassword = !showPassword"
+                                        x-on:click="showPassword = !showPassword"
                                         class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                         tabindex="-1"
                                     >
@@ -106,7 +106,7 @@
                                     />
                                     <button
                                         type="button"
-                                        @click="showConfirm = !showConfirm"
+                                        x-on:click="showConfirm = !showConfirm"
                                         class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-600 dark:hover:text-gray-300"
                                         tabindex="-1"
                                     >

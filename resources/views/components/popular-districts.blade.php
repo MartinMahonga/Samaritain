@@ -5,7 +5,7 @@
         <div class="flex items-center justify-center gap-2 mb-2">
             <!-- Switch intégré dans le label -->
             <button 
-                @click="switchCity('brazzaville')"
+                x-on:click="switchCity('brazzaville')"
                 class="text-sm font-semibold font-display uppercase tracking-widest transition-all duration-300"
                 :class="city === 'brazzaville' 
                     ? 'text-primary' 
@@ -17,7 +17,7 @@
             <span class="text-muted-foreground text-sm">/</span>
             
             <button 
-                @click="switchCity('pointeNoire')"
+                x-on:click="switchCity('pointeNoire')"
                 class="text-sm font-semibold font-display uppercase tracking-widest transition-all duration-300"
                 :class="city === 'pointeNoire' 
                     ? 'text-primary' 

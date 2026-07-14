@@ -1,5 +1,5 @@
 <div x-data="{ open: false }">
-    <button @click="open = true" class="inline-flex items-center justify-center rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:bg-[var(--primary)]/90 transition-colors shadow-sm">
+    <button x-on:click="open = true" class="inline-flex items-center justify-center rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:bg-[var(--primary)]/90 transition-colors shadow-sm">
         <i data-lucide="plus" class="w-4 h-4 mr-2"></i>
         Inviter
     </button>
@@ -9,12 +9,12 @@
 
         <div class="fixed inset-0 z-10 w-screen overflow-y-auto">
             <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-                <div x-show="open" @click.away="open = false" x-transition
+                <div x-show="open" x-on:click.away="open = false" x-transition
                     class="relative transform overflow-hidden rounded-lg bg-[var(--card)] text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-md border border-[var(--border)]">
                     
                     <div class="flex items-center justify-between px-6 py-4 border-b border-[var(--border)]">
                         <h3 class="text-lg font-semibold text-[var(--foreground)]">Inviter un nouveau membre</h3>
-                        <button @click="open = false" class="text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
+                        <button x-on:click="open = false" class="text-[var(--muted-foreground)] hover:text-[var(--foreground)]">
                             <i data-lucide="x" class="w-5 h-5"></i>
                         </button>
                     </div>
@@ -42,7 +42,7 @@
                         </div>
 
                         <div class="mt-6 flex justify-end gap-3">
-                            <button type="button" @click="open = false" class="rounded-md px-4 py-2 text-sm font-medium border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)]">
+                            <button type="button" x-on:click="open = false" class="rounded-md px-4 py-2 text-sm font-medium border border-[var(--border)] text-[var(--foreground)] hover:bg-[var(--muted)]">
                                 Annuler
                             </button>
                             <button type="submit" class="rounded-md bg-[var(--primary)] px-4 py-2 text-sm font-medium text-[var(--primary-foreground)] hover:bg-[var(--primary)]/90">

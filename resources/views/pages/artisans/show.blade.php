@@ -122,7 +122,7 @@
             <div x-data="{ tab: 'about' }" x-cloak>
                 <nav class="flex gap-8 border-b border-border mb-10 overflow-x-auto scrollbar-hide">
                     @if ($artisan->bio || $artisan->categories->isNotEmpty())
-                        <button @click="tab = 'about'"
+                        <button x-on:click="tab = 'about'"
                             :class="tab === 'about' ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'"
                             class="pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0">
                             À propos
@@ -131,13 +131,13 @@
                             @endif
                         </button>
                     @endif
-                    <button @click="tab = 'projects'"
+                    <button x-on:click="tab = 'projects'"
                         :class="tab === 'projects' ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'"
                         class="pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0">
                         Réalisations
                         <sup class="text-xs text-muted-foreground ml-0.5">{{ $artisan->projects->count() }}</sup>
                     </button>
-                    <button @click="tab = 'reviews'"
+                    <button x-on:click="tab = 'reviews'"
                         :class="tab === 'reviews' ? 'border-foreground text-foreground' : 'border-transparent text-muted-foreground hover:text-foreground'"
                         class="pb-3 text-sm font-medium border-b-2 transition-colors whitespace-nowrap shrink-0">
                         Avis
@@ -230,7 +230,7 @@
                                     <label class="block text-sm font-medium text-muted-foreground mb-2">Votre note</label>
                                     <div class="flex gap-2" x-data="{ rating: 0 }">
                                         @for ($i = 1; $i <= 5; $i++)
-                                            <button type="button" @click="rating = {{ $i }}"
+                                            <button type="button" x-on:click="rating = {{ $i }}"
                                                 class="focus:outline-none transition-transform hover:scale-110">
                                                 <svg class="w-8 h-8 transition-colors"
                                                     :class="rating >= {{ $i }} ? 'text-warning fill-current' : 'text-muted-foreground'"

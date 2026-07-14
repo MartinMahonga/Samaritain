@@ -81,19 +81,19 @@
                                             </a>
                                             @if ($member->is_active)
                                                 <button
-                                                    @click="openActionModal('deactivate', '{{ route('admin.members.deactivate', $member) }}', '{{ $member->name }}')"
+                                                    x-on:click="openActionModal('deactivate', '{{ route('admin.members.deactivate', $member) }}', '{{ $member->name }}')"
                                                     class="block text-orange-500 dark:text-orange-400 hover:text-orange-600 dark:hover:text-orange-300 transition" title="Désactiver">
                                                     <i data-lucide="user-x" class="w-4 h-4"></i>
                                                 </button>
                                             @else
                                                 <button
-                                                    @click="openActionModal('activate', '{{ route('admin.members.activate', $member) }}', '{{ $member->name }}')"
+                                                    x-on:click="openActionModal('activate', '{{ route('admin.members.activate', $member) }}', '{{ $member->name }}')"
                                                     class="block text-green-500 dark:text-green-400 hover:text-green-600 dark:hover:text-green-300 transition" title="Réactiver">
                                                     <i data-lucide="user-check" class="w-4 h-4"></i>
                                                 </button>
                                             @endif
                                             <button
-                                                @click="openActionModal('delete', '{{ route('admin.members.destroy', $member) }}', '{{ $member->name }}')"
+                                                x-on:click="openActionModal('delete', '{{ route('admin.members.destroy', $member) }}', '{{ $member->name }}')"
                                                 class="block text-destructive dark:text-red-400 hover:text-red-600 dark:hover:text-red-300 transition" title="Supprimer">
                                                 <i data-lucide="trash" class="w-4 h-4"></i>
                                             </button>
@@ -110,8 +110,8 @@
 
                 <!-- Modal de confirmation -->
                 <div x-cloak x-show="isModalOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70"
-                    @click.self="closeActionModal()">
-                    <div class="relative w-full max-w-md rounded-lg bg-background dark:bg-gray-800 p-6 shadow-lg dark:shadow-gray-900/70" @click.stop>
+                    x-on:click.self="closeActionModal()">
+                    <div class="relative w-full max-w-md rounded-lg bg-background dark:bg-gray-800 p-6 shadow-lg dark:shadow-gray-900/70" x-on:click.stop>
                         <div class="flex items-start gap-4">
                             <div class="flex h-10 w-10 items-center justify-center rounded-full"
                                 :class="{
@@ -135,7 +135,7 @@
                         </div>
 
                         <div class="mt-6 flex items-center justify-end gap-3">
-                            <x-btn @click="closeActionModal()" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
+                            <x-btn x-on:click="closeActionModal()" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">
                                 Annuler
                             </x-btn>
                             <form :action="actionUrl" method="POST" class="inline">

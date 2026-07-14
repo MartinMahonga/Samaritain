@@ -262,7 +262,7 @@
 
                         @can('delete', $visitPass)
                             <div x-data="{ showConfirm: false }">
-                                <button @click="showConfirm = true" type="button"
+                                <button x-on:click="showConfirm = true" type="button"
                                     class="inline-flex w-full items-center justify-center gap-2 rounded-xl border border-red-200 dark:border-red-800 text-red-600 dark:text-red-400 px-4 py-2.5 text-sm font-medium hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     Supprimer ce pass
@@ -270,8 +270,8 @@
 
                                 {{-- Confirmation overlay --}}
                                 <div x-show="showConfirm" x-cloak
-                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70" @click.self="showConfirm = false">
-                                    <div class="w-full max-w-sm mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" @click.stop>
+                                    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 dark:bg-black/70" x-on:click.self="showConfirm = false">
+                                    <div class="w-full max-w-sm mx-4 p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700" x-on:click.stop>
                                         <div class="flex items-start gap-3">
                                             <div class="flex h-10 w-10 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30 shrink-0">
                                                 <i data-lucide="alert-octagon" class="h-5 w-5 text-red-600 dark:text-red-400"></i>
@@ -287,7 +287,7 @@
                                             </div>
                                         </div>
                                         <div class="mt-5 flex items-center justify-end gap-3">
-                                            <button @click="showConfirm = false" type="button"
+                                            <button x-on:click="showConfirm = false" type="button"
                                                 class="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                                                 Annuler
                                             </button>
