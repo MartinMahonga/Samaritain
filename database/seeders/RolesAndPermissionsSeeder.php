@@ -63,10 +63,10 @@ class RolesAndPermissionsSeeder extends Seeder
         ]);
 
         // Créer un utilisateur owner par défaut (optionnel)
-        if (! User::where('email', 'owner@agence.com')->exists()) {
+        if (! User::where('email', 'owner@entreprise.com')->exists()) {
             $ownerUser = User::create([
                 'name' => 'Owner',
-                'email' => 'owner@agence.com',
+                'email' => 'owner@entreprise.com',
                 'password' => bcrypt('password'),
                 'email_verified_at' => now(),
                 'is_staff' => true,

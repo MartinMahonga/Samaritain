@@ -83,6 +83,7 @@ class PropertyController extends Controller
         return view('pages.property.index', [
             'properties' => $properties,
             'cities' => City::select(['id', 'name'])->get(),
+            'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
         ]);
     }
 
@@ -333,6 +334,7 @@ class PropertyController extends Controller
         return view('pages.property.index', [
             'properties' => $properties,
             'cities' => City::select(['id', 'name'])->get(),
+            'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
             'filters' => $request->all(),
         ]);
     }

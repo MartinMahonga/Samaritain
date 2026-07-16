@@ -19,6 +19,10 @@ class ArtisanPolicy
 
     public function create(User $user): bool
     {
+        if ($user->isAdmin()) {
+            return true;
+        }
+
         return ! Artisan::where('user_id', $user->id)->exists();
     }
 

@@ -2,7 +2,7 @@
     'phone' => '068007138'
 ])
 
-<div class="fixed bottom-14 right-6 z-50 flex flex-col items-end gap-3" x-data="{ open: false }" @click.away="open = false">
+<div class="fixed bottom-14 right-6 z-50 flex flex-col items-end gap-3" x-data="{ open: false }" x-on:click.away="open = false">
 
     <!-- Tooltip -->
     <div x-cloak x-show="open" x-transition:enter="transition ease-out duration-200"
@@ -18,7 +18,7 @@
         </a>
     </div>
 
-    <button @click="open = !open"
+    <button x-on:click="open = !open"
         class="relative w-12 h-12 bg-[#25D366] hover:bg-[#1ebe5a] rounded-full flex items-center justify-center transition-transform hover:scale-110 active:scale-95">
         <!-- Badge -->
         <span

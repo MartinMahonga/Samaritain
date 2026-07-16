@@ -59,6 +59,6 @@ class AgencyContactController extends Controller
         }
 
         return redirect()->route($routeName, $contactable)
-            ->with('success', 'Votre message a été envoyé à l\'agence. Nous vous répondrons dans les plus brefs délais.');
+            ->with('success', 'Votre message a été envoyé à l\'entreprise. Nous vous répondrons dans les plus brefs délais.');
     }
 }

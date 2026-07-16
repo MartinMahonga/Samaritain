@@ -152,8 +152,22 @@
         </div>
     </div>
 
+    <div class="section">
+        <h2>Visites</h2>
+        <div class="grid">
+            <div class="row">
+                <div class="label">Visites autorisées</div>
+                <div class="value">{{ $visitPass->allowed_visits }}</div>
+            </div>
+            <div class="row">
+                <div class="label">Visites restantes</div>
+                <div class="value">{{ $visitPass->remaining_visits }}</div>
+            </div>
+        </div>
+    </div>
+
     <div class="footer">
-        Ce pass est valable pour une visite de la propriété indiquée.<br>
+        Ce pass est valable pour {{ $visitPass->allowed_visits }} visites de la propriété indiquée.<br>
         Généré le {{ now()->format('d/m/Y à H:i') }} via Samaritain
     </div>
 </body>

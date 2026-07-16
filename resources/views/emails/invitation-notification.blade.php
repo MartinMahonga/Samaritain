@@ -1,7 +1,7 @@
 <x-mail::message>
 # Invitation à rejoindre l'équipe
 
-Vous avez été invité à rejoindre l'agence en tant que membre.
+Vous avez été invité à rejoindre l'entreprise en tant que membre.
 
 <x-mail::button :url="$acceptUrl">
 Accepter l'invitation

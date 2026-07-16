@@ -52,7 +52,7 @@
                             </span>
                         @endif
                     </div>
-                    <button @click="open = !open"
+                    <button x-on:click="open = !open"
                         class="group flex items-center gap-2 text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-all duration-200">
                         <span class="text-sm font-medium" x-text="open ? 'Masquer' : 'Afficher'"></span>
                         <i data-lucide="chevron-down" class="h-4 w-4"></i>

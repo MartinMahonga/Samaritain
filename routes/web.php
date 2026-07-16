@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\ArtisanController as AdminArtisanController;
+use App\Http\Controllers\Admin\ArtisanProjectController as AdminArtisanProjectController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\MemberController;
@@ -98,11 +99,24 @@ Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddlewa
 
     // Artisans
     Route::get('/artisans', [AdminArtisanController::class, 'index'])->name('artisans.index');
+    Route::get('/artisans/create', [AdminArtisanController::class, 'create'])->name('artisans.create');
+    Route::post('/artisans', [AdminArtisanController::class, 'store'])->name('artisans.store');
     Route::get('/artisans/pending', [AdminArtisanController::class, 'pending'])->name('artisans.pending');
     Route::get('/artisans/{artisan}', [AdminArtisanController::class, 'show'])->name('artisans.show');
+    Route::get('/artisans/{artisan}/edit', [AdminArtisanController::class, 'edit'])->name('artisans.edit');
+    Route::put('/artisans/{artisan}', [AdminArtisanController::class, 'update'])->name('artisans.update');
     Route::post('/artisans/{artisan}/verify', [AdminArtisanController::class, 'verify'])->name('artisans.verify');
     Route::post('/artisans/{artisan}/suspend', [AdminArtisanController::class, 'suspend'])->name('artisans.suspend');
     Route::delete('/artisans/{artisan}', [AdminArtisanController::class, 'destroy'])->name('artisans.destroy');
+
+    // Réalisations (admin)
+    Route::get('/artisans/{artisan}/projects', [AdminArtisanProjectController::class, 'index'])->name('artisans.projects.index');
+    Route::get('/artisans/{artisan}/projects/create', [AdminArtisanProjectController::class, 'create'])->name('artisans.projects.create');
+    Route::post('/artisans/{artisan}/projects', [AdminArtisanProjectController::class, 'store'])->name('artisans.projects.store');
+    Route::get('/artisans/{artisan}/projects/{project}/edit', [AdminArtisanProjectController::class, 'edit'])->name('artisans.projects.edit');
+    Route::put('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'update'])->name('artisans.projects.update');
+    Route::delete('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'destroy'])->name('artisans.projects.destroy');
+    Route::delete('/artisans/{artisan}/projects/image/{image}', [AdminArtisanProjectController::class, 'destroyImage'])->name('artisans.projects.image.destroy');
 });
 
 // Socialite
@@ -236,6 +250,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('my-visit-passes.download');
     Route::post('/my-visit-passes/{visitPass}/retry-payment', [UserVisitPassController::class, 'retryPayment'])
         ->name('my-visit-passes.retry-payment');
+    Route::delete('/my-visit-passes/{visitPass}', [UserVisitPassController::class, 'destroy'])
+        ->name('my-visit-passes.destroy');
 });
 
 // Route::get('/debug-signature', function (Request $request) {

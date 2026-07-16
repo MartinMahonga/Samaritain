@@ -15,6 +15,7 @@ class Artisan extends Model
 
     protected $fillable = [
         'user_id',
+        'created_by',
         'business_name',
         'slug',
         'profession',
@@ -55,6 +56,11 @@ class Artisan extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function createdBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by');
     }
 
     public function categories(): BelongsToMany

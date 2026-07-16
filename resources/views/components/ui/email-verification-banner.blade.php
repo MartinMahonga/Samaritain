@@ -15,7 +15,7 @@
                             Renvoyer le lien
                         </button>
                     </form>
-                    <button type="button" @click="dismissed = true" class="font-medium text-foreground hover:text-accent">
+                    <button type="button" x-on:click="dismissed = true" class="font-medium text-foreground hover:text-accent">
                         Ignorer pour l'instant
                     </button>
                 </div>

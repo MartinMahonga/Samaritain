@@ -142,4 +142,25 @@ class UserVisitPassController extends Controller
 
         return $this->redirectToPayment($visitPass);
     }
+
+    /**
+     * Delete the visit pass.
+     */
+    public function destroy(VisitPass $visitPass)
+    {
+        Gate::authorize('delete', $visitPass);
+
+        if ($visitPass->qr_code_path) {
+            Storage::delete($visitPass->qr_code_path);
+        }
+
+        if ($visitPass->pdf_path) {
+            Storage::delete($visitPass->pdf_path);
+        }
+
+        $visitPass->delete();
+
+        return redirect()->route('my-visit-passes.index')
+            ->with('success', 'Votre pass visite a été supprimé avec succès.');
+    }
 }

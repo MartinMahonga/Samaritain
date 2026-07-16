@@ -72,7 +72,7 @@
     <!-- Trigger -->
     <button
         type="button"
-        @click="open = !open"
+        x-on:click="open = !open"
         class="w-full min-h-10 rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-3 py-2 text-left flex flex-wrap gap-2 items-center focus:outline-none focus:ring-2 focus:border-primary dark:focus:border-primary focus:ring-primary/10 dark:focus:ring-primary/20"
     >
         <template x-if="selected.length === 0">
@@ -97,13 +97,13 @@
     <div
         x-show="open"
         x-transition
-        @click.outside="open = false"
+        x-on:click.outside="open = false"
         class="absolute z-50 mt-2 w-full bg-sidebar dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-sm overflow-hidden"
     >
         <template x-for="option in options" :key="option.value">
             <button
                 type="button"
-                @click="toggle(option.value)"
+                x-on:click="toggle(option.value)"
                 class="w-full px-4 py-3 text-left text-sm text-gray-700 dark:text-gray-300 hover:bg-accent dark:hover:bg-gray-700 flex items-center justify-between"
             >
                 <span x-text="option.label"></span>

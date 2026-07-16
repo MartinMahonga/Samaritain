@@ -35,7 +35,7 @@
                         this.favorited = data.favorited;
                     }
                 }" class="absolute top-3 right-3 z-20">
-                    <button @click.prevent="toggle"
+                    <button x-on:click.prevent="toggle"
                         class="bg-white/90 backdrop-blur-sm p-2 rounded-full shadow-md hover:scale-110 transition">
                         <i data-lucide="heart" class="w-5 h-5"
                             :class="favorited ? 'fill-red-500 text-red-500' : 'text-gray-500'"></i>

@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Contacter l\'agence - '.($contactable->title ?? $contactable->titre))
+@section('title', 'Contacter l\'entreprise - '.($contactable->title ?? $contactable->titre))
 
 @section('content')
     <div class="font-body bg-background dark:bg-gray-950 text-[#0F0E0C] dark:text-white antialiased min-h-screen">
@@ -20,14 +20,14 @@
                     <a href="{{ route('parcelles.show', $contactable) }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">{{ $contactable->titre }}</a>
                 @endif
                 <i data-lucide="chevron-right" class="w-3 h-3"></i>
-                <span class="dark:text-gray-300">Contacter l'agence</span>
+                <span class="dark:text-gray-300">Contacter l'entreprise</span>
             </nav>
 
             {{-- Header --}}
             <header class="mb-10">
                 <h1 class="font-display font-semibold leading-[1.1] tracking-tight text-[#0F0E0C] dark:text-white"
                     style="font-size: clamp(1.8rem, 3.5vw, 2.5rem);">
-                    Contacter l'agence
+                    Contacter l'entreprise
                 </h1>
                 <p class="text-[#6B6660] dark:text-gray-400 mt-2 text-sm">
                     Remplissez le formulaire ci-dessous pour nous envoyer un message concernant ce bien.

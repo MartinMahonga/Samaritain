@@ -26,7 +26,7 @@ class InvitationService
         // Vérifier si l'utilisateur existe déjà et est membre
         $existingUser = User::where('email', $email)->first();
         if ($existingUser && $existingUser->is_staff) {
-            throw new \Exception('Cet utilisateur est déjà membre de l\'agence.');
+            throw new \Exception('Cet utilisateur est déjà membre de l\'entreprise.');
         }
 
         // Vérifier si l'utilisateur existe mais est inactif / banni
@@ -113,7 +113,7 @@ class InvitationService
             }
 
             if ($user->is_staff) {
-                throw new \Exception('Cet utilisateur est déjà membre de l\'agence.');
+                throw new \Exception('Cet utilisateur est déjà membre de l\'entreprise.');
             }
 
             if (! $user->is_active) {

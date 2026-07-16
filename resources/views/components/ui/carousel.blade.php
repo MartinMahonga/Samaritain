@@ -41,13 +41,13 @@
         </div>
 
         <div class="flex items-center gap-2">
-            <button @click="prev" :disabled="atStart"
+            <button x-on:click="prev" :disabled="atStart"
                 :class="atStart ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-200'"
                 class="hidden md:flex w-8 h-8 items-center justify-center rounded-full bg-gray-100 transition">
                 <i data-lucide="chevron-left" class="w-4 h-4 text-gray-700"></i>
             </button>
 
-            <button @click="next" :disabled="atEnd"
+            <button x-on:click="next" :disabled="atEnd"
                 :class="atEnd ? 'opacity-40 cursor-not-allowed' : 'hover:bg-gray-200'"
                 class="hidden md:flex w-8 h-8 items-center justify-center rounded-full bg-gray-100 transition">
                 <i data-lucide="chevron-right" class="w-4 h-4 text-gray-700"></i>

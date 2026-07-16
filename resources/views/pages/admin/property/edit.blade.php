@@ -41,6 +41,16 @@
                 ]" :value="$property->status->value" />
             </div>
 
+            <div>
+                <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Localisation du bien
+                </label>
+                <x-ui.location-picker
+                    :latitude="$property->latitude"
+                    :longitude="$property->longitude"
+                />
+            </div>
+
             {{-- IDs des images à conserver --}}
             <div class="mb-3 flex flex-wrap gap-2 text-xs text-gray-700 font-medium">
                 @foreach ($property->images as $image)

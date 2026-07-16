@@ -9,7 +9,7 @@
     <tr>
         <td style="padding: 0 0 24px 0;">
             <p style="margin: 0; font-size: 15px; color: #374151; line-height: 1.6;">
-                {{ __("Vous avez été invité à rejoindre l'agence en tant que membre.") }}
+                {{ __("Vous avez été invité à rejoindre l'entreprise en tant que membre.") }}
             </p>
             <p style="margin: 12px 0 0 0; font-size: 15px; color: #374151; line-height: 1.6;">
                 {{ __("Cliquez sur le bouton ci-dessous pour créer votre compte et rejoindre l'équipe.") }}
