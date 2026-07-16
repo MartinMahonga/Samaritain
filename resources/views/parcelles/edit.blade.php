@@ -82,29 +82,6 @@
                     </div>
                 </div>
 
-                <!-- Statut & Titre foncier -->
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Statut & Documentation</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
-                            <select name="statut"
-                                class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-500/20 focus:border-emerald-500 dark:focus:border-emerald-500">
-                                <option value="disponible"
-                                    {{ old('statut', $parcelle->statut) === 'disponible' ? 'selected' : '' }}>Disponible
-                                </option>
-                                <option value="vendu"
-                                    {{ old('statut', $parcelle->statut) === 'vendu' ? 'selected' : '' }}>Vendu</option>
-                                <option value="réservé"
-                                    {{ old('statut', $parcelle->statut) === 'réservé' ? 'selected' : '' }}>Réservé</option>
-                            </select>
-                        </div>
-                        <x-form.input name="titre_foncier" label="Titre foncier" placeholder="Ex: TF-12345"
-                            value="{{ $parcelle->titre_foncier }}" />
-                    </div>
-                </div>
-
-                <!-- Viabilité -->
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Viabilité</h2>
                     <label class="inline-flex items-center gap-3 cursor-pointer">

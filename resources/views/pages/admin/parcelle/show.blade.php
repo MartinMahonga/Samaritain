@@ -23,35 +23,6 @@
     </div>
 
     <x-container-dashed>
-        <!-- Badges de statut -->
-        <div class="flex gap-2 mb-6 pb-4 border-b border-gray-100 dark:border-gray-700">
-            @switch($parcelle->statut)
-                @case('disponible')
-                    <span class="px-3 py-1 text-xs font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 rounded-full">disponible</span>
-                @break
-                @case('vendu')
-                    <span class="px-3 py-1 text-xs font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 rounded-full">vendu</span>
-                @break
-                @default
-                    <span class="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 rounded-full">réservé</span>
-            @endswitch
-
-            @if($parcelle->viabilisee)
-                <span class="px-3 py-1 text-xs font-medium text-green-600 dark:text-green-400 bg-green-100 dark:bg-green-900/30 rounded-full">
-                    <i data-lucide="check-circle" class="inline w-3 h-3"></i> Viabilisée
-                </span>
-            @else
-                <span class="px-3 py-1 text-xs font-medium text-yellow-600 dark:text-yellow-400 bg-yellow-100 dark:bg-yellow-900/30 rounded-full">
-                    <i data-lucide="clock" class="inline w-3 h-3"></i> Non viabilisée
-                </span>
-            @endif
-
-            @if($parcelle->titre_foncier)
-                <span class="px-3 py-1 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-100 dark:bg-blue-900/30 rounded-full">
-                    <i data-lucide="file-text" class="inline w-3 h-3"></i> Titre foncier disponible
-                </span>
-            @endif
-        </div>
 
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Colonne gauche - Informations principales -->
@@ -84,18 +55,7 @@
                             <span class="text-gray-500 dark:text-gray-400">Ville :</span>
                             <p class="font-medium text-gray-800 dark:text-white">{{ $parcelle->ville }}</p>
                         </div>
-                        <div>
-                            <span class="text-gray-500 dark:text-gray-400">Référence :</span>
-                            <p class="font-medium text-gray-800 dark:text-white">{{ $parcelle->reference }}</p>
-                        </div>
-                        <div>
-                            <span class="text-gray-500 dark:text-gray-400">Titre foncier :</span>
-                            <p class="font-medium text-gray-800 dark:text-white">{{ $parcelle->titre_foncier ?? 'Non renseigné' }}</p>
-                        </div>
-                        <div>
-                            <span class="text-gray-500 dark:text-gray-400">Viabilisée :</span>
-                            <p class="font-medium text-gray-800 dark:text-white">{{ $parcelle->viabilisee ? 'Oui' : 'Non' }}</p>
-                        </div>
+                       
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Créé par :</span>
                             <p class="font-medium text-gray-800 dark:text-white">{{ $parcelle->creator->name ?? 'Admin' }}</p>

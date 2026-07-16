@@ -31,10 +31,12 @@ class Property extends Model
         'status',
         'is_verify',
         'is_active',
+        'conditions_accepted_at',
     ];
 
     protected $casts = [
         'status' => PropertyStatus::class,
+        'conditions_accepted_at' => 'datetime'
     ];
 
     /**

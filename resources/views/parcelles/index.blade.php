@@ -37,34 +37,28 @@
                     </div>
 
                     <!-- City -->
-                    <div>
-                        <label class="block text-sm font-medium text-foreground/80 mb-2">Ville</label>
-                        <input type="text" name="ville" id="ville"
-                            placeholder="Ex: Brazzaville"
-                            value="{{ request('ville') }}"
-                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                    </div>
 
-                    <!-- District -->
                     <div>
-                        <label class="block text-sm font-medium text-foreground/80 mb-2">Quartier</label>
-                        <input type="text" name="quartier" id="quartier"
-                            placeholder="Ex: Bacongo"
-                            value="{{ request('quartier') }}"
+                        <label class="block text-sm font-medium text-foreground/80 mb-2">Villes</label>
+                        <select name="ville" id="ville"
                             class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                    </div>
-
-                    <!-- Status -->
-                    <div>
-                        <label class="block text-sm font-medium text-foreground/80 mb-2">Statut</label>
-                        <select name="statut" id="statut"
-                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                            <option value="">Tous les statuts</option>
-                            <option value="disponible" {{ request('statut') === 'disponible' ? 'selected' : '' }}>Disponible</option>
-                            <option value="vendu" {{ request('statut') === 'vendu' ? 'selected' : '' }}>Vendu</option>
-                            <option value="réservé" {{ request('statut') === 'réservé' ? 'selected' : '' }}>Réservé</option>
+                            <option value="">Toutes les villes</option>
+                            <option value="Brazzaville" {{ request('ville') === 'Brazzaville' ? 'selected' : '' }}>Brazzaville</option>
+                            <option value="Pointe-noire" {{ request('ville') === 'Pointe-noire' ? 'selected' : '' }}>Pointe-noire</option>
                         </select>
                     </div>
+                 
+                    <div>
+                        <label class="block text-sm font-medium text-foreground/80 mb-2">Quartier</label>
+                        <select name="quartier" id="quartier"
+                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
+                            <option value="">Tous les quartiers</option>
+                            <option value="Bacongo" {{ request('quartier') === 'Bacongo' ? 'selected' : '' }}>Bacongo</option>
+                            <option value="Moungali" {{ request('quartier') === 'Moungali' ? 'selected' : '' }}>Moungali</option>
+                            <option value="Ouenze" {{ request('quartier') === 'Ouenze' ? 'selected' : '' }}>Ouenze</option>
+                        </select>
+                    </div>
+                   
                 </div>
 
                 <!-- Advanced Filters Toggle -->
@@ -110,16 +104,6 @@
                                     class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
                             </div>
 
-                            <!-- Viable -->
-                            <div>
-                                <label class="block text-sm font-medium text-foreground/80 mb-2">Viabilisée</label>
-                                <select name="viabilisee" id="viabilisee"
-                                    class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                                    <option value="">Toutes</option>
-                                    <option value="1" {{ request('viabilisee') === '1' ? 'selected' : '' }}>Oui</option>
-                                    <option value="0" {{ request('viabilisee') === '0' ? 'selected' : '' }}>Non</option>
-                                </select>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -179,11 +163,11 @@
                             Quartier: {{ request('quartier') }}
                         </span>
                     @endif
-                    @if (request('statut'))
+                    {{-- @if (request('statut'))
                         <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                             {{ ucfirst(request('statut')) }}
                         </span>
-                    @endif
+                    @endif --}}
                     @if (request('prix_min'))
                         <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                             Prix ≥ {{ number_format(request('prix_min'), 0, ',', ' ') }} FCFA

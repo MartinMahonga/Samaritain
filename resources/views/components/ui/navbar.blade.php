@@ -58,7 +58,7 @@
                     request()->route()->getName() === 'avis.index',
                 'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'avis.index',
             ])>
-                Avis
+                Boite à suggestions
             </a>
 
 

@@ -8,7 +8,7 @@
         {{-- En-tête --}}
         <div class="flex items-center justify-center gap-2 mb-8">
             <i data-lucide="message-square-heart" class="w-6 h-6 text-primary"></i>
-            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Suggestions & Avis</h1>
+            <h1 class="text-2xl font-bold text-gray-800 dark:text-gray-100">Suggestions</h1>
         </div>
 
         {{-- Message succès --}}

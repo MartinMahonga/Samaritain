@@ -72,18 +72,22 @@
                     <h3 class="font-bold text-primary dark:text-accent mb-4 text-sm uppercase tracking-wide">L'agence
                     </h3>
                     <ul class="space-y-2 text-sm">
-                        <li><a href="#"
+                        <li><a href="{{ route("apropos_S") }}"
                                 class="text-gray-400 hover:text-primary dark:hover:text-primary transition">À
                                 propos</a></li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Nos
-                                conseillers</a></li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Carrières</a>
+                        <li><a href="{{ route("politique") }}"
+                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Politique de confidentialité</a>
                         </li>
                         <li><a href="{{ route('avis.index') }}"
-                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Avis
-                                clients</a></li>
+                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Suggestions
+
+                                </a></li>
+
+                        <li><a href="{{ route('conditions') }}"
+                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Conditions générales d'utilisation
+                                </a></li>
+                    </ul>
+                    
                     </ul>
                 </div>
 
@@ -120,9 +124,6 @@
                         <li><a href="#"
                                 class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Signaler
                                 un souci</a></li>
-                        <li><a href="#"
-                                class="text-gray-400 hover:text-primary dark:hover:text-primary transition">Support
-                                technique</a></li>
                     </ul>
                 </div>
             </div>

@@ -55,6 +55,8 @@ class ParcelleWebController extends Controller
 
         $data = $request->validated();
         $data['viabilisee'] = $request->boolean('viabilisee');
+        $data['conditions_accepted_at'] = now();
+        unset($data['conditions']);
 
         $parcelle = $this->parcelleService->createParcelle($data, $request->file('images', []));
 

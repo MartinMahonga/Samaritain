@@ -63,46 +63,32 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <x-form.input name="superficie" label="Superficie (m²) *" type="number" step="0.01"
                             placeholder="Ex: 500" required />
-                        <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000"
-                            placeholder="Ex: 5000000" required />
+                        <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000" placeholder="Ex: 5000000"
+                            required />
                     </div>
                 </div>
 
-                <!-- Statut & Titre foncier -->
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Statut & Documentation</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Statut</label>
-                            <select name="statut"
-                                class="w-full h-10 rounded-lg border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 px-4 py-2 text-sm text-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-500/20 focus:border-emerald-500 dark:focus:border-emerald-500">
-                                <option value="disponible" {{ old('statut') === 'disponible' ? 'selected' : '' }}>Disponible
-                                </option>
-                                <option value="vendu" {{ old('statut') === 'vendu' ? 'selected' : '' }}>Vendu</option>
-                                <option value="réservé" {{ old('statut') === 'réservé' ? 'selected' : '' }}>Réservé</option>
-                            </select>
-                        </div>
-                        <x-form.input name="titre_foncier" label="Titre foncier" placeholder="Ex: TF-12345" />
-                    </div>
-                </div>
-
-                <!-- Viabilité -->
-                <div class="p-6 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Viabilité</h2>
                     <label class="inline-flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" name="viabilisee" value="1" {{ old('viabilisee') ? 'checked' : '' }}
+                        <input type="checkbox" name="conditions" value="1" {{ old('conditions') ? 'checked' : '' }} required
                             class="w-5 h-5 text-emerald-600 border-gray-300 dark:border-gray-700 rounded focus:ring-emerald-500 dark:focus:ring-emerald-500/20 cursor-pointer" />
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Parcelle viabilisée (eau, électricité, route d'accès)
+                            J'accepte les
+                            <a href="{{ route('conditions') }}" target="_blank"
+                                class="text-primary">
+                                conditions d'utilisation
+                            </a> *
                         </span>
                     </label>
+                    @error('conditions')
+                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                    @enderror
                 </div>
 
                 <!-- Images -->
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Images</h2>
-                    <x-form.file-input name="images" label="Images de la parcelle" accept="image/*"
-                        multiple="{{ true }}" />
+                    <x-form.file-input name="images" label="Images de la parcelle" accept="image/*" multiple="{{ true }}" />
                     <p class="text-xs text-gray-500 dark:text-gray-400 mt-2">
                         Formats acceptés : JPG, PNG, GIF, WEBP. Taille max : 5MB par image.
                     </p>
@@ -121,6 +107,7 @@
                         Publier la parcelle
                     </x-btn>
                 </div>
+
             </form>
         </div>
     </div>

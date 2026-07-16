@@ -68,12 +68,12 @@
                         <div class="md:col-span-2">
                             <x-form.input name="address" label="Adresse *" value="{{ old('address') }}" required />
                         </div>
-                        <x-form.select name="city_id" label="Ville *" :options="$cities" placeholder="Sélectionnez une ville"
-                            required />
+                        <x-form.select name="city_id" label="Ville *" :options="$cities"
+                            placeholder="Sélectionnez une ville" required />
                         <x-form.select name="arrondissement_id" label="Arrondissement" :options="$arrondissements"
                             placeholder="Sélectionnez un arrondissement" />
-                        <x-form.select name="status" label="Statut *" :options="$statusOptions" placeholder="Choisir un statut"
-                            required />
+                        <x-form.select name="status" label="Statut *" :options="$statusOptions"
+                            placeholder="Choisir un statut" required />
                     </div>
                 </div>
 
@@ -96,9 +96,28 @@
                     </p>
                 </div>
 
+                <!-- Conditions d'utilisation -->
+                <div class="p-6 border-b border-gray-100 dark:border-gray-700">
+                    <label class="inline-flex items-center gap-3 cursor-pointer">
+                        <input type="checkbox" name="conditions" value="1" {{ old('conditions') ? 'checked' : '' }} required
+                            class="w-5 h-5 text-primary-600 border-gray-300 dark:border-gray-700 rounded focus:ring-primary-500 dark:focus:ring-primary-500/20 cursor-pointer" />
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                            J'accepte les
+                            <a href="{{ route('conditions') }}" target="_blank"
+                                class="text-primary-600 underline hover:text-primary-700">
+                                conditions d'utilisation
+                            </a> *
+                        </span>
+                    </label>
+                    @error('conditions')
+                        <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                    @enderror
+                </div>
+
                 <!-- Boutons d'action -->
                 <div class="p-6 bg-accent dark:bg-gray-700/50 flex justify-end items-center gap-3">
-                    <x-btn href="{{ route('property.dashboard') }}" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Annuler</x-btn>
+                    <x-btn href="{{ route('property.dashboard') }}" style="outline"
+                        class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Annuler</x-btn>
                     <x-btn type="submit" class="dark:bg-primary-600 dark:text-white dark:hover:bg-primary-700">
                         <x-slot:prefix>
                             <i data-lucide="check"></i>
@@ -113,7 +132,7 @@
     @push('scripts')
         <script>
             // Filtrer les arrondissements par ville
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const citySelect = document.getElementById('city_id');
                 const arrondissementSelect = document.getElementById('arrondissement_id');
 

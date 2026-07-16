@@ -24,7 +24,6 @@
                                 <th class="px-4 py-3 text-left">Superficie</th>
                                 <th class="px-4 py-3 text-left">Prix</th>
                                 <th class="px-4 py-3 text-left">Ville</th>
-                                <th class="px-4 py-3 text-left">Statut</th>
                                 <th class="px-4 py-3 text-center">Actions</th>
                             </tr>
                         </thead>
@@ -39,7 +38,7 @@
                                     <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($parcelle->superficie, 2, ',', ' ') }} m²</td>
                                     <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($parcelle->prix, 0, ',', ' ') }}</td>
                                     <td class="px-4 py-3">{{ $parcelle->ville }}</td>
-                                    <td class="px-4 py-3">
+                                    {{-- <td class="px-4 py-3">
                                         @switch($parcelle->statut)
                                             @case('disponible')
                                                 <span class="px-2 py-1 text-xs font-medium text-green-500 bg-green-300 dark:bg-green-900/30 dark:text-green-400 rounded-full">disponible</span>
@@ -50,7 +49,7 @@
                                             @default
                                                 <span class="px-2 py-1 text-xs font-medium text-blue-500 bg-blue-300 dark:bg-blue-900/30 dark:text-blue-400 rounded-full">réservé</span>
                                         @endswitch
-                                    </td>
+                                    </td> --}}
                                     <td class="px-4 py-3">
                                         <div class="flex items-center justify-center gap-2">
                                             <a href="{{ route('admin.parcelle.show', $parcelle) }}" class="block text-blue-500 dark:text-blue-400 hover:text-blue-600 dark:hover:text-blue-300">

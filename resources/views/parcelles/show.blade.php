@@ -102,16 +102,9 @@
                                 class="text-sm font-bold {{ $parcelle->viabilisee ? 'text-emerald-600 dark:text-emerald-400' : 'text-red-500' }}">
                                 {{ $parcelle->viabilisee ? 'Oui' : 'Non' }}
                             </p>
-                        </div>
+                        </div> 
 
-                        <div class="bg-[#F7F6F4] dark:bg-gray-800/50 rounded-xl p-4 text-center">
-                            <i data-lucide="file-text" class="w-5 h-5 text-[#6B6660] dark:text-gray-400 mx-auto mb-1.5"></i>
-                            <p
-                                class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider">
-                                Titre foncier</p>
-                            <p class="text-sm font-bold text-[#0F0E0C] dark:text-white">
-                                {{ $parcelle->titre_foncier ?: 'N/A' }}</p>
-                        </div>
+                        
                     </div>
 
                     {{-- Description --}}

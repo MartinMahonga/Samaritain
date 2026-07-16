@@ -248,3 +248,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
 //         'forwarded_host' => $request->header('X-Forwarded-Host'),
 //     ]);
 // });
+
+Route::get('/propos',function()
+{
+    return view('apropos');
+})->name('propos');
+
+Route::get('/politique', function() {
+    return view('politique');
+})->name('politique');
+
+Route::get('/conditions', function() {
+    return view('conditions');
+})->name('conditions');
+
+Route::get('/apropo_S', function() {
+    return view('apropo_S');
+})->name('apropos_S');

@@ -23,14 +23,10 @@
                 <x-form.input name="localisation" label="Localisation" :value="$parcelle->localisation" />
                 <x-form.input name="quartier" label="Quartier" :value="$parcelle->quartier" />
                 <x-form.input name="ville" label="Ville" :value="$parcelle->ville" />
-                <x-form.select name="statut" label="Statut" placeholder="Choisir un statut" :options="[
-                    'disponible' => 'Disponible',
-                    'vendu' => 'Vendu',
-                    'réservé' => 'Réservé',
-                ]" :value="$parcelle->statut" />
+              
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {{-- <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <x-form.input name="titre_foncier" label="Titre foncier" :value="$parcelle->titre_foncier" />
                 <div class="flex items-center gap-2 pt-6">
                     <input type="checkbox" name="viabilisee" id="viabilisee" value="1"
@@ -38,7 +34,7 @@
                         class="rounded border-gray-300 dark:border-gray-600 text-primary-600 shadow-sm focus:ring-primary-500 dark:bg-gray-700 dark:focus:ring-primary-400">
                     <label for="viabilisee" class="text-sm font-medium text-gray-700 dark:text-gray-300">Viabilisée</label>
                 </div>
-            </div>
+            </div> --}}
 
             {{-- Images existantes --}}
             @if ($parcelle->images->count() > 0)

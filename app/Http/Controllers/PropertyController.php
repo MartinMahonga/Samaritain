@@ -142,12 +142,14 @@ class PropertyController extends Controller
     public function store(PropertyFormRequest $request, UploadImage $storeImage)
     {
         $data = $request->validated();
+        unset($data['conditions']);
 
         $property = Property::create([
             ...$data,
             'created_by' => Auth::id(),
             'is_verify' => false, // Par défaut, non vérifié
             'is_active' => true,   // Par défaut, actif
+            'conditions_accepted_at' => now(),
         ]);
 
         $property->amenities()->sync($request->validated('amenities'));

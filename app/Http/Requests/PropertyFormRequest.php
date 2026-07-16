@@ -48,6 +48,10 @@ class PropertyFormRequest extends FormRequest
             'kept_images.*' => ['integer', 'exists:property_images,id'],
         ];
 
+        if ($this->isMethod('POST')) {
+    $rules['conditions'] = ['required', 'accepted'];
+}
+
         if ($this->user() && $this->user()->isStaff()) {
             $rules['is_verify'] = ['nullable', 'boolean'];
             $rules['is_active'] = ['nullable', 'boolean'];

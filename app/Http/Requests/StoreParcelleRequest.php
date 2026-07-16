@@ -21,11 +21,14 @@ class StoreParcelleRequest extends FormRequest
             'ville' => ['required', 'string'],
             'superficie' => ['required', 'numeric', 'min:1'],
             'prix' => ['required', 'numeric', 'min:0'],
-            'statut' => ['required', 'in:disponible,vendu,réservé'],
+            'statut' => ['nullable', 'in:disponible,vendu,réservé'],
             'titre_foncier' => ['nullable', 'string', 'max:255'],
             'viabilisee' => ['nullable', 'boolean'],
             'images' => ['nullable', 'array'],
             'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
+            'conditions' => ['required', 'accepted'],
         ];
+
+        
     }
 }

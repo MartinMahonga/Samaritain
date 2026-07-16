@@ -1,36 +1,35 @@
 <x-app-layout>
     <!-- Hero Section avec pattern et animation -->
 
-        <div class="relative w-full h-96 pt-20">
-            {{-- Image de fond --}}
-            <img src="{{ asset('/artis/ar1.jpg') }}" alt="Background"
-                class="absolute inset-0 w-full h-full object-cover">
+    <div class="relative w-full h-64 sm:h-80 md:h-96 pt-16 sm:pt-20">
+        {{-- Image de fond --}}
+        <img src="{{ asset('/artis/ar1.jpg') }}" alt="Background" class="absolute inset-0 w-full h-full object-cover">
 
-            {{-- Overlay sombre pour rendre le texte lisible --}}
-            <div class="absolute inset-0 bg-black/50"></div>
+        {{-- Overlay sombre pour rendre le texte lisible --}}
+        <div class="absolute inset-0 bg-black/50"></div>
 
-            {{-- Contenu par dessus --}}
-            <div class="relative z-10 flex flex-col items-center justify-center text-white ">
-                <h1 class="relative flex items-center justify-center h-full text-primary text-6xl font-bold">
-                    Marketplace <span class="text-white ml-5">Artisans</span>
-                </h1>
+        {{-- Contenu par dessus --}}
+        <div class="relative z-10 flex flex-col items-center justify-center h-full text-white px-4">
+            <h1 class="text-primary text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-center">
+                Marketplace <span class="text-white ml-2 sm:ml-5">Artisans</span>
+            </h1>
 
-                <p class="relative z-10 flex flex-col items-center justify-center h-full text-white px-4 text-lg italic mt-5">
-                    Trouvez les meilleurs artisans pour vos projets immobiliers
-                </p>
+            <p class="text-white text-sm sm:text-base md:text-lg italic mt-3 sm:mt-5 text-center max-w-xl">
+                Trouvez les meilleurs artisans pour vos projets immobiliers
+            </p>
 
-                <div class="relative z-10 flex  items-center justify-center h-full text-white px-4 mt-5">
-                    <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
-                        500+ professionnels
-                    </div>
-                    <div class="flex items-center gap-2 text-sm text-white/90 dark:text-white/90">
-                        <i data-lucide="map-pin" class="w-4 h-4 "></i>
-                        <span>Partout au Congo</span>
-                    </div>
+            <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 mt-3 sm:mt-5">
+                <div class="flex items-center gap-2 text-sm text-white/90">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>500+ professionnels</span>
                 </div>
-                
+                <div class="flex items-center gap-2 text-sm text-white/90">
+                    <i data-lucide="map-pin" class="w-4 h-4"></i>
+                    <span>Partout au Congo</span>
+                </div>
             </div>
-
+        </div>
+    </div>
     </div>
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -192,7 +191,8 @@
                         Devenir artisan
                         <i data-lucide="arrow-right"></i>
                     </x-btn>
-                    <x-btn style="outline">En savoir plus</x-btn>
+                    <x-btn href="{{route('propos')}}" style="outline">En savoir plus</x-btn>
+                    <a></a>
                 </div>
             </div>
         </div>

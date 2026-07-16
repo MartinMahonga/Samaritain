@@ -21,12 +21,14 @@ class Parcelle extends Model
         'viabilisee',
         'titre_foncier',
         'created_by',
+        'conditions_accepted_at',
     ];
 
     protected $casts = [
-        'viabilisee' => 'boolean',
+        // 'viabilisee' => 'boolean',
         'prix' => 'float',
         'superficie' => 'float',
+        'conditions_accepted_at' => 'datetime'
     ];
 
     /**
