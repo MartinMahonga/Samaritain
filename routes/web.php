@@ -254,6 +254,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         ->name('my-visit-passes.destroy');
 });
 
+Route::livewire('chat', 'pages::chat.index');
+
 // Route::get('/debug-signature', function (Request $request) {
 //     return response()->json([
 //         'full_url' => $request->fullUrl(),
