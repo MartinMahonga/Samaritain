@@ -37,7 +37,7 @@
             @endif
 
             <!-- Statistiques -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-5 mb-8">
                 <!-- Note moyenne -->
                 <div class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
                     <div class="flex items-center justify-between">
