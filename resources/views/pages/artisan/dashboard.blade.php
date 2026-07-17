@@ -111,6 +111,24 @@
                         </div>
                     @endif
                 </div>
+
+                <!-- Vues du profil -->
+                <div class="group bg-sidebar dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 p-5 border border-accent dark:border-gray-700">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-gray-500 dark:text-gray-400 text-sm font-medium">Vues du profil</p>
+                            <p class="text-3xl font-bold text-sky-600 dark:text-sky-400 mt-1">{{ number_format($stats['views_count']) }}</p>
+                        </div>
+                        <div class="w-12 h-12 bg-sky-100 dark:bg-sky-900/30 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform">
+                            <i data-lucide="eye" class="w-6 h-6 text-sky-600 dark:text-sky-400"></i>
+                        </div>
+                    </div>
+                    @if ($stats['projects_views'] > 0)
+                        <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <p class="text-xs text-sky-600 dark:text-sky-400">{{ number_format($stats['projects_views']) }} vues sur les réalisations</p>
+                        </div>
+                    @endif
+                </div>
             </div>
 
             <!-- Actions rapides -->

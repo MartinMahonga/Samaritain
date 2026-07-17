@@ -141,6 +141,7 @@ Route::get('/parcelles/{parcelle}', [ParcelleWebController::class, 'show'])->nam
 // Artisans (public)
 Route::get('/artisans', [ArtisanController::class, 'index'])->name('artisans.index');
 Route::get('/artisans/{artisan:slug}', [ArtisanController::class, 'show'])->name('artisans.show');
+Route::get('/artisans/{artisan:slug}/projects/{project}', [ArtisanProjectController::class, 'show'])->name('artisans.projects.show');
 
 // Contact
 Route::post('/artisans/{artisan:slug}/contact', [ArtisanContactController::class, 'store'])->middleware('throttle:5,1')->name('artisans.contact.store');
@@ -165,6 +166,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/artisan/{artisan}/projects/{project}/edit', [ArtisanProjectController::class, 'edit'])->name('artisan.projects.edit');
     Route::put('/artisan/{artisan}/projects/{project}', [ArtisanProjectController::class, 'update'])->name('artisan.projects.update');
     Route::delete('/artisan/{artisan}/projects/{project}', [ArtisanProjectController::class, 'destroy'])->name('artisan.projects.destroy');
+    Route::delete('/artisan/{artisan}/projects/image/{image}', [ArtisanProjectController::class, 'destroyImage'])->name('artisan.projects.image.destroy');
 
     // Gestion des avis
     Route::post('/artisans/{artisan:slug}/reviews', [ArtisanReviewController::class, 'store'])->middleware('throttle:10,1')->name('artisans.reviews.store');

@@ -65,6 +65,10 @@
                                 {{ $artisan->profession }}
                                 <span class="mx-1.5 text-border">·</span>
                                 {{ $artisan->city }}
+                                @if ($artisan->arrondissement)
+                                    <span class="mx-1.5 text-border">·</span>
+                                    {{ $artisan->arrondissement->name }}
+                                @endif
                                 @if ($artisan->experience)
                                     <span class="mx-1.5 text-border">·</span>
                                     {{ $artisan->experience }} an(s) d'expérience
@@ -113,6 +117,11 @@
                         <div class="text-center">
                             <div class="text-2xl md:text-3xl font-bold text-foreground">{{ $artisan->projects->count() }}</div>
                             <p class="text-xs text-muted-foreground mt-1">Réalisations</p>
+                        </div>
+                        <div class="w-px h-10 bg-border"></div>
+                        <div class="text-center">
+                            <div class="text-2xl md:text-3xl font-bold text-foreground">{{ number_format($artisan->views) }}</div>
+                            <p class="text-xs text-muted-foreground mt-1">Vues</p>
                         </div>
                     </div>
                 </div>
@@ -177,9 +186,12 @@
                     @if ($artisan->projects->isNotEmpty())
                         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
                             @foreach ($artisan->projects as $project)
-                                <div class="group bg-muted/40 rounded-3xl overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300">
+                                <a href="{{ route('artisans.projects.show', [$artisan, $project]) }}" class="group bg-muted/40 rounded-3xl overflow-hidden hover:shadow-lg hover:shadow-primary/5 transition-all duration-300 block">
                                     <div class="relative overflow-hidden aspect-[4/3] m-3 mb-0 rounded-2xl">
-                                        @if ($project->image)
+                                        @if ($project->images->isNotEmpty())
+                                            <img src="{{ Storage::url($project->images->first()->image_path) }}" alt="{{ $project->title }}"
+                                                class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                                        @elseif ($project->image)
                                             <img src="{{ Storage::url($project->image) }}" alt="{{ $project->title }}"
                                                 class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
                                         @else
@@ -203,7 +215,7 @@
                                             <p class="text-sm text-muted-foreground mt-1 line-clamp-2">{{ $project->description }}</p>
                                         @endif
                                     </div>
-                                </div>
+                                </a>
                             @endforeach
                         </div>
                     @else

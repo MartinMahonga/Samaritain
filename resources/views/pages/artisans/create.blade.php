@@ -100,6 +100,15 @@
                             />
 
                             <x-form.input name="address" label="Adresse" placeholder="Quartier, rue..." icon="home" />
+                            <x-form.select
+                                name="arrondissement_id"
+                                label="Arrondissement (optionnel)"
+                                :options="$arrondissements ?? []"
+                                optionValue="id"
+                                optionLabel="name"
+                                placeholder="Choisir un arrondissement"
+                                icon="map-pin"
+                            />
                         </div>
                     </div>
 

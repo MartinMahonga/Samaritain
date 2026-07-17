@@ -33,13 +33,13 @@
                 </div>
                 <div class="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950/40 dark:to-green-900/30 rounded-xl p-4 text-center">
                     <i data-lucide="image" class="w-8 h-8 text-green-600 dark:text-green-400 mx-auto mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projects->where('image', '!=', null)->count() }}</p>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projects->sum(fn($p) => $p->images->count()) }}</p>
                     <p class="text-sm text-gray-600 dark:text-gray-300">Photo(s) publiée(s)</p>
                 </div>
                 <div class="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950/40 dark:to-purple-900/30 rounded-xl p-4 text-center">
-                    <i data-lucide="calendar" class="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2"></i>
-                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projects->where('created_at', '>=', now()->subMonth())->count() }}</p>
-                    <p class="text-sm text-gray-600 dark:text-gray-300">Ajout(s) ce mois</p>
+                    <i data-lucide="eye" class="w-8 h-8 text-purple-600 dark:text-purple-400 mx-auto mb-2"></i>
+                    <p class="text-2xl font-bold text-gray-900 dark:text-white">{{ $projects->sum('views') }}</p>
+                    <p class="text-sm text-gray-600 dark:text-gray-300">Vues totales</p>
                 </div>
             </div>
 
@@ -48,7 +48,11 @@
                 @foreach($projects as $project)
                     <div class="group bg-white dark:bg-gray-800 rounded-xl border border-gray-100 dark:border-gray-700 overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 dark:hover:shadow-gray-900/50">
                         <div class="relative h-52 overflow-hidden">
-                            @if ($project->image)
+                            @if ($project->images->isNotEmpty())
+                                <img src="{{ Storage::url($project->images->first()->image_path) }}" alt="{{ $project->title }}"
+                                    class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
+                                <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                            @elseif ($project->image)
                                 <img src="{{ Storage::url($project->image) }}" alt="{{ $project->title }}"
                                     class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105">
                                 <div class="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -70,7 +74,17 @@
                                 <p class="text-sm text-gray-500 dark:text-gray-400 line-clamp-2">{{ Str::limit($project->description, 80) }}</p>
                             @endif
                             
-                            <div class="flex items-center justify-between gap-3 mt-4 pt-3 border-t border-gray-100 dark:border-gray-700">
+                            <div class="flex items-center gap-3 text-xs text-gray-400 dark:text-gray-500 mt-2">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="eye" class="w-3.5 h-3.5"></i>
+                                    {{ number_format($project->views) }} vues
+                                </span>
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="image" class="w-3.5 h-3.5"></i>
+                                    {{ $project->images->count() }} photo(s)
+                                </span>
+                            </div>
+                            <div class="flex items-center justify-between gap-3 mt-3 pt-3 border-t border-gray-100 dark:border-gray-700">
                                 <a href="{{ route('artisan.projects.edit', [$artisan, $project]) }}"
                                     class="inline-flex items-center gap-1 text-primary dark:text-primary-400 hover:text-primary/80 dark:hover:text-primary-300 text-sm font-medium transition-colors">
                                     <i data-lucide="edit" class="w-4 h-4"></i>
