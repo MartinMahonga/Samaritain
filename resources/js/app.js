@@ -126,6 +126,7 @@ import {
     CheckCheck,
     QrCode,
     Hash,
+    MessageCircleMore,
 } from "lucide";
 
 createIcons({
@@ -256,7 +257,8 @@ createIcons({
         Shield,
         CheckCheck,
         QrCode,
-        Hash
+        Hash,
+        MessageCircleMore
     },
 });
 

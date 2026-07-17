@@ -134,6 +134,16 @@
                                 :value="old('address', $artisan->address)" 
                                 icon="home" 
                             />
+                            <x-form.select
+                                name="arrondissement_id"
+                                label="Arrondissement (optionnel)"
+                                :options="$arrondissements ?? []"
+                                optionValue="id"
+                                optionLabel="name"
+                                placeholder="Choisir un arrondissement"
+                                :value="old('arrondissement_id', $artisan->arrondissement_id)"
+                                icon="map-pin"
+                            />
                         </div>
                     </div>
 

@@ -35,7 +35,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <!-- Filtres - Version améliorée -->
         <div class="rounded-2xl shadow-sm border border-accent dark:border-gray-700 mb-10 overflow-hidden bg-white dark:bg-gray-800"
-            x-data="{ open: {{ request()->hasAny(['search', 'category', 'city', 'rating']) ? 'true' : 'false' }} }">
+            x-data="{ open: {{ request()->hasAny(['search', 'category', 'city', 'arrondissement_id', 'rating']) ? 'true' : 'false' }} }">
 
             <!-- En-tête des filtres -->
             <div class="px-6 py-4 border-b border-accent dark:border-gray-700">
@@ -45,7 +45,7 @@
                             <i data-lucide="funnel" class="text-primary dark:text-primary-400"></i>
                         </div>
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">Filtres avancés</h2>
-                        @if (request()->hasAny(['search', 'category', 'city', 'rating']))
+                        @if (request()->hasAny(['search', 'category', 'city', 'arrondissement_id', 'rating']))
                             <span
                                 class="px-2 py-1 text-xs font-medium text-primary dark:text-primary-400 bg-primary/35 dark:bg-primary/20 rounded-full">
                                 Filtres actifs
@@ -70,6 +70,8 @@
                             icon="drill" :options="$categories" :value="request('category')" />
                         <x-form.select name="city" label="Ville" placeholder="Toutes les villes" icon="building-2"
                             :options="$cities" :value="request('city')" />
+                        <x-form.select name="arrondissement_id" label="Arrondissement" placeholder="Tous les arrondissements" icon="map-pin"
+                            :options="$arrondissements" optionValue="id" optionLabel="name" :value="request('arrondissement_id')" />
                         <x-form.select name="rating" label="Note minimum" placeholder="Toutes les notes" icon="star"
                             :options="[
         '4' => '4+ étoiles',

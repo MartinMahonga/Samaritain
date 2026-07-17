@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreArtisanProjectRequest;
 use App\Models\Artisan;
 use App\Models\ArtisanProject;
+use App\Models\ArtisanProjectImage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,9 +14,20 @@ class ArtisanProjectController extends Controller
 {
     public function index(Artisan $artisan)
     {
-        $projects = $artisan->projects()->latest()->paginate(12);
+        $projects = $artisan->projects()->with('images')->latest()->paginate(12);
 
         return view('pages.artisan.projects.index', compact('artisan', 'projects'));
+    }
+
+    public function show(Artisan $artisan, ArtisanProject $project)
+    {
+        $project->load('images');
+
+        if (! auth()->check() || ! (auth()->user()->isAdmin() || auth()->id() === $artisan->user_id)) {
+            $project->increment('views');
+        }
+
+        return view('pages.artisan.projects.show', compact('artisan', 'project'));
     }
 
     public function create(Artisan $artisan)
@@ -30,11 +43,19 @@ class ArtisanProjectController extends Controller
 
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            $data['image'] = $request->file('image')->store('artisans/projects');
-        }
+        DB::transaction(function () use ($request, $data, $artisan) {
+            $project = $artisan->projects()->create([
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+            ]);
 
-        $artisan->projects()->create($data);
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('artisans/projects');
+                    $project->images()->create(['image_path' => $path]);
+                }
+            }
+        });
 
         return redirect()->route('artisan.projects.index', $artisan)
             ->with('success', 'Réalisation ajoutée avec succès.');
@@ -43,6 +64,8 @@ class ArtisanProjectController extends Controller
     public function edit(Artisan $artisan, ArtisanProject $project)
     {
         Gate::authorize('update', $project);
+
+        $project->load('images');
 
         return view('pages.artisan.projects.edit', compact('artisan', 'project'));
     }
@@ -53,30 +76,48 @@ class ArtisanProjectController extends Controller
 
         $data = $request->validated();
 
-        if ($request->hasFile('image')) {
-            if ($project->image) {
-                Storage::delete($project->image);
-            }
-            $data['image'] = $request->file('image')->store('artisans/projects');
-        } elseif (! $request->hasFile('image') && $project->image) {
-            unset($data['image']);
-        }
+        DB::transaction(function () use ($request, $data, $project) {
+            $project->update([
+                'title' => $data['title'],
+                'description' => $data['description'] ?? null,
+            ]);
 
-        $project->update($data);
+            if ($request->hasFile('images')) {
+                foreach ($request->file('images') as $image) {
+                    $path = $image->store('artisans/projects');
+                    $project->images()->create(['image_path' => $path]);
+                }
+            }
+        });
 
         return redirect()->route('artisan.projects.index', $artisan)
             ->with('success', 'Réalisation mise à jour.');
+    }
+
+    public function destroyImage(Artisan $artisan, $imageId)
+    {
+        Gate::authorize('update', $artisan);
+
+        $image = ArtisanProjectImage::findOrFail($imageId);
+
+        Storage::delete($image->image_path);
+        $image->delete();
+
+        return back()->with('success', 'Image supprimée.');
     }
 
     public function destroy(Artisan $artisan, ArtisanProject $project)
     {
         Gate::authorize('delete', $project);
 
-        if ($project->image) {
-            Storage::delete($project->image);
-        }
+        DB::transaction(function () use ($project) {
+            foreach ($project->images as $image) {
+                Storage::delete($image->image_path);
+                $image->delete();
+            }
 
-        $project->delete();
+            $project->delete();
+        });
 
         return back()->with('success', 'Réalisation supprimée.');
     }

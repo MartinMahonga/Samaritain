@@ -16,6 +16,7 @@ class ArtisanProject extends Model
         'title',
         'description',
         'image',
+        'views',
     ];
 
     public function artisan(): BelongsTo
