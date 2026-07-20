@@ -26,15 +26,18 @@ class Artisan extends Model
         'avatar',
         'cover',
         'city',
+        'arrondissement_id',
         'experience',
         'verified',
         'is_active',
+        'views',
     ];
 
     protected $casts = [
         'verified' => 'boolean',
         'is_active' => 'boolean',
         'experience' => 'integer',
+        'views' => 'integer',
     ];
 
     protected $appends = [
@@ -81,6 +84,11 @@ class Artisan extends Model
     public function contacts(): HasMany
     {
         return $this->hasMany(ArtisanContact::class);
+    }
+
+    public function arrondissement(): BelongsTo
+    {
+        return $this->belongsTo(Arrondissement::class);
     }
 
     public function getAverageRatingAttribute(): float

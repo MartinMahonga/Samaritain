@@ -17,7 +17,26 @@
     <div class="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl border border-gray-100 dark:border-gray-700 overflow-hidden">
             <div class="p-6 md:p-8">
-                <form action="{{ route('artisan.projects.store', $artisan) }}" method="POST" enctype="multipart/form-data" class="space-y-8" x-data="{ preview: null }">
+                <form action="{{ route('artisan.projects.store', $artisan) }}" method="POST" enctype="multipart/form-data" class="space-y-8" x-data="{
+                    previews: [],
+                    handleFileSelect(event) {
+                        const files = event.target.files;
+                        for (let i = 0; i < files.length; i++) {
+                            this.previews.push(URL.createObjectURL(files[i]));
+                        }
+                    },
+                    rebuildFileList() {
+                        const input = document.getElementById('images');
+                        const dt = new DataTransfer();
+                        const files = input.files;
+                        for (let i = 0; i < files.length; i++) {
+                            if (this.previews.some(p => p.includes(files[i].name))) {
+                                dt.items.add(files[i]);
+                            }
+                        }
+                        input.files = dt.files;
+                    }
+                }">
                     @csrf
 
                     <!-- Section Informations -->
@@ -48,17 +67,17 @@
                                 rows="4"
                             >{{ old('description') }}</x-form.textarea>
 
-                            <!-- File input avec prévisualisation -->
+                            <!-- File input avec prévisualisation multiple -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Photo du projet *
+                                    Photos du projet *
                                     <span class="text-red-500 dark:text-red-400">*</span>
                                 </label>
                                 
                                 <div class="relative">
                                     <div class="flex items-center justify-center w-full">
-                                        <label for="image" class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
-                                            <template x-if="!preview">
+                                        <label for="images" class="flex flex-col items-center justify-center w-full h-36 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-700/50 hover:bg-gray-100 dark:hover:bg-gray-700 transition-all duration-200 group">
+                                            <template x-if="previews.length === 0">
                                                 <div class="flex flex-col items-center justify-center pt-5 pb-6">
                                                     <div class="p-2 bg-gray-100 dark:bg-gray-600 rounded-full group-hover:bg-primary/10 dark:group-hover:bg-primary/20 transition-colors">
                                                         <i data-lucide="camera" class="w-8 h-8 text-gray-400 dark:text-gray-500 group-hover:text-primary dark:group-hover:text-primary-400 transition-colors"></i>
@@ -66,22 +85,31 @@
                                                     <p class="mt-2 text-sm text-gray-500 dark:text-gray-400">
                                                         <span class="font-semibold text-primary dark:text-primary-400">Cliquez pour uploader</span> ou glissez-déposez
                                                     </p>
-                                                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">JPG, PNG, WebP (max. 5MB)</p>
+                                                    <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">JPG, PNG, WebP (max. 5MB) - Plusieurs fichiers autorisés</p>
                                                 </div>
                                             </template>
-                                            <template x-if="preview">
-                                                <div class="relative w-full h-full">
-                                                    <img :src="preview" class="w-full h-32 object-cover rounded-lg" alt="Aperçu">
-                                                    <button type="button" x-on:click="preview = null; document.getElementById('image').value = ''" class="absolute top-1 right-1 p-1 bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700">
-                                                        <i data-lucide="x" class="w-3 h-3"></i>
-                                                    </button>
+                                            <template x-if="previews.length > 0">
+                                                <div class="relative w-full h-full p-2">
+                                                    <div class="flex gap-2 overflow-x-auto h-full items-center">
+                                                        <template x-for="(preview, index) in previews" :key="index">
+                                                            <div class="relative shrink-0">
+                                                                <img :src="preview" class="w-24 h-24 object-cover rounded-lg border border-gray-200 dark:border-gray-600" :alt="'Aperçu ' + (index + 1)">
+                                                                <button type="button" x-on:click="previews.splice(index, 1); rebuildFileList()" class="absolute -top-1.5 -right-1.5 p-0.5 bg-red-500 dark:bg-red-600 text-white rounded-full hover:bg-red-600 dark:hover:bg-red-700">
+                                                                    <i data-lucide="x" class="w-3 h-3"></i>
+                                                                </button>
+                                                            </div>
+                                                        </template>
+                                                    </div>
                                                 </div>
                                             </template>
-                                            <input type="file" id="image" name="image" accept="image/*" required class="hidden" @change="preview = URL.createObjectURL($event.target.files[0])">
+                                            <input type="file" id="images" name="images[]" accept="image/*" multiple class="hidden" @change="handleFileSelect($event)">
                                         </label>
                                     </div>
                                 </div>
-                                @error('image')
+                                @error('images')
+                                    <p class="text-red-500 dark:text-red-400 text-xs mt-1">{{ $message }}</p>
+                                @enderror
+                                @error('images.*')
                                     <p class="text-red-500 dark:text-red-400 text-xs mt-1">{{ $message }}</p>
                                 @enderror
                             </div>

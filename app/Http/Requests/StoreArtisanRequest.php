@@ -21,6 +21,7 @@ class StoreArtisanRequest extends FormRequest
             'whatsapp' => ['nullable', 'string', 'max:20'],
             'website' => ['nullable', 'url', 'max:255'],
             'city' => ['required', 'string', 'max:255'],
+            'arrondissement_id' => ['nullable', 'exists:arrondissements,id'],
             'experience' => ['nullable', 'integer', 'min:0', 'max:50'],
             'categories' => ['required', 'array', 'min:1'],
             'categories.*' => ['exists:artisan_categories,id'],

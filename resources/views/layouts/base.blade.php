@@ -9,6 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title') | Samaritain</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 
 <body x-data="openModal()" class="min-h-screen flex flex-col">
@@ -17,7 +18,8 @@
 
     <main class="flex-1 mb-3">
         @if (session('success'))
-            <div class="mx-3 mt-3 md:mx-auto md:max-w-4xl p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-400 text-sm flex items-center gap-2">
+            <div
+                class="mx-3 mt-3 md:mx-auto md:max-w-4xl p-4 bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 rounded-xl text-emerald-700 dark:text-emerald-400 text-sm flex items-center gap-2">
                 <i data-lucide="check-circle" class="w-4 h-4 shrink-0"></i>
                 <span>{{ session('success') }}</span>
             </div>
@@ -109,6 +111,7 @@
             }
         }
     </script>
+    @livewireScripts
 </body>
 
 </html>

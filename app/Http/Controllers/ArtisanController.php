@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreArtisanRequest;
 use App\Http\Requests\UpdateArtisanRequest;
+use App\Models\Arrondissement;
 use App\Models\Artisan;
 use App\Models\ArtisanCategory;
 use Illuminate\Http\Request;
@@ -32,6 +33,10 @@ class ArtisanController extends Controller
             $query->byCity($request->city);
         }
 
+        if ($request->filled('arrondissement_id')) {
+            $query->where('arrondissement_id', $request->arrondissement_id);
+        }
+
         if ($request->filled('rating')) {
             $query->having('average_rating', '>=', $request->rating);
         }
@@ -42,21 +47,27 @@ class ArtisanController extends Controller
 
         $categories = ArtisanCategory::orderBy('id')->get();
         $cities = Artisan::verified()->active()->distinct()->pluck('city')->filter();
+        $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
 
         return view('pages.artisans.index', [
             'artisans' => $artisans,
             'categories' => $categories,
             'cities' => $cities,
+            'arrondissements' => $arrondissements,
         ]);
     }
 
     public function show(Artisan $artisan)
     {
-        $artisan->load(['categories', 'projects' => function ($query) {
-            $query->latest()->limit(12);
+        $artisan->load(['categories', 'arrondissement', 'projects' => function ($query) {
+            $query->with('images')->latest()->limit(12);
         }, 'reviews' => function ($query) {
             $query->with('user:id,name,profile_image')->latest();
         }]);
+
+        if (! auth()->check() || ! (auth()->user()->isAdmin() || auth()->id() === $artisan->user_id)) {
+            $artisan->increment('views');
+        }
 
         $userReview = null;
         if (auth()->check()) {
@@ -69,8 +80,9 @@ class ArtisanController extends Controller
     public function create()
     {
         $categories = ArtisanCategory::orderBy('name')->get();
+        $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
 
-        return view('pages.artisans.create', compact('categories'));
+        return view('pages.artisans.create', compact('categories', 'arrondissements'));
     }
 
     public function store(StoreArtisanRequest $request)
@@ -105,8 +117,9 @@ class ArtisanController extends Controller
 
         $categories = ArtisanCategory::orderBy('name')->get();
         $selectedCategories = $artisan->categories->pluck('id')->toArray();
+        $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
 
-        return view('pages.artisans.edit', compact('artisan', 'categories', 'selectedCategories'));
+        return view('pages.artisans.edit', compact('artisan', 'categories', 'selectedCategories', 'arrondissements'));
     }
 
     public function update(UpdateArtisanRequest $request, Artisan $artisan)
@@ -152,6 +165,8 @@ class ArtisanController extends Controller
             'average_rating' => $artisan->average_rating,
             'projects_count' => $artisan->projects()->count(),
             'contacts_count' => $artisan->contacts()->count(),
+            'views_count' => $artisan->views,
+            'projects_views' => $artisan->projects()->sum('views'),
         ];
 
         $recentReviews = $artisan->reviews()->with('user:id,name,profile_image')->latest()->limit(5)->get();
