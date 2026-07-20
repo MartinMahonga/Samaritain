@@ -197,6 +197,7 @@
             </form>
         </div>
 
+
         <!-- En-tête avec titre et compteur -->
         <div id="properties"
             class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8 mt-4 md:mt-8">
@@ -236,9 +237,9 @@
                         @php $city = \App\Models\City::find(request('city_id')); @endphp
                         <span
                             class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Ville:
-                            {{ $city->name ?? '' }}</span>
+                            {{ $city->name ?? '' }}</span>              
                     @endif
-                    @if (request('category_id'))
+                    @if (request('category_id')) 
                         @php $category = \App\Models\Category::find(request('category_id')); @endphp
                         <span
                             class="px-2 py-1 bg-primary/10 dark:bg-primary-400/20 text-primary dark:text-primary-400 rounded-full text-xs">Type:

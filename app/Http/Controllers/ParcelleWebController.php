@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreParcelleRequest;
 use App\Http\Requests\UpdateParcelleRequest;
+use App\Models\Arrondissement;
 use App\Models\Parcelle;
 use App\Models\ParcelleImage;
 use App\Services\ParcelleService;
@@ -22,7 +23,7 @@ class ParcelleWebController extends Controller
     {
         $filters = $request->only([
             'ville',
-            'quartier',
+            'arrondissement_id',
             'statut',
             'viabilisee',
             'prix_min',
@@ -32,7 +33,9 @@ class ParcelleWebController extends Controller
 
         $parcelles = $this->parcelleService->getParcelles($filters, (int) $request->input('per_page', 12));
 
-        return view('parcelles.index', compact('parcelles', 'filters'));
+        $arrondissements = Arrondissement::select(['id', 'name'])->orderBy('name')->get();
+
+        return view('parcelles.index', compact('parcelles', 'filters', 'arrondissements'));
     }
 
     public function show(Request $request, Parcelle $parcelle): View
@@ -46,7 +49,9 @@ class ParcelleWebController extends Controller
     {
         Gate::authorize('create', Parcelle::class);
 
-        return view('parcelles.create');
+        $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+
+        return view('parcelles.create', compact('arrondissements'));
     }
 
     public function store(StoreParcelleRequest $request): RedirectResponse
@@ -68,7 +73,9 @@ class ParcelleWebController extends Controller
     {
         Gate::authorize('update', $parcelle);
 
-        return view('parcelles.edit', compact('parcelle'));
+        $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+
+        return view('parcelles.edit', compact('parcelle', 'arrondissements'));
     }
 
     public function update(UpdateParcelleRequest $request, Parcelle $parcelle): RedirectResponse

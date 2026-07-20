@@ -111,7 +111,7 @@
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                             J'accepte les
                             <a href="{{ route('conditions') }}" target="_blank"
-                                class="text-primary-600 underline hover:text-primary-700">
+                                class="text-primary">
                                 conditions d'utilisation
                             </a> *
                         </span>

@@ -12,7 +12,6 @@ class Parcelle extends Model
         'slug',
         'description',
         'localisation',
-        'quartier',
         'ville',
         'superficie',
         'prix',
@@ -22,13 +21,14 @@ class Parcelle extends Model
         'titre_foncier',
         'created_by',
         'conditions_accepted_at',
+        'arrondissement_id',
     ];
 
     protected $casts = [
         // 'viabilisee' => 'boolean',
         'prix' => 'float',
         'superficie' => 'float',
-        'conditions_accepted_at' => 'datetime'
+        'conditions_accepted_at' => 'datetime',
     ];
 
     /**
@@ -37,6 +37,11 @@ class Parcelle extends Model
     public function getRouteKeyName(): string
     {
         return 'slug';
+    }
+
+    public function arrondissement()
+    {
+        return $this->belongsTo(Arrondissement::class);
     }
 
     protected static function boot()

@@ -85,14 +85,14 @@
                             </div>
                         @endif
 
-                        <span class="absolute top-3 left-3 text-xs font-semibold px-2 py-1 rounded-full {{ $parcelle->statut === 'vendu' ? 'bg-red-100 text-red-700' : ($parcelle->statut === 'réservé' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700') }}">
+                        {{-- <span class="absolute top-3 left-3 text-xs font-semibold px-2 py-1 rounded-full {{ $parcelle->statut === 'vendu' ? 'bg-red-100 text-red-700' : ($parcelle->statut === 'réservé' ? 'bg-yellow-100 text-yellow-700' : 'bg-green-100 text-green-700') }}">
                             {{ ucfirst($parcelle->statut) }}
-                        </span>
-                        @if ($parcelle->viabilisee)
+                        </span> --}}
+                        {{-- @if ($parcelle->viabilisee)
                             <span class="absolute top-3 right-3 text-xs font-semibold px-2 py-1 rounded-full bg-blue-100 text-blue-700">
                                 Viabilisée
                             </span>
-                        @endif
+                        @endif --}}
                     </div>
 
                     <div class="p-4 flex flex-col gap-2 flex-1">

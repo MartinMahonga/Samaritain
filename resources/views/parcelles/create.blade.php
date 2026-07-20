@@ -51,7 +51,8 @@
                         @endphp
                         <x-form.select name="ville" label="Ville" :options="$cities" placeholder="Choisir une ville"
                             required />
-                        <x-form.input name="quartier" label="Quartier *" placeholder="Ex: Bacongo" required />
+                        <x-form.select name="arrondissement_id" label="Arrondissement *" :options="$arrondissements"
+                            placeholder="Choisir un arrondissement" required />
                         <x-form.input name="localisation" label="Localisation précise *" placeholder="Ex: Nord de Bacongo"
                             required />
                     </div>
@@ -74,8 +75,7 @@
                             class="w-5 h-5 text-emerald-600 border-gray-300 dark:border-gray-700 rounded focus:ring-emerald-500 dark:focus:ring-emerald-500/20 cursor-pointer" />
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                             J'accepte les
-                            <a href="{{ route('conditions') }}" target="_blank"
-                                class="text-primary">
+                            <a href="{{ route('conditions') }}" target="_blank" class="text-primary">
                                 conditions d'utilisation
                             </a> *
                         </span>
