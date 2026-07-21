@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Marketplace Artisans">
     <!-- Hero Section avec pattern et animation -->
 
     <div class="relative w-full h-64 sm:h-80 md:h-96 pt-16 sm:pt-20">

@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Mon tableau de bord">
     <div class="bg-primary text-white overflow-hidden">
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">

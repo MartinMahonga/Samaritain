@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Devenir artisan">
     <!-- Hero Section -->
     <div class="bg-primary dark:bg-primary-700 text-white overflow-hidden">
         <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
