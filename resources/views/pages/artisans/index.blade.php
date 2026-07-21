@@ -21,7 +21,7 @@
             <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-6 mt-3 sm:mt-5">
                 <div class="flex items-center gap-2 text-sm text-white/90">
                     <i data-lucide="users" class="w-4 h-4"></i>
-                    <span>500+ professionnels</span>
+                    <span>{{ $count }}+ professionnels</span>
                 </div>
                 <div class="flex items-center gap-2 text-sm text-white/90">
                     <i data-lucide="map-pin" class="w-4 h-4"></i>
