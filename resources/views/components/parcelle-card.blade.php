@@ -24,10 +24,10 @@
 @endphp
 
 <a href="{{ route('parcelles.show', $parcelle) }}"
-    class="group shrink-0 snap-start w-44 md:w-52 cursor-pointer block transition-all duration-300 overflow-hidden">
+    class="group block w-full cursor-pointer transition-all duration-300 overflow-hidden">
 
     {{-- Image --}}
-    <div class="relative overflow-hidden" style="height: 176px;">
+    <div class="relative overflow-hidden aspect-[4/3]">
         @if ($imagePrincipale)
             <img src="{{ $imagePrincipale['url'] }}" alt="{{ $parcelle['titre'] }}"
                 class="w-full h-full object-cover rounded-2xl shadow-sm transition duration-500 group-hover:scale-105"

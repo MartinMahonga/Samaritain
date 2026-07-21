@@ -111,12 +111,12 @@
                             Localisation
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            @php
-                                $cities = [
-                                    1 => 'Brazzaville',
-                                    2 => 'Pointe-Noire'
-                                ]
-                            @endphp
+                        @php
+                            $cities = [
+                                'Brazzaville' => 'Brazzaville',
+                                'Pointe-Noire' => 'Pointe-Noire'
+                            ]
+                        @endphp
                             <x-form.select
                                 name="city"
                                 label="Ville"

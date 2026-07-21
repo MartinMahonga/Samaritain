@@ -118,11 +118,6 @@
                             <div class="text-2xl md:text-3xl font-bold text-foreground">{{ $artisan->projects->count() }}</div>
                             <p class="text-xs text-muted-foreground mt-1">Réalisations</p>
                         </div>
-                        <div class="w-px h-10 bg-border"></div>
-                        <div class="text-center">
-                            <div class="text-2xl md:text-3xl font-bold text-foreground">{{ number_format($artisan->views) }}</div>
-                            <p class="text-xs text-muted-foreground mt-1">Vues</p>
-                        </div>
                     </div>
                 </div>
             </div>
