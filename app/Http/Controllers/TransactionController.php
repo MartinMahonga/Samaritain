@@ -16,7 +16,7 @@ class TransactionController extends Controller
         $transaction = Transaction::create([
             'user_id' => auth()->id(),
             'status' => 'pending',
-            'amount' => 2500,
+            'amount' => 5000,
         ]);
 
         if (! $transaction) {
