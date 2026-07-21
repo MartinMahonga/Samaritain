@@ -51,7 +51,7 @@
             {{-- Micro-stats --}}
             <div class="flex items-center gap-6 pt-2">
                 <div>
-                    <p class="text-white font-bold text-lg leading-tight">{{ $properties->count() }}+</p>
+                    <p class="text-white font-bold text-lg leading-tight">{{ $properties }}+</p>
                     <p class="text-white/60 text-xs">biens disponibles</p>
                 </div>
                 <div class="w-px h-8 bg-white/20"></div>

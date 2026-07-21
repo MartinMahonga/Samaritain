@@ -70,16 +70,16 @@
         <div class="flex items-start justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-semibold text-xs text-gray-800 dark:text-gray-300 truncate group-hover:text-primary transition">
+                    <h3 class="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-300 truncate group-hover:text-primary transition">
                         {{ $property->title }}
                     </h3>
-                    <div class="text-gray-400 text-xs flex items-center gap-1">
-                        <i data-lucide="land-plot" class="h-3 w-3"></i>
+                    <div class="text-gray-400 text-[11px] sm:text-xs flex items-center gap-1 shrink-0 ml-2">
+                        <i data-lucide="land-plot" class="h-2.5 w-2.5 sm:h-3 sm:w-3"></i>
                         {{ $property->surface }}m²
                     </div>
                 </div>
-                <p class="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
-                    <i data-lucide="map-pin" class="w-3 h-3 flex-shrink-0"></i>
+                <p class="text-gray-400 text-[11px] sm:text-xs flex items-center gap-1 mt-0.5">
+                    <i data-lucide="map-pin" class="w-2.5 h-2.5 sm:w-3 sm:h-3 flex-shrink-0"></i>
                     {{ $property->city->name }}
                 </p>
             </div>
