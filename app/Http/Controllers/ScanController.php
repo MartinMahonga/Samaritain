@@ -21,6 +21,8 @@ class ScanController extends Controller
 
     public function show(string $uuid)
     {
+        Gate::authorize('scan', Pass::class);
+
         $result = $this->scanService->validatePass($uuid);
 
         if (! $result['valid']) {
@@ -37,25 +39,15 @@ class ScanController extends Controller
         $result = $this->scanService->validatePass($request->uuid);
 
         if (! $result['valid']) {
-            return response()->json($result, 400);
+            return redirect()->back()->with('error', $result['message'] ?? 'Pass invalide');
         }
 
         $pass = $this->scanService->scanPass($result['pass'], auth()->user(), $request);
 
         $isVisitPass = $pass instanceof VisitPass;
-        $expDate = $isVisitPass ? $pass->expires_at : $pass->expiration_date;
 
-        return response()->json([
-            'valid' => true,
-            'message' => $isVisitPass ? 'Pass visite validé avec succès' : 'Scan validé avec succès',
-            'pass' => [
-                'holder_name' => $pass->holder_name,
-                'phone' => $pass->phone,
-                'expiration_date' => $expDate ? $expDate->toIso8601String() : null,
-                'remaining_visits' => $pass->remaining_visits,
-                'allowed_visits' => $pass->allowed_visits,
-                'status' => $pass->status === 'active' ? 'actif' : ($pass->status === 'expired' ? 'expiré' : ($pass->status === 'used' ? 'utilisé' : $pass->status)),
-            ],
-        ]);
+        $message = $isVisitPass ? 'Pass visite validé avec succès' : 'Scan validé avec succès';
+
+        return redirect()->back()->with('success', $message);
     }
 }
