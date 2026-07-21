@@ -15,7 +15,6 @@ class ParcelleService
     {
         $query = Parcelle::with(['images', 'imagePrincipale', 'arrondissement']);
 
-
         if (! empty($filters['ville'])) {
             $query->where('ville', 'like', '%'.$filters['ville'].'%');
         }
@@ -59,7 +58,6 @@ class ParcelleService
     {
         return Parcelle::with(['images', 'imagePrincipale', 'arrondissement'])->findOrFail($id);
     }
-
 
     public function createParcelle(array $data, array $images = []): Parcelle
     {

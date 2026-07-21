@@ -14,6 +14,8 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             ArrondissementSeeder::class,
             ArtisanCategorySeeder::class,
+            ParcelleSeeder::class,
+            PropertySeeder::class,
         ]);
     }
 }
