@@ -28,7 +28,7 @@ class Parcelle extends Model
         // 'viabilisee' => 'boolean',
         'prix' => 'float',
         'superficie' => 'float',
-        'conditions_accepted_at' => 'datetime'
+        'conditions_accepted_at' => 'datetime',
     ];
 
     /**

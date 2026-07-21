@@ -6,17 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-   public function up(): void
-{
-    Schema::table('parcelles', function (Blueprint $table) {
-        $table->timestamp('conditions_accepted_at')->nullable();
-    });
-}
+    public function up(): void
+    {
+        Schema::table('parcelles', function (Blueprint $table) {
+            $table->timestamp('conditions_accepted_at')->nullable();
+        });
+    }
 
-public function down(): void
-{
-    Schema::table('parcelles', function (Blueprint $table) {
-        $table->dropColumn('conditions_accepted_at');
-    });
-}
+    public function down(): void
+    {
+        Schema::table('parcelles', function (Blueprint $table) {
+            $table->dropColumn('conditions_accepted_at');
+        });
+    }
 };

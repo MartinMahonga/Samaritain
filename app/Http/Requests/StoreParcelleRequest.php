@@ -29,6 +29,5 @@ class StoreParcelleRequest extends FormRequest
             'conditions' => ['required', 'accepted'],
         ];
 
-        
     }
 }

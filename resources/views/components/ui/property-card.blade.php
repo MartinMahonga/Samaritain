@@ -3,10 +3,10 @@
 ])
 
 <a href="{{ route('property.show', $property) }}"
-    class="group shrink-0 w-44 md:w-52 snap-start cursor-pointer">
+    class="group block w-full cursor-pointer">
 
     {{-- Image --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gray-100" style="height: 176px;">
+    <div class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[4/3]">
         <img src="{{ $property->images->first()->image_url }}" alt="{{ $property->title }}"
             class="w-full h-full object-cover shadow-sm transition duration-500 group-hover:scale-105">
 

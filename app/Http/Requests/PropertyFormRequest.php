@@ -51,8 +51,8 @@ class PropertyFormRequest extends FormRequest
         ];
 
         if ($this->isMethod('POST')) {
-    $rules['conditions'] = ['required', 'accepted'];
-}
+            $rules['conditions'] = ['required', 'accepted'];
+        }
 
         if ($this->user() && $this->user()->isStaff()) {
             $rules['is_verify'] = ['nullable', 'boolean'];

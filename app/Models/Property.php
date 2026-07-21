@@ -38,7 +38,7 @@ class Property extends Model
 
     protected $casts = [
         'status' => PropertyStatus::class,
-        'conditions_accepted_at' => 'datetime'
+        'conditions_accepted_at' => 'datetime',
     ];
 
     /**
