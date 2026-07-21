@@ -1,5 +1,7 @@
 @extends('layouts.dashboard')
 
+@section('title', 'Notifications')
+
 @section('content')
     <div x-data="notificationsApp()" x-init="init()" class="h-full flex flex-col">
 
