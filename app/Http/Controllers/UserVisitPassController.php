@@ -65,7 +65,6 @@ class UserVisitPassController extends Controller
                     'amount' => (string) $transaction->amount,
                     'currency' => 'XAF',
                 ],
-                'phoneNumber' => '242'.$visitPass->phone,
                 'language' => 'FR',
                 'country' => 'COG',
                 'reason' => 'Achat pass visite - '.$visitPass->reference,
