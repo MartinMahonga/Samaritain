@@ -17,7 +17,7 @@ class StoreParcelleRequest extends FormRequest
             'titre' => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'localisation' => ['required', 'string'],
-            'quartier' => ['required', 'string'],
+            'arrondissement_id' => ['required', 'exists:arrondissements,id'],
             'ville' => ['required', 'string'],
             'superficie' => ['required', 'numeric', 'min:1'],
             'prix' => ['required', 'numeric', 'min:0'],
@@ -28,6 +28,5 @@ class StoreParcelleRequest extends FormRequest
             'images.*' => ['image', 'mimes:jpeg,png,jpg,webp', 'max:5120'],
             'conditions' => ['required', 'accepted'],
         ];
-
     }
 }

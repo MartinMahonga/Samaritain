@@ -48,14 +48,20 @@
                         </select>
                     </div>
                  
+
+                    
                     <div>
-                        <label class="block text-sm font-medium text-foreground/80 mb-2">Quartier</label>
-                        <select name="quartier" id="quartier"
-                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                            <option value="">Tous les quartiers</option>
-                            <option value="Bacongo" {{ request('quartier') === 'Bacongo' ? 'selected' : '' }}>Bacongo</option>
-                            <option value="Moungali" {{ request('quartier') === 'Moungali' ? 'selected' : '' }}>Moungali</option>
-                            <option value="Ouenze" {{ request('quartier') === 'Ouenze' ? 'selected' : '' }}>Ouenze</option>
+                        <label
+                            class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Arrondissement</label>
+                        <select name="arrondissement_id" id="arrondissement_id"
+                            class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background  text-foreground dark:text-white">
+                            <option value="">Toutes les Arrondissement</option>
+                            @foreach ($arrondissements as $arrondissement)
+                                <option value="{{ $arrondissement->id }}"
+                                    {{ request('arrondissement_id') == $arrondissement->id ? 'selected' : '' }}>
+                                    {{ $arrondissement->name }}
+                                </option>
+                            @endforeach
                         </select>
                     </div>
                    
@@ -145,7 +151,7 @@
             </div>
 
             <!-- Active filters -->
-            @if (request()->anyFilled(['titre', 'ville', 'quartier', 'statut', 'prix_min', 'prix_max', 'superficie_min', 'viabilisee']))
+            @if (request()->anyFilled(['titre', 'ville', 'arrondissement_id', 'statut', 'prix_min', 'prix_max', 'superficie_min', 'viabilisee']))
                 <div class="flex flex-wrap gap-2">
                     <span class="text-sm text-muted-foreground">Filtres actifs :</span>
                     @if (request('titre'))
@@ -158,9 +164,9 @@
                             Ville: {{ request('ville') }}
                         </span>
                     @endif
-                    @if (request('quartier'))
+                    @if (request('arrondissement_id'))
                         <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
-                            Quartier: {{ request('quartier') }}
+                            Arrondissement: {{ $arrondissements->firstWhere('id', request('arrondissement_id'))?->name }}
                         </span>
                     @endif
                     {{-- @if (request('statut'))

@@ -71,12 +71,7 @@
             @endif
         </div>
 
-        {{-- Badge statut --}}
-        <span
-            class="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full shadow-sm {{ $statut['class'] }}">
-            {{ $statut['label'] }}
-        </span>
-
+        
         {{-- Badge viabilisée --}}
         @if ($parcelle['viabilisee'])
             <span
@@ -110,7 +105,7 @@
                 </div>
                 <p class="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
                     <i data-lucide="map-pin" class="w-3 h-3 flex-shrink-0"></i>
-                    {{ $parcelle['quartier'] }}, {{ $parcelle['ville'] }}
+                    {{ $parcelle->arrondissement->name ?? '' }}, {{ $parcelle['ville'] }}
                 </p>
             </div>
         </div>

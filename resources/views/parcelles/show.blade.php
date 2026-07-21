@@ -138,17 +138,17 @@
 
                             <hr class="border-accent">
 
-                            <div>
+                            {{-- <div>
                                 <p
                                     class="text-[0.68rem] font-medium text-[#6B6660] dark:text-gray-400 uppercase tracking-wider mb-1">
                                     Statut</p>
                                 <span
-                                    class="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full {{ $statusStyles[$parcelle->statut] ?? $statusStyles['disponible'] }}">
+                                    class="inline-flex items-center gap-1.5 text-sm font-semibold px-3 py-1.5 rounded-full {{ $statusStyles[$parcelle->statut] ?? $statusStyles['verifié'] }}">
                                     {{ ucfirst($parcelle->statut) }}
                                 </span>
                             </div>
 
-                            <hr class="border-accent">
+                            <hr class="border-accent"> --}}
 
                             <div>
                                 <p
@@ -174,7 +174,7 @@
                                     Référence</p>
                                 <p class="text-sm text-[#6B6660] dark:text-gray-300">{{ $parcelle->reference }}</p>
                             </div>
-
+{{-- 
                             @if ($parcelle->titre_foncier)
                                 <div>
                                     <p
@@ -182,7 +182,7 @@
                                         Titre foncier</p>
                                     <p class="text-sm text-[#6B6660] dark:text-gray-300">{{ $parcelle->titre_foncier }}</p>
                                 </div>
-                            @endif
+                            @endif --}}
                         </div>
                     </div>
 

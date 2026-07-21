@@ -17,7 +17,7 @@ class UpdateParcelleRequest extends FormRequest
             'titre' => ['sometimes', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
             'localisation' => ['sometimes', 'string'],
-            'quartier' => ['sometimes', 'string'],
+            'arrondissement_id' => ['sometimes', 'exists:arrondissements,id'],
             'ville' => ['sometimes', 'string'],
             'superficie' => ['sometimes', 'numeric', 'min:1'],
             'prix' => ['sometimes', 'numeric', 'min:0'],

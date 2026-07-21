@@ -48,15 +48,7 @@
     <div class="max-w-7xl mx-auto px-6 py-16 md:py-20">
       <p class="italic text-ink/60 text-sm mb-3">Vivez sereinement.</p>
       <h1 class="font-display font-black text-4xl md:text-5xl tracking-tight">Conditions Générales d'Utilisation</h1>
-      <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
-        <span class="inline-flex items-center px-3 py-1.5 rounded-sm bg-ink text-paper font-semibold">Version 1.1</span>
-        <span class="text-ink/50">Dernière mise à jour&nbsp;: 11 juillet 2026</span>
-      </div>
-      <div class="mt-8 max-w-2xl border-l-2 border-orange pl-5 py-1">
-        <p class="text-sm text-ink/60 italic leading-relaxed">
-          Document préparé à titre de base de travail. Il est fortement recommandé de le faire valider par un avocat ou juriste compétent en droit congolais et en droit OHADA avant toute mise en ligne ou usage contractuel opposable aux utilisateurs.
-        </p>
-      </div>
+      
     </div>
   </section>
 

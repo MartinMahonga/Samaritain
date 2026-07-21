@@ -73,24 +73,7 @@
             <div class="max-w-7xl mx-auto px-6 py-16 md:py-20">
                 <p class="italic text-ink/60 text-sm mb-3">Vivez sereinement.</p>
                 <h1 class="font-display font-black text-4xl md:text-5xl tracking-tight">Politique de Confidentialité</h1>
-                <div class="mt-6 flex flex-wrap items-center gap-4 text-sm">
-                    <span class="inline-flex items-center px-3 py-1.5 rounded-sm bg-ink text-paper font-semibold">Version
-                        1.0</span>
-                    <span class="text-ink/50">Dernière mise à jour&nbsp;: 11 juillet 2026</span>
-                    <span
-                        class="inline-flex items-center px-3 py-1.5 rounded-sm bg-orange-light text-orange-dark font-semibold text-xs">Loi
-                        n° 29-2019 — RC</span>
-                </div>
-                <div class="mt-8 max-w-2xl border-l-2 border-orange pl-5 py-1">
-                    <p class="text-sm text-ink/60 italic leading-relaxed">
-                        Document préparé à titre de base de travail, établi à la lumière de la loi n° 29-2019 du 10 octobre
-                        2019 portant protection des données à caractère personnel en République du Congo. Il est fortement
-                        recommandé de le faire valider par un avocat ou juriste compétent avant toute mise en ligne,
-                        notamment pour finaliser l'identité du responsable du traitement une fois la structure juridique de
-                        Samaritain immatriculée, et pour confirmer les modalités pratiques de déclaration auprès de
-                        l'autorité compétente.
-                    </p>
-                </div>
+                
             </div>
         </section>
 

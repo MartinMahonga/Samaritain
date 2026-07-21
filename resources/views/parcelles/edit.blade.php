@@ -64,8 +64,8 @@
                         @endphp
                         <x-form.select name="ville" label="Ville" :options="$cities" placeholder="Choisir une ville"
                             value="{{ $parcelle->ville }}" required />
-                        <x-form.input name="quartier" label="Quartier *" placeholder="Ex: Bacongo"
-                            value="{{ $parcelle->quartier }}" />
+                        <x-form.select name="arrondissement_id" label="Arrondissement *" :options="$arrondissements"
+                            placeholder="Choisir un arrondissement" value="{{ $parcelle->arrondissement_id }}" />
                         <x-form.input name="localisation" label="Localisation précise *" placeholder="Ex: Nord de Bacongo"
                             value="{{ $parcelle->localisation }}" />
                     </div>
@@ -77,16 +77,15 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <x-form.input name="superficie" label="Superficie (m²) *" type="number" step="0.01"
                             placeholder="Ex: 500" value="{{ $parcelle->superficie }}" />
-                        <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000"
-                            placeholder="Ex: 5000000" value="{{ $parcelle->prix }}" />
+                        <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000" placeholder="Ex: 5000000"
+                            value="{{ $parcelle->prix }}" />
                     </div>
                 </div>
 
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Viabilité</h2>
                     <label class="inline-flex items-center gap-3 cursor-pointer">
-                        <input type="checkbox" name="viabilisee" value="1"
-                            {{ old('viabilisee', $parcelle->viabilisee) ? 'checked' : '' }}
+                        <input type="checkbox" name="viabilisee" value="1" {{ old('viabilisee', $parcelle->viabilisee) ? 'checked' : '' }}
                             class="w-5 h-5 text-emerald-600 border-gray-300 dark:border-gray-700 rounded focus:ring-emerald-500 dark:focus:ring-emerald-500/20 cursor-pointer" />
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                             Parcelle viabilisée (eau, électricité, route d'accès)
@@ -100,16 +99,14 @@
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Images existantes</h2>
                         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
                             @foreach ($parcelle->images as $image)
-                                <div
-                                    class="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                                <div class="relative group rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
                                     <img src="{{ $image->url }}" alt="Image {{ $loop->iteration }}"
                                         class="w-full h-32 object-cover" />
                                     <div
                                         class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-200 flex items-end">
                                         <div class="w-full p-2 bg-black/70 text-white text-xs space-y-1">
                                             @if ($image->principale)
-                                                <span
-                                                    class="block bg-emerald-600 px-2 py-1 rounded text-center font-medium">
+                                                <span class="block bg-emerald-600 px-2 py-1 rounded text-center font-medium">
                                                     Principale
                                                 </span>
                                             @endif
@@ -155,8 +152,7 @@
             </form>
 
             @foreach ($parcelle->images as $image)
-                <form id="delete-image-{{ $image->id }}" action="{{ route('parcelles.images.destroy', $image) }}"
-                    method="POST">
+                <form id="delete-image-{{ $image->id }}" action="{{ route('parcelles.images.destroy', $image) }}" method="POST">
                     @csrf
                     @method('DELETE')
                 </form>

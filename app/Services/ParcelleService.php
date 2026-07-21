@@ -13,14 +13,19 @@ class ParcelleService
 {
     public function getParcelles(array $filters = [], int $perPage = 12)
     {
-        $query = Parcelle::with(['images', 'imagePrincipale']);
+        $query = Parcelle::with(['images', 'imagePrincipale', 'arrondissement']);
+
 
         if (! empty($filters['ville'])) {
             $query->where('ville', 'like', '%'.$filters['ville'].'%');
         }
 
-        if (! empty($filters['quartier'])) {
-            $query->where('quartier', 'like', '%'.$filters['quartier'].'%');
+        if (! empty($filters['titre'])) {
+            $query->where('titre', 'like', '%'.$filters['titre'].'%');
+        }
+
+        if (! empty($filters['arrondissement_id'])) {
+            $query->where('arrondissement_id', $filters['arrondissement_id']);
         }
 
         if (! empty($filters['statut'])) {
@@ -52,8 +57,9 @@ class ParcelleService
 
     public function getParcelle(int $id): Parcelle
     {
-        return Parcelle::with(['images', 'imagePrincipale'])->findOrFail($id);
+        return Parcelle::with(['images', 'imagePrincipale', 'arrondissement'])->findOrFail($id);
     }
+
 
     public function createParcelle(array $data, array $images = []): Parcelle
     {
