@@ -1,4 +1,6 @@
-<nav x-data="{ isOpen: false, scrolled: false }" x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })" :class="scrolled ? 'bg-background/95 dark:bg-gray-900/95 shadow-sm' : 'bg-background/80 dark:bg-gray-900/80'"
+<nav x-data="{ isOpen: false, scrolled: false }"
+    x-init="window.addEventListener('scroll', () => { scrolled = window.scrollY > 10 })"
+    :class="scrolled ? 'bg-background/95 dark:bg-gray-900/95 shadow-sm' : 'bg-background/80 dark:bg-gray-900/80'"
     class="sticky top-0 z-50 backdrop-blur-md border-b border-gray-100 dark:border-gray-800 transition-all duration-200">
 
     {{-- Desktop --}}
@@ -43,16 +45,18 @@
                 Services
             </a>
             @if (!auth()->user())
-                <a href="{{ route('property.create') }}" class="text-sm underline hover:text-primary dark:hover:text-primary-400 text-gray-700 dark:text-gray-300">
+                <a href="{{ route('property.create') }}"
+                    class="text-sm underline hover:text-primary dark:hover:text-primary-400 text-gray-700 dark:text-gray-300">
                     Publier une annonce
                 </a>
-                <a href="{{ route('artisan.create') }}" class="text-sm underline hover:text-primary dark:hover:text-primary-400 text-gray-700 dark:text-gray-300">
+                <a href="{{ route('artisan.create') }}"
+                    class="text-sm underline hover:text-primary dark:hover:text-primary-400 text-gray-700 dark:text-gray-300">
                     Devenir artisan
                 </a>
             @endif
 
 
-             <a href="{{ route('avis.index') }}" @class([
+            <a href="{{ route('avis.index') }}" @class([
                 'px-3 py-2 text-sm font-medium hover:text-primary dark:hover:text-primary-400 hover:bg-primary/5 dark:hover:bg-primary/10 rounded-lg transition',
                 'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' =>
                     request()->route()->getName() === 'avis.index',
@@ -86,7 +90,8 @@
 
             @if (auth()->user())
                 @if (auth()->user()?->is_staff)
-                    <x-btn href="{{ route('admin.index') }}" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Dashboard</x-btn>
+                    <x-btn href="{{ route('admin.index') }}" style="outline"
+                        class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Dashboard</x-btn>
                 @endif
                 {{-- Avatar + menu --}}
                 <div x-data="{ open: false }" class="relative">
@@ -100,21 +105,24 @@
                                 {{ strtoupper(auth()->user()->name[0]) }}
                             </div>
                         @endif
-                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500" :class="open && 'rotate-180'"
-                            style="transition: transform .2s"></i>
+                        <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"
+                            :class="open && 'rotate-180'" style="transition: transform .2s"></i>
                     </button>
 
                     <div x-show="open" x-cloak x-on:click.outside="open = false"
                         class="absolute right-0 mt-2 w-44 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-100 dark:border-gray-700 py-1 text-sm">
-                        <p class="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-700">
-                            {{ auth()->user()?->name }}</p>
+                        <p
+                            class="px-3 py-2 text-xs text-gray-400 dark:text-gray-500 border-b border-gray-100 dark:border-gray-700">
+                            {{ auth()->user()?->name }}
+                        </p>
                         <a href="{{ route('profile.show') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                             <i data-lucide="user" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mon profil
                         </a>
                         <a href="{{ route('property.dashboard') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Tableau de bord
+                            <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i>
+                            Tableau de bord
                         </a>
                         <a href="{{ route('property.create') }}" x-on:click="isOpen = false"
                             class="flex items-center mb-2 gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -133,7 +141,8 @@
                         @endif
                         <a href="{{ route('my-visit-passes.index') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
-                            <i data-lucide="ticket" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mes pass visite
+                            <i data-lucide="ticket" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mes pass
+                            visite
                         </a>
                         <a href="{{ route('favorite') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
@@ -151,7 +160,8 @@
                     </div>
                 </div>
             @else
-                <a href="{{ route('login') }}" class="text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300">
+                <a href="{{ route('login') }}"
+                    class="text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300">
                     Se connecter
                 </a>
                 <a href="{{ route('register') }}"
@@ -164,6 +174,7 @@
 
     {{-- Mobile --}}
     <div class="flex md:hidden justify-between items-center px-4 h-14">
+
 
         <a href="{{ route('index') }}" class="flex items-center gap-2">
             <x-ui.logo />
@@ -189,7 +200,8 @@
 
             @if (auth()->user())
                 @if (auth()->user()?->is_staff)
-                    <x-btn href="{{ route('admin.index') }}" style="outline" class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Dashboard</x-btn>
+                    <x-btn href="{{ route('admin.index') }}" style="outline"
+                        class="dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700">Dashboard</x-btn>
                 @endif
 
                 @if (auth()->user()->profile_image)
@@ -216,11 +228,19 @@
         </div>
     </div>
 
+
+
+
+    
+
+
+
+
     {{-- Mobile drawer --}}
-    <div x-show="isOpen" x-cloak x-on:click.outside="isOpen = false" x-transition:enter="transition ease-out duration-200"
-        x-transition:enter-start="opacity-0 -translate-y-2" x-transition:enter-end="opacity-100 translate-y-0"
-        x-transition:leave="transition ease-in duration-150" x-transition:leave-start="opacity-100 translate-y-0"
-        x-transition:leave-end="opacity-0 -translate-y-2"
+    <div x-show="isOpen" x-cloak x-on:click.outside="isOpen = false"
+        x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0 -translate-y-2"
+        x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-150"
+        x-transition:leave-start="opacity-100 translate-y-0" x-transition:leave-end="opacity-0 -translate-y-2"
         class="md:hidden absolute inset-x-0 top-full z-50 bg-white dark:bg-gray-900 border-t border-gray-100 dark:border-gray-800 shadow-xl rounded-b-2xl">
         <div class="flex flex-col gap-1 max-w-7xl mx-auto px-4 py-4">
             <a href="{{ route('index') }}" x-on:click="isOpen = false"
@@ -246,6 +266,10 @@
             <a href="{{ route('property.create') }}" x-on:click="isOpen = false"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <i data-lucide="warehouse" class="w-4 h-4 text-gray-400 dark:text-gray-500"></i> Publier un bien
+            </a>
+            <a href="{{ route('avis.index') }}" x-on:click="isOpen = false"
+                class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
+                <i data-lucide="warehouse" class="w-4 h-4 text-gray-400 dark:text-gray-500"></i>Boites à suggestions
             </a>
             @if (!auth()->user()?->artisan())
                 <a href="{{ route('artisan.create') }}" x-on:click="isOpen = false"
@@ -288,3 +312,71 @@
         </div>
     </div>
 </nav>
+
+
+{{-- menu de navigation pour téléphone --}}
+    <div x-show="!isOpen" class="block md:hidden text-sm flex overflow-x-auto whitespace-nowrap scrollbar-hide">
+        <div class="flex justify-center items-center gap-1  dark:border-t-white py-2 ">
+            <a href="{{ route('index') }}" @class([
+                'px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md',
+                'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' => request()->route()->getName() === 'index',
+                'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'index',
+            ])>
+                Accueil
+            </a>
+            <a href="{{ route('property.index') }}" @class([
+
+                'px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md',
+
+                'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' =>
+                    request()->route()->getName() === 'property.index',
+                'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'property.index',
+            ])>
+                Maisons
+            </a>
+            <a href="{{ route('parcelles.index') }}" @class([
+
+                'px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md',
+
+                'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' =>
+                    request()->route()->getName() === 'parcelles.index',
+                'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'parcelles.index',
+            ])>
+                Parcelles
+            </a>
+            <a href="{{ route('artisans.index') }}" @class([
+                'px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md',
+
+
+                'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' =>
+                    request()->route()->getName() === 'artisans.index',
+                'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'artisans.index',
+            ])>
+                Services
+            </a>
+            @if (!auth()->user())
+                <a href="{{ route('property.create') }}"
+                    class="px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md">
+                    Publier
+                </a>
+
+                <a href="{{ route('artisan.create') }}"
+                    class="px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md">
+                    Artisan
+                </a>
+
+            @endif
+
+
+            <a href="{{ route('avis.index') }}" @class([
+
+                'px-5 py-1 flex jutify-center items-center  text-sm font-medium hover:text-primary dark:hover:text-primary-400 transition text-gray-700 dark:text-gray-300 border-1 border-solid rounded-md',
+
+                'text-primary dark:text-primary-400 bg-primary/5 dark:bg-primary/10' =>
+                    request()->route()->getName() === 'avis.index',
+                'text-gray-700 dark:text-gray-300' => request()->route()->getName() !== 'avis.index',
+            ])>
+                Boite à suggestions
+            </a>
+        </div>
+    </div>

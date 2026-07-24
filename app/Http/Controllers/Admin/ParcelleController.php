@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreParcelleRequest;
 use App\Http\Requests\UpdateParcelleRequest;
+use App\Models\Arrondissement;
 use App\Models\Parcelle;
 use App\Services\ParcelleService;
 
@@ -31,7 +32,9 @@ class ParcelleController extends Controller
      */
     public function create()
     {
-        return view('pages.admin.parcelle.create');
+        $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+
+        return view('pages.admin.parcelle.create', compact('arrondissements'));
     }
 
     /**
@@ -67,9 +70,9 @@ class ParcelleController extends Controller
     {
         $parcelle->load('images');
 
-        return view('pages.admin.parcelle.edit', [
-            'parcelle' => $parcelle,
-        ]);
+        $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+
+        return view('pages.admin.parcelle.edit', compact('parcelle', 'arrondissements'));
     }
 
     /**

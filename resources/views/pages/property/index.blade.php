@@ -351,10 +351,10 @@
             overflow: hidden;
         }
 
-        .overflow-x-auto {
+        /* .overflow-x-auto {
             -webkit-overflow-scrolling: touch;
             scrollbar-width: thin;
-        }
+        } */
 
         @media (max-width: 640px) {
             .pagination {

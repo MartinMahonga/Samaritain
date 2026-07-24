@@ -22,11 +22,14 @@
                 <x-form.input name="localisation" label="Localisation" />
                 <x-form.input name="quartier" label="Quartier" />
                 <x-form.input name="ville" label="Ville" />
+                <x-form.select name="arrondissement_id" label="Arrondissement *" :options="$arrondissements"
+                    placeholder="Choisir un arrondissement" required />
+
                 {{-- <x-form.select name="statut" label="Statut" placeholder="Choisir un statut" :options="[
-                                            'disponible' => 'Disponible',
-                                            'vendu' => 'Vendu',
-                                            'réservé' => 'Réservé',
-                                        ]" /> --}}
+                                                'disponible' => 'Disponible',
+                                                'vendu' => 'Vendu',
+                                                'réservé' => 'Réservé',
+                                            ]" /> --}}
             </div>
             <div>
                 <x-form.file-input name="images" label="Images" accept="image/*" multiple="{{ true }}" />

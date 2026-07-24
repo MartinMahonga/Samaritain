@@ -75,7 +75,7 @@
                             class="w-5 h-5 text-emerald-600 border-gray-300 dark:border-gray-700 rounded focus:ring-emerald-500 dark:focus:ring-emerald-500/20 cursor-pointer" />
                         <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                             J'accepte les
-                            <a href="{{ route('conditions') }}" target="_blank" class="text-primary">
+                            <a href="{{ route('conditions') }}" target="_blank" class="text-primary underline">
                                 conditions d'utilisation
                             </a> *
                         </span>

@@ -147,7 +147,7 @@
 
             {{-- Social Links --}}
             <div class="flex gap-4">
-                <a href="https://facebook.com/samartian" target="_blank" rel="noopener noreferrer"
+                <a href="https://facebook.com/samaritian" target="_blank" rel="noopener noreferrer"
                     class="w-9 h-9 flex items-center justify-center rounded-full bg-gray-800/60 text-gray-400 hover:bg-primary hover:text-white transition"
                     aria-label="Facebook">
                     <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
