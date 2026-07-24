@@ -89,10 +89,9 @@
             {{ $property->description }}
         </p>
 
-        <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center justify-between pt-1">
             <p class="text-gray-800 dark:text-gray-300 text-xs font-bold">
-                {{ number_format($property->price, 0, ',', ' ') }}
-                <span class="text-xs font-normal text-gray-400">FCFA / mois</span>
+                {{ number_format($property->price, 0, ',', ' ') }} FCFA <span class="text-xs font-normal text-gray-400">{{ $property->price_label }}</span>
             </p>
             <div class="flex items-center gap-3">
                 <span

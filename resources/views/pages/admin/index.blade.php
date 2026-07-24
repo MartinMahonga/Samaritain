@@ -125,7 +125,7 @@
                             </div>
                         </div>
                         <div class="text-right">
-                            <p class="font-bold text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} FCFA</p>
+                            <p class="font-bold text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} FCFA {{ $property->price_label }}</p>
                             <span class="text-xs px-2 py-0.5 rounded-full bg-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-100 dark:bg-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-900/30 text-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-600 dark:text-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-400">
                                 {{ ucfirst($property->status->value) }}
                             </span>
@@ -196,7 +196,7 @@
                             <p class="text-xs text-gray-400 dark:text-gray-500">{{ $property->address }} · {{ $property->surface }} m²</p>
                         </div>
                         <div class="flex items-center gap-2">
-                            <span class="text-sm font-semibold text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }}</span>
+                            <span class="text-sm font-semibold text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} {{ $property->price_label }}</span>
                             <span class="text-xs px-2 py-0.5 rounded-full bg-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-100 dark:bg-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-900/30 text-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-600 dark:text-{{ $property->status->value === 'available' ? 'emerald' : ($property->status->value === 'sold' ? 'red' : 'blue') }}-400">
                                 {{ ucfirst($property->status->value) }}
                             </span>

@@ -146,7 +146,7 @@
                                                     <td class="px-4 py-3 font-medium hover:text-blue-600 dark:hover:text-blue-400">
                                                         <a href="{{ route('property.show', $property) }}" class="text-gray-800 dark:text-white">{{ $property->title }}</a>
                                                     </td>
-                                                    <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }}</td>
+                                                    <td class="px-4 py-3 text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} FCFA {{ $property->price_label }}</td>
                                                     <td class="px-4 py-3">{{ $property->rooms }}</td>
                                                     <td class="px-4 py-3">{{ $property->city->name ?? '-' }}</td>
                                                     <td class="px-4 py-3">

@@ -74,6 +74,12 @@ class PropertyController extends Controller
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
                         $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    })
+                    ->orWhereHas('amenities', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    })
+                    ->orWhereHas('category', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
                     });
             });
         }
@@ -130,7 +136,7 @@ class PropertyController extends Controller
     public function create()
     {
         return view('pages.property.create', [
-            'categories' => Category::select(['id', 'name'])->get(),
+            'categories' => Category::propertyTypes()->select(['id', 'name'])->get(),
             'cities' => City::select(['id', 'name'])->get(),
             'amenities' => Amenity::select(['id', 'name'])->get(),
             'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
@@ -174,7 +180,7 @@ class PropertyController extends Controller
 
         return view('pages.property.edit', [
             'property' => $property,
-            'categories' => Category::select(['id', 'name'])->get(),
+            'categories' => Category::propertyTypes()->select(['id', 'name'])->get(),
             'cities' => City::select(['id', 'name'])->get(),
             'amenities' => Amenity::select(['id', 'name'])->get(),
             'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
@@ -321,6 +327,12 @@ class PropertyController extends Controller
                         $q2->where('name', 'like', '%'.$request->keyword.'%');
                     })
                     ->orWhereHas('arrondissement', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'%');
+                    })
+                    ->orWhereHas('amenities', function ($q2) use ($request) {
+                        $q2->where('name', 'like', '%'.$request->keyword.'');
+                    })
+                    ->orWhereHas('category', function ($q2) use ($request) {
                         $q2->where('name', 'like', '%'.$request->keyword.'%');
                     });
             });

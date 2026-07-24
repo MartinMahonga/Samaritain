@@ -104,24 +104,27 @@
         <div class="mb-8 max-w-max">
             @php
                 $serviceIcons = [
-                    'macon' => 'hammer',
-                    'plombier' => 'wrench',
-                    'electricien' => 'zap',
-                    'peintre' => 'paint-roller',
-                    'menuisier' => 'ruler',
-                    'carreleur' => 'grid-3x3',
-                    'jardinier' => 'trees',
-                    'serrurier' => 'key-round',
-                    'climatisation' => 'wind',
-                    'nettoyage' => 'sparkles',
-                    'demenagement' => 'truck',
+                    'Maçon' => 'hammer',
+                    'Plombier' => 'wrench',
+                    'Électricien' => 'zap',
+                    'Peintre' => 'paint-roller',
+                    'Menuisier' => 'ruler',
+                    'Carreleur' => 'grid-3x3',
+                    'Jardinier' => 'trees',
+                    'Serrurier' => 'key-round',
+                    'Climatisation' => 'wind',
+                    'Déménagement' => 'truck',
+                    'Toiture' => 'home',
+                    'Architecte' => 'building',
+                    'Décorateur intérieur' => 'lamp',
+                    'Rénovation' => 'refresh-cw',
+                    'Isolation' => 'thermometer',
                 ];
 
-                $pillOptions = collect($categories)->mapWithKeys(
-                    fn($label, $key) => [
-                        $key => ['label' => $label, 'icon' => $serviceIcons[$key] ?? 'briefcase'],
-                    ],
-                );
+                $pillOptions = collect($categories)->mapWithKeys(function ($category) use ($serviceIcons) {
+                    $icon = $serviceIcons[$category->name] ?? 'briefcase';
+                    return [$category->id => ['label' => $category, 'icon' => $icon]];
+                });
             @endphp
 
             <h3 class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-3">Métiers populaires</h3>
