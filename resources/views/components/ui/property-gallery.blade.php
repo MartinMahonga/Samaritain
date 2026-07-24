@@ -19,7 +19,7 @@
                     {{ number_format($property->price, 0, ',', ' ') }}
                 </span>
                 <span class="font-body text-[0.75rem] font-normal text-white/70">
-                    XAF{{ $property->price_type === 'monthly' ? ' / mois' : '' }}
+                    XAF {{ $property->price_label }}
                 </span>
             </div>
         @endif

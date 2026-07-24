@@ -89,7 +89,7 @@
                             class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
                             <option value="">Tous les types</option>
                             @php
-                                $categories = \App\Models\Category::select(['id', 'name'])->get();
+                                $categories = \App\Models\Category::propertyTypes()->select(['id', 'name'])->get();
                             @endphp
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}"

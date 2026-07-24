@@ -70,7 +70,7 @@
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Prix :</span>
-                            <p class="font-medium text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} FCFA</p>
+                            <p class="font-medium text-gray-800 dark:text-white">{{ number_format($property->price, 0, ',', ' ') }} FCFA {{ $property->price_label }}</p>
                         </div>
                         <div>
                             <span class="text-gray-500 dark:text-gray-400">Surface :</span>
