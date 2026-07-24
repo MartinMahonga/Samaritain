@@ -24,17 +24,19 @@
         @php
             $label = is_array($option) ? $option['label'] : $option;
             $icon = is_array($option) ? ($option['icon'] ?? 'briefcase') : 'briefcase';
-            $isActive = (string) $current === (string) $label->id;
+            $labelId = is_object($label) ? $label->id : null;
+            $labelName = is_object($label) ? $label->name : $label;
+            $isActive = (string) $current === (string) $labelId;
         @endphp
         <a href="{{ $isActive
                 ? request()->fullUrlWithoutQuery([$name, 'page'])
-                : request()->fullUrlWithQuery([$name => $label->id, 'page' => null]) }}"
+                : request()->fullUrlWithQuery([$name => $labelId, 'page' => null]) }}"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-full border text-sm font-medium transition-all duration-200 whitespace-nowrap
                 {{ $isActive
                     ? 'bg-primary border-primary text-white shadow-sm'
                     : 'bg-white dark:bg-gray-800 border-accent dark:border-gray-700 text-gray-700 dark:text-gray-300 hover:border-primary hover:text-primary dark:hover:text-primary-400' }}">
             <i data-lucide="{{ $icon }}" class="w-4 h-4"></i>
-            {{ $label->name }}
+            {{ $labelName }}
         </a>
     @endforeach
 </div>
