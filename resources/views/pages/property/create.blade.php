@@ -39,6 +39,8 @@
                             value="{{ old('surface') }}" required />
                         <x-form.input name="price" label="Prix (FCFA) *" type="number" step="1000"
                             value="{{ old('price') }}" required />
+                        <x-form.select name="price_type" label="Type de prix *" :options="['monthly' => 'Mensuel / mois', 'daily' => 'Journalier / jour']"
+                            placeholder="Choisir le type de prix" value="{{ old('price_type') }}" required />
                     </div>
                 </div>
 

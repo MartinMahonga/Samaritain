@@ -89,7 +89,7 @@
                             class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
                             <option value="">Tous les types</option>
                             @php
-                                $categories = \App\Models\Category::select(['id', 'name'])->get();
+                                $categories = \App\Models\Category::propertyTypes()->select(['id', 'name'])->get();
                             @endphp
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}"
@@ -279,7 +279,7 @@
 
         <!-- Grille des biens -->
         <div
-            class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 md:gap-24 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-3 sm:gap-4">
+            class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             @forelse($properties as $property)
                 <x-ui.property-card :property="$property" />
             @empty

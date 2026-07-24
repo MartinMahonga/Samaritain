@@ -269,19 +269,18 @@ Route::livewire('chat', 'pages::chat.index');
 //     ]);
 // });
 
-Route::get('/propos',function()
-{
+Route::get('/propos', function () {
     return view('apropos');
 })->name('propos');
 
-Route::get('/politique', function() {
+Route::get('/politique', function () {
     return view('politique');
 })->name('politique');
 
-Route::get('/conditions', function() {
+Route::get('/conditions', function () {
     return view('conditions');
 })->name('conditions');
 
-Route::get('/apropo_S', function() {
+Route::get('/apropo_S', function () {
     return view('apropo_S');
 })->name('apropos_S');

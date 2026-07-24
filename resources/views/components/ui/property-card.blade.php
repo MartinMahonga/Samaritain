@@ -3,10 +3,10 @@
 ])
 
 <a href="{{ route('property.show', $property) }}"
-    class="group shrink-0 w-44 md:w-52 snap-start cursor-pointer">
+    class="group block w-full cursor-pointer">
 
     {{-- Image --}}
-    <div class="relative overflow-hidden rounded-2xl bg-gray-100" style="height: 176px;">
+    <div class="relative overflow-hidden rounded-2xl bg-gray-100 aspect-[4/3]">
         <img src="{{ $property->images->first()->image_url }}" alt="{{ $property->title }}"
             class="w-full h-full object-cover shadow-sm transition duration-500 group-hover:scale-105">
 
@@ -70,11 +70,11 @@
         <div class="flex items-start justify-between gap-2">
             <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between">
-                    <h3 class="font-semibold text-xs text-gray-800 dark:text-gray-300 truncate group-hover:text-primary transition">
+                    <h3 class="text-xs sm:text-sm font-semibold text-gray-800 dark:text-gray-300 truncate group-hover:text-primary transition">
                         {{ $property->title }}
                     </h3>
-                    <div class="text-gray-400 text-xs flex items-center gap-1">
-                        <i data-lucide="land-plot" class="h-3 w-3"></i>
+                    <div class="text-gray-400 text-[11px] sm:text-xs flex items-center gap-1 shrink-0 ml-2">
+                        <i data-lucide="land-plot" class="h-2.5 w-2.5 sm:h-3 sm:w-3"></i>
                         {{ $property->surface }}m²
                     </div>
                 </div>
@@ -91,10 +91,9 @@
             {{ $property->description }}
         </p>
 
-        <div class="flex items-center justify-between pt-1">
+            <div class="flex items-center justify-between pt-1">
             <p class="text-gray-800 dark:text-gray-300 text-xs font-bold">
-                {{ number_format($property->price, 0, ',', ' ') }}
-                <span class="text-xs font-normal text-gray-400">FCFA / mois</span>
+                {{ number_format($property->price, 0, ',', ' ') }} FCFA <span class="text-xs font-normal text-gray-400">{{ $property->price_label }}</span>
             </p>
             <div class="flex items-center gap-3">
                 <span

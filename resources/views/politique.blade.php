@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'politique')
+@section('title', 'Politique de Confidentialité')
 
 @section('content')
 

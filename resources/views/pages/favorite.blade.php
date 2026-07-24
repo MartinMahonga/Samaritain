@@ -65,7 +65,7 @@
                                     </span>
                                 </div>
                                 <p class="text-sm font-semibold text-gray-900 dark:text-white whitespace-nowrap">
-                                    {{ number_format($property->price, 0, ',', ' ') }} <span class="text-[10px] font-normal text-gray-400 dark:text-gray-500">FCFA/mois</span>
+                                    {{ number_format($property->price, 0, ',', ' ') }} FCFA <span class="text-[10px] font-normal text-gray-400 dark:text-gray-500">{{ $property->price_label }}</span>
                                 </p>
                             </div>
                         </a>

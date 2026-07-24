@@ -1,6 +1,6 @@
 @extends('layouts.base')
 
-@section('title', 'Payment Status')
+@section('title', 'Statut du paiement')
 
 @section('content')
     <div class="container mt-5">

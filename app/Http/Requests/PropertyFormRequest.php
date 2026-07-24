@@ -29,6 +29,7 @@ class PropertyFormRequest extends FormRequest
             'title' => ['required', 'min:8'],
             'description' => ['nullable', 'min:8'],
             'price' => ['required', 'integer', 'min:0'],
+            'price_type' => ['required', 'in:monthly,daily'],
             'surface' => ['required', 'integer', 'min:10'],
             'rooms' => ['required', 'integer', 'min:1'],
             'bedrooms' => ['required', 'integer', 'min:0'],
@@ -51,8 +52,8 @@ class PropertyFormRequest extends FormRequest
         ];
 
         if ($this->isMethod('POST')) {
-    $rules['conditions'] = ['required', 'accepted'];
-}
+            $rules['conditions'] = ['required', 'accepted'];
+        }
 
         if ($this->user() && $this->user()->isStaff()) {
             $rules['is_verify'] = ['nullable', 'boolean'];

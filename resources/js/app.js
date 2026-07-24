@@ -127,6 +127,16 @@ import {
     QrCode,
     Hash,
     MessageCircleMore,
+    PaintRoller,
+    Grid3x3,
+    Lamp,
+    RefreshCw,
+    Thermometer,
+    Hammer,
+    Wrench,
+    Truck,
+    Zap,
+    Wind,
 } from "lucide";
 
 createIcons({
@@ -258,7 +268,17 @@ createIcons({
         CheckCheck,
         QrCode,
         Hash,
-        MessageCircleMore
+        MessageCircleMore,
+        PaintRoller,
+        Grid3x3,
+        Lamp,
+        RefreshCw,
+        Thermometer,
+        Hammer,
+        Wrench,
+        Truck,
+        Zap,
+        Wind,
     },
 });
 

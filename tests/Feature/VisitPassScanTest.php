@@ -19,7 +19,7 @@ beforeEach(function () {
         'property_id' => $this->property->id,
         'holder_name' => 'Jean Dupont',
         'phone' => '+242061234567',
-        'amount' => 2500,
+        'amount' => 5000,
         'allowed_visits' => VisitPass::ALLOWED_VISITS,
         'remaining_visits' => VisitPass::ALLOWED_VISITS,
         'payment_status' => 'paid',
@@ -36,7 +36,7 @@ test('un pass visite est créé avec 3 visites autorisées', function () {
         'property_id' => $this->property->id,
         'holder_name' => 'Marie Martin',
         'phone' => '+242069876543',
-        'amount' => 2500,
+        'amount' => 5000,
         'payment_status' => 'pending',
         'status' => 'pending_payment',
     ]);

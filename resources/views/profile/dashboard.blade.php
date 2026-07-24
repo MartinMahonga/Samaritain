@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Mon tableau de bord">
     <div class="bg-primary text-white overflow-hidden">
         <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-12">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -86,7 +86,7 @@
                             <div class="flex items-start justify-between">
                                 <div>
                                     <h4 class="font-medium text-gray-900">{{ $property->title }}</h4>
-                                    <p class="text-sm text-gray-500 mt-1">{{ number_format($property->price, 0, ',', ' ') }} FCFA</p>
+                                    <p class="text-sm text-gray-500 mt-1">{{ number_format($property->price, 0, ',', ' ') }} FCFA {{ $property->price_label }}</p>
                                     <div class="flex items-center gap-2 mt-2">
                                         @if($property->is_verify)
                                             <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">✓ Vérifié</span>

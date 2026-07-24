@@ -20,7 +20,7 @@ class VisitPassService
     /**
      * The price of a visit pass in FCFA.
      */
-    const PASS_PRICE = 2500;
+    const PASS_PRICE = 5000;
 
     public function getPassPrice(): int
     {

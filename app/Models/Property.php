@@ -18,6 +18,7 @@ class Property extends Model
         'slug',
         'description',
         'price',
+        'price_type',
         'surface',
         'rooms',
         'bedrooms',
@@ -38,7 +39,7 @@ class Property extends Model
 
     protected $casts = [
         'status' => PropertyStatus::class,
-        'conditions_accepted_at' => 'datetime'
+        'conditions_accepted_at' => 'datetime',
     ];
 
     /**
@@ -166,5 +167,12 @@ class Property extends Model
     public function agencyContacts()
     {
         return $this->morphMany(AgencyContact::class, 'contactable');
+    }
+
+    public function getPriceLabelAttribute(): string
+    {
+        $type = $this->price_type ?? 'monthly';
+
+        return $type === 'daily' ? '/jour' : '/mois';
     }
 }

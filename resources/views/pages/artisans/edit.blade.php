@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="Modifier mon profil - Artisan">
     <!-- Hero Section améliorée -->
     <div class="bg-primary dark:bg-primary-700 text-white overflow-hidden">
         <div class="relative max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
@@ -111,12 +111,12 @@
                             Localisation
                         </h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                            @php
-                                $cities = [
-                                    1 => 'Brazzaville',
-                                    2 => 'Pointe-Noire'
-                                ]
-                            @endphp
+                        @php
+                            $cities = [
+                                'Brazzaville' => 'Brazzaville',
+                                'Pointe-Noire' => 'Pointe-Noire'
+                            ]
+                        @endphp
                             <x-form.select
                                 name="city"
                                 label="Ville"

@@ -48,12 +48,14 @@ class ArtisanController extends Controller
         $categories = ArtisanCategory::orderBy('id')->get();
         $cities = Artisan::verified()->active()->distinct()->pluck('city')->filter();
         $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
+        $count = $artisans->count();
 
         return view('pages.artisans.index', [
             'artisans' => $artisans,
             'categories' => $categories,
             'cities' => $cities,
             'arrondissements' => $arrondissements,
+            'count' => $count,
         ]);
     }
 

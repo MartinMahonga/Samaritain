@@ -8,14 +8,14 @@
         {{-- Price --}}
         <div>
             <p class="font-body text-[0.68rem] font-medium tracking-[0.12em] uppercase mb-1.5 dark:text-gray-400">
-                {{ $property->price_type === 'monthly' ? 'Loyer mensuel' : 'Prix de vente' }}
+                {{ $property->price_label === '/mois' ? 'Loyer mensuel' : 'Prix de vente' }}
             </p>
             @if ($property->price)
                 <p class="font-display font-bold text-[2.6rem] text-primary dark:text-primary-400 leading-none mb-1">
                     {{ number_format($property->price, 0, ',', ' ') }}
                     <sub
                         class="font-body text-[0.75rem] font-normal text-primary/90 dark:text-primary-300 align-middle ml-1">
-                        FCFA{{ $property->price_type === 'monthly' ? '/mois' : '' }}
+                        FCFA {{ $property->price_label }}
                     </sub>
                 </p>
             @endif

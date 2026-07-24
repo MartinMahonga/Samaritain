@@ -57,22 +57,6 @@
                             value="{{ old('email', auth()->user()->email) }}"
                         />
 
-                        <div>
-                            <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                Commentaire (optionnel)
-                            </label>
-                            <textarea
-                                id="comment"
-                                name="comment"
-                                rows="3"
-                                placeholder="Ajoutez un commentaire..."
-                                class="w-full rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-900 px-4 py-2.5 text-sm text-gray-900 dark:text-gray-100 placeholder-gray-400 dark:placeholder-gray-500 focus:border-primary dark:focus:border-primary-400 focus:ring-1 focus:ring-primary dark:focus:ring-primary-400 outline-none transition-colors"
-                            >{{ old('comment') }}</textarea>
-                            @error('comment')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <div class="pt-4">
                             <button type="submit"
                                 class="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-primary text-white px-6 py-3 text-sm font-semibold hover:bg-primary/90 transition-colors"

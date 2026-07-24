@@ -1,4 +1,4 @@
-<x-app-layout>
+<x-app-layout title="{{ $artisan->business_name }}">
     <div class="bg-background min-h-screen pb-16">
         {{-- Bannière décorative --}}
         <div class="relative h-36 md:h-44 overflow-hidden">
@@ -117,11 +117,6 @@
                         <div class="text-center">
                             <div class="text-2xl md:text-3xl font-bold text-foreground">{{ $artisan->projects->count() }}</div>
                             <p class="text-xs text-muted-foreground mt-1">Réalisations</p>
-                        </div>
-                        <div class="w-px h-10 bg-border"></div>
-                        <div class="text-center">
-                            <div class="text-2xl md:text-3xl font-bold text-foreground">{{ number_format($artisan->views) }}</div>
-                            <p class="text-xs text-muted-foreground mt-1">Vues</p>
                         </div>
                     </div>
                 </div>

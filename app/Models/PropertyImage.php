@@ -16,6 +16,11 @@ class PropertyImage extends Model
 
     public function getImageUrlAttribute(string $value): string
     {
+        // Si l'URL est déjà absolue (http/https), on la retourne telle quelle
+        if (str_starts_with($value, 'http://') || str_starts_with($value, 'https://')) {
+            return $value;
+        }
+
         return Storage::url($value);
     }
 }

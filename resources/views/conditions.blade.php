@@ -1,5 +1,5 @@
 @extends('layouts.base')
-@section('title', 'condition')
+@section('title', 'Conditions Générales d\'Utilisation')
 
 @section('content')
     <section>

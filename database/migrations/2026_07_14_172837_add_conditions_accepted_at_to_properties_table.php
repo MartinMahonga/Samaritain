@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('properties', function (Blueprint $table) {
             //
-              $table->dropColumn('conditions_accepted_at');
+            $table->dropColumn('conditions_accepted_at');
         });
     }
 };

@@ -6,17 +6,23 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::table('parcelles', function (Blueprint $table) {
-            $table->dropColumn('quartier');
+        Schema::table('properties', function (Blueprint $table) {
+            //
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::table('parcelles', function (Blueprint $table) {
-            $table->string('quartier')->nullable();
+        Schema::table('properties', function (Blueprint $table) {
+            //
         });
     }
 };

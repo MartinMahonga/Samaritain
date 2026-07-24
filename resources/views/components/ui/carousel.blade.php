@@ -12,18 +12,19 @@
     update() {
         const c = this.$refs.carousel;
         this.atStart = c.scrollLeft <= 0;
-        this.atEnd = c.scrollLeft + c.clientWidth >= c.scrollWidth - 1;
+        this.atEnd = Math.ceil(c.scrollLeft + c.clientWidth) >= c.scrollWidth - 1;
     },
     scrollAmount() {
-        return Math.max(this.$refs.carousel.clientWidth * 0.8, 300);
+        const cardWidth = window.innerWidth < 640 ? 240 : 300;
+        return Math.max(cardWidth + 20, 280);
     },
     prev() {
         this.$refs.carousel.scrollBy({ left: -this.scrollAmount(), behavior: 'smooth' });
-        setTimeout(() => this.update(), 300);
+        setTimeout(() => this.update(), 350);
     },
     next() {
         this.$refs.carousel.scrollBy({ left: this.scrollAmount(), behavior: 'smooth' });
-        setTimeout(() => this.update(), 300);
+        setTimeout(() => this.update(), 350);
     }
 }" x-cloak>
 
@@ -66,7 +67,9 @@
         </style>
 
         @foreach ($properties as $property)
-            <x-ui.property-card :property="$property" />
+            <div class="flex-shrink-0 w-[80vw] sm:w-[45vw] md:w-[38vw] lg:w-[28vw] xl:w-[22vw] snap-start">
+                <x-ui.property-card :property="$property" />
+            </div>
         @endforeach
 
         {{-- Carte "Tout afficher" --}}
