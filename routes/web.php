@@ -284,3 +284,49 @@ Route::get('/conditions', function () {
 Route::get('/apropo_S', function () {
     return view('apropo_S');
 })->name('apropos_S');
+
+// Owner Portal & Management Routes
+Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.')->group(function () {
+    // Dashboard / Portal Overview
+    Route::get('/dashboard', [App\Http\Controllers\Owner\DashboardController::class, 'index'])->name('dashboard');
+
+    // Financial Dashboard & Stats
+    Route::get('/financial', [App\Http\Controllers\Owner\FinancialController::class, 'index'])->name('financial');
+    Route::get('/financial/export', [App\Http\Controllers\Owner\FinancialController::class, 'export'])->name('financial.export');
+
+    // Contracts (Contrats)
+    Route::get('/contracts', [App\Http\Controllers\Owner\ContractController::class, 'index'])->name('contracts.index');
+    Route::get('/contracts/create', [App\Http\Controllers\Owner\ContractController::class, 'create'])->name('contracts.create');
+    Route::post('/contracts', [App\Http\Controllers\Owner\ContractController::class, 'store'])->name('contracts.store');
+    Route::get('/contracts/{contract}', [App\Http\Controllers\Owner\ContractController::class, 'show'])->name('contracts.show');
+    Route::post('/contracts/{contract}/generate-rents', [App\Http\Controllers\Owner\ContractController::class, 'generateRents'])->name('contracts.generate-rents');
+    Route::post('/rent-payments/{rentPayment}/toggle-paid', [App\Http\Controllers\Owner\ContractController::class, 'togglePaid'])->name('rent-payments.toggle-paid');
+
+    // Invoices (Factures)
+    Route::get('/invoices', [App\Http\Controllers\Owner\InvoiceController::class, 'index'])->name('invoices.index');
+    Route::get('/invoices/create', [App\Http\Controllers\Owner\InvoiceController::class, 'create'])->name('invoices.create');
+    Route::post('/invoices', [App\Http\Controllers\Owner\InvoiceController::class, 'store'])->name('invoices.store');
+    Route::post('/invoices/{invoice}/toggle-paid', [App\Http\Controllers\Owner\InvoiceController::class, 'togglePaid'])->name('invoices.toggle-paid');
+    Route::delete('/invoices/{invoice}', [App\Http\Controllers\Owner\InvoiceController::class, 'destroy'])->name('invoices.destroy');
+
+    // Interventions / Maintenance
+    Route::get('/interventions', [App\Http\Controllers\Owner\InterventionController::class, 'index'])->name('interventions.index');
+    Route::get('/interventions/create', [App\Http\Controllers\Owner\InterventionController::class, 'create'])->name('interventions.create');
+    Route::post('/interventions', [App\Http\Controllers\Owner\InterventionController::class, 'store'])->name('interventions.store');
+    Route::get('/interventions/{intervention}', [App\Http\Controllers\Owner\InterventionController::class, 'show'])->name('interventions.show');
+    Route::post('/interventions/{intervention}/status', [App\Http\Controllers\Owner\InterventionController::class, 'updateStatus'])->name('interventions.update-status');
+
+    // Inspections (États des lieux)
+    Route::get('/inspections', [App\Http\Controllers\Owner\InspectionController::class, 'index'])->name('inspections.index');
+    Route::get('/inspections/create', [App\Http\Controllers\Owner\InspectionController::class, 'create'])->name('inspections.create');
+    Route::post('/inspections', [App\Http\Controllers\Owner\InspectionController::class, 'store'])->name('inspections.store');
+    Route::get('/inspections/compare', [App\Http\Controllers\Owner\InspectionController::class, 'compare'])->name('inspections.compare');
+    Route::get('/inspections/{inspection}', [App\Http\Controllers\Owner\InspectionController::class, 'show'])->name('inspections.show');
+    Route::get('/inspections/{inspection}/pdf', [App\Http\Controllers\Owner\InspectionController::class, 'downloadPdf'])->name('inspections.pdf');
+
+    // Documents
+    Route::get('/documents', [App\Http\Controllers\Owner\DocumentController::class, 'index'])->name('documents.index');
+    Route::post('/documents', [App\Http\Controllers\Owner\DocumentController::class, 'store'])->name('documents.store');
+    Route::get('/documents/{document}/download', [App\Http\Controllers\Owner\DocumentController::class, 'download'])->name('documents.download');
+    Route::delete('/documents/{document}', [App\Http\Controllers\Owner\DocumentController::class, 'destroy'])->name('documents.destroy');
+});

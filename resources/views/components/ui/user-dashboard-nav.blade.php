@@ -6,6 +6,12 @@
                 @php
                     $tabs = [
                         [
+                            'route' => 'owner.dashboard',
+                            'icon' => 'layout-dashboard',
+                            'label' => 'Portail Propriétaire',
+                            'show' => auth()->user()?->hasRole('owner'),
+                        ],
+                        [
                             'route' => 'property.dashboard',
                             'icon' => 'warehouse',
                             'label' => 'Mes biens',
