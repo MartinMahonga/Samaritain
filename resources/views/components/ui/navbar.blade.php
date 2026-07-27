@@ -173,7 +173,7 @@
     </div>
 
     {{-- Mobile --}}
-    <div class="flex md:hidden justify-between items-center px-4 h-14">
+    <div class="flex md:hidden justify-between items-center px-4 h-14 ">
 
 
         <a href="{{ route('index') }}" class="flex items-center gap-2">

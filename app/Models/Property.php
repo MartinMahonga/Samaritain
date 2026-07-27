@@ -20,7 +20,6 @@ class Property extends Model
         'price',
         'price_type',
         'surface',
-        'rooms',
         'bedrooms',
         'bathrooms',
         'floor',
