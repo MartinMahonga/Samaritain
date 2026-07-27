@@ -77,7 +77,7 @@ class VisitPass extends Model
             'payment_status' => 'paid',
             'status' => 'active',
             'paid_at' => now(),
-            'expires_at' => $this->created_at ? $this->created_at->copy()->addDays(3) : now()->addDays(3),
+            'expires_at' => $this->created_at ? $this->created_at->copy()->addDays(7) : now()->addDays(7),
         ]);
     }
 
