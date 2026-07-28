@@ -6,17 +6,21 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreInvoiceRequest;
 use App\Models\Invoice;
 use App\Models\Property;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class InvoiceController extends Controller
 {
     public function index(Request $request)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
-        $properties = Property::where('created_by', auth()->id())->get();
+        Gate::authorize('viewAny', Invoice::class);
 
-        $query = Invoice::whereIn('property_id', $propertyIds)->with('property');
+        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+
+        $query = Invoice::whereIn('property_id', $propertyIds)->with('property:id,title');
 
         if ($request->filled('property_id')) {
             $query->where('property_id', $request->property_id);
@@ -32,8 +36,13 @@ class InvoiceController extends Controller
 
         $invoices = $query->latest()->paginate(15)->withQueryString();
 
-        $totalUnpaid = Invoice::whereIn('property_id', $propertyIds)->where('status', 'unpaid')->sum('amount');
-        $totalPaid = Invoice::whereIn('property_id', $propertyIds)->where('status', 'paid')->sum('amount');
+        $totals = Invoice::whereIn('property_id', $propertyIds)
+            ->selectRaw("COALESCE(SUM(CASE WHEN status = 'unpaid' THEN amount ELSE 0 END), 0) as total_unpaid")
+            ->selectRaw("COALESCE(SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END), 0) as total_paid")
+            ->first();
+
+        $totalUnpaid = $totals->total_unpaid ?? 0;
+        $totalPaid = $totals->total_paid ?? 0;
 
         return view('pages.owner.invoices.index', compact(
             'invoices', 'properties', 'totalUnpaid', 'totalPaid'
@@ -42,12 +51,17 @@ class InvoiceController extends Controller
 
     public function create()
     {
-        $properties = Property::where('created_by', auth()->id())->get();
+        Gate::authorize('create', Invoice::class);
+
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+
         return view('pages.owner.invoices.create', compact('properties'));
     }
 
     public function store(StoreInvoiceRequest $request)
     {
+        Gate::authorize('create', Invoice::class);
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
         $data['status'] = 'unpaid';
@@ -64,30 +78,37 @@ class InvoiceController extends Controller
             ->with('success', 'Facture enregistrée avec succès.');
     }
 
+    public function downloadPdf(Invoice $invoice)
+    {
+        Gate::authorize('view', $invoice);
+
+        $invoice->load('property.city');
+        $property = $invoice->property;
+
+        $pdf = Pdf::loadView('pages.owner.pdf.invoice', compact('invoice', 'property'));
+        $fileName = 'facture_'.str_pad($invoice->id, 6, '0', STR_PAD_LEFT).'.pdf';
+
+        return response()->streamDownload(fn () => print ($pdf->output()), $fileName);
+    }
+
     public function togglePaid(Invoice $invoice)
     {
-        $property = Property::find($invoice->property_id);
-
-        if ($property->created_by !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('update', $invoice);
 
         if ($invoice->status === 'paid') {
             $invoice->update(['status' => 'unpaid', 'paid_at' => null]);
+
             return redirect()->back()->with('success', 'Facture marquée comme impayée.');
         } else {
             $invoice->update(['status' => 'paid', 'paid_at' => now()]);
+
             return redirect()->back()->with('success', 'Facture marquée comme payée.');
         }
     }
 
     public function destroy(Invoice $invoice)
     {
-        $property = Property::find($invoice->property_id);
-
-        if ($property->created_by !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('delete', $invoice);
 
         if ($invoice->file_path) {
             Storage::delete($invoice->file_path);

@@ -8,16 +8,19 @@ use App\Models\Artisan;
 use App\Models\Intervention;
 use App\Models\Property;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class InterventionController extends Controller
 {
     public function index(Request $request)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
-        $properties = Property::where('created_by', auth()->id())->get();
+        Gate::authorize('viewAny', Intervention::class);
 
-        $query = Intervention::whereIn('property_id', $propertyIds)->with('property', 'artisan');
+        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+
+        $query = Intervention::whereIn('property_id', $propertyIds)
+            ->with('property:id,title', 'artisan:id,name');
 
         if ($request->filled('property_id')) {
             $query->where('property_id', $request->property_id);
@@ -33,8 +36,14 @@ class InterventionController extends Controller
 
         $interventions = $query->latest()->paginate(15)->withQueryString();
 
-        $pending = Intervention::whereIn('property_id', $propertyIds)->whereIn('status', ['pending', 'in_progress'])->count();
-        $totalCost = Intervention::whereIn('property_id', $propertyIds)->where('status', 'completed')->sum('cost');
+        // Aggregated stats in a single query
+        $stats = Intervention::whereIn('property_id', $propertyIds)
+            ->selectRaw('SUM(CASE WHEN status IN (?, ?) THEN 1 ELSE 0 END) as pending_count', ['pending', 'in_progress'])
+            ->selectRaw('COALESCE(SUM(CASE WHEN status = ? THEN cost ELSE 0 END), 0) as total_cost', ['completed'])
+            ->first();
+
+        $pending = $stats->pending_count ?? 0;
+        $totalCost = $stats->total_cost ?? 0;
 
         return view('pages.owner.interventions.index', compact(
             'interventions', 'properties', 'pending', 'totalCost'
@@ -43,13 +52,18 @@ class InterventionController extends Controller
 
     public function create()
     {
-        $properties = Property::where('created_by', auth()->id())->get();
-        $artisans = Artisan::where('verified', true)->where('is_active', true)->get();
+        Gate::authorize('create', Intervention::class);
+
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+        $artisans = Artisan::where('verified', true)->where('is_active', true)->get(['id', 'name', 'specialty']);
+
         return view('pages.owner.interventions.create', compact('properties', 'artisans'));
     }
 
     public function store(StoreInterventionRequest $request)
     {
+        Gate::authorize('create', Intervention::class);
+
         $data = $request->validated();
         $data['is_renovation'] = (bool) ($data['is_renovation'] ?? false);
 
@@ -75,24 +89,16 @@ class InterventionController extends Controller
 
     public function show(Intervention $intervention)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        Gate::authorize('view', $intervention);
 
-        if (! $propertyIds->contains($intervention->property_id)) {
-            abort(403);
-        }
-
-        $intervention->load('property', 'artisan');
+        $intervention->load('property:id,title,address', 'artisan:id,name,specialty,phone');
 
         return view('pages.owner.interventions.show', compact('intervention'));
     }
 
     public function updateStatus(Intervention $intervention, Request $request)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
-
-        if (! $propertyIds->contains($intervention->property_id)) {
-            abort(403);
-        }
+        Gate::authorize('update', $intervention);
 
         $request->validate([
             'status' => 'required|string|in:pending,approved,in_progress,completed,cancelled',

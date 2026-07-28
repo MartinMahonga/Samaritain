@@ -8,8 +8,8 @@
     <p class="text-gray-500 dark:text-gray-400 mt-1">Voici un aperçu de votre patrimoine immobilier.</p>
 </div>
 
-{{-- KPI Cards --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
+{{-- KPI Cards avec skeleton loading --}}
+<div x-data="{ loading: false }" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
     {{-- Total Biens --}}
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 hover:shadow-md transition">
         <div class="flex items-center justify-between mb-3">
@@ -20,7 +20,12 @@
         </div>
         <div class="text-2xl font-bold text-gray-800 dark:text-white">{{ $totalProperties }}</div>
         <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">Propriétés gérées</div>
-        <div class="text-xs text-emerald-600 dark:text-emerald-400 mt-2">{{ $occupancyRate }}% taux d'occupation</div>
+        <div class="flex items-center gap-1 mt-2">
+            <div class="h-1.5 flex-1 bg-gray-100 dark:bg-gray-700 rounded-full overflow-hidden">
+                <div class="h-full bg-emerald-500 rounded-full transition-all duration-500" style="width: {{ $occupancyRate }}%"></div>
+            </div>
+            <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400">{{ $occupancyRate }}%</span>
+        </div>
     </div>
 
     {{-- Loyers du mois --}}
@@ -33,7 +38,16 @@
         </div>
         <div class="text-2xl font-bold text-gray-800 dark:text-white">{{ number_format($rentCollectedThisMonth, 0, ',', ' ') }}</div>
         <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">FCFA perçus</div>
-        <div class="text-xs text-amber-600 dark:text-amber-400 mt-2">{{ number_format($rentPendingThisMonth, 0, ',', ' ') }} FCFA en attente</div>
+        <div class="flex items-center justify-between mt-2">
+            <span class="text-xs text-amber-600 dark:text-amber-400">{{ number_format($rentPendingThisMonth, 0, ',', ' ') }} FCFA en attente</span>
+            <span class="text-xs text-emerald-600 dark:text-emerald-400">
+                @if($rentExpectedThisMonth > 0)
+                    {{ round(($rentCollectedThisMonth / $rentExpectedThisMonth) * 100) }}%
+                @else
+                    0%
+                @endif
+            </span>
+        </div>
     </div>
 
     {{-- Contrats actifs --}}
@@ -68,6 +82,24 @@
         <div class="text-xs text-red-600 dark:text-red-400 mt-2">
             <a href="{{ route('owner.invoices.index', ['status' => 'unpaid']) }}" class="hover:underline">Voir les factures →</a>
         </div>
+    </div>
+</div>
+
+{{-- Charts Section --}}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    {{-- Monthly Revenue Chart --}}
+    <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="font-semibold text-gray-800 dark:text-white">Revenus & Dépenses {{ now()->year }}</h3>
+            <a href="{{ route('owner.financial') }}" class="text-xs text-blue-600 dark:text-blue-400 hover:underline">Détails →</a>
+        </div>
+        <canvas id="dashboardChart" height="100"></canvas>
+    </div>
+
+    {{-- Collection Rate Trend --}}
+    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+        <h3 class="font-semibold text-gray-800 dark:text-white mb-4">Taux de collecte</h3>
+        <canvas id="collectionChart" height="200"></canvas>
     </div>
 </div>
 
@@ -223,3 +255,75 @@
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const isDark = document.documentElement.classList.contains('dark');
+    const gridColor = isDark ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.05)';
+    const textColor = isDark ? '#9ca3af' : '#6b7280';
+
+    // Monthly Revenue & Expenses Chart
+    const ctx1 = document.getElementById('dashboardChart').getContext('2d');
+    new Chart(ctx1, {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'],
+            datasets: [
+                {
+                    label: 'Revenus',
+                    data: @json($monthlyRevenue),
+                    backgroundColor: 'rgba(16, 185, 129, 0.7)',
+                    borderRadius: 4,
+                },
+                {
+                    label: 'Dépenses',
+                    data: @json($monthlyExpenses),
+                    backgroundColor: 'rgba(239, 68, 68, 0.7)',
+                    borderRadius: 4,
+                },
+            ]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { labels: { color: textColor } } },
+            scales: {
+                x: { ticks: { color: textColor }, grid: { color: gridColor } },
+                y: { ticks: { color: textColor }, grid: { color: gridColor } }
+            }
+        }
+    });
+
+    // Collection Rate Trend
+    const ctx2 = document.getElementById('collectionChart').getContext('2d');
+    new Chart(ctx2, {
+        type: 'line',
+        data: {
+            labels: @json(array_column($collectionTrend, 'label')),
+            datasets: [{
+                label: 'Taux de collecte',
+                data: @json(array_column($collectionTrend, 'rate')),
+                borderColor: '#0d9488',
+                backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                fill: true,
+                tension: 0.4,
+                pointBackgroundColor: '#0d9488',
+                pointRadius: 4,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                y: {
+                    min: 0,
+                    max: 100,
+                    ticks: { color: textColor, callback: v => v + '%' },
+                    grid: { color: gridColor }
+                },
+                x: { ticks: { color: textColor }, grid: { display: false } }
+            }
+        }
+    });
+</script>
+@endpush

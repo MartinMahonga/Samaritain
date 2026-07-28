@@ -110,6 +110,11 @@
                         </td>
                         <td class="px-5 py-3 text-center">
                             <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('owner.invoices.pdf', $invoice) }}" target="_blank"
+                                    class="text-xs px-2 py-1 rounded-lg border border-gray-200 dark:border-gray-600 text-gray-500 dark:text-gray-400 hover:text-emerald-600 hover:border-emerald-200 transition"
+                                    title="Télécharger PDF">
+                                    <i data-lucide="file-text" class="w-3 h-3"></i>
+                                </a>
                                 <form action="{{ route('owner.invoices.toggle-paid', $invoice) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit" class="text-xs px-3 py-1 rounded-lg border {{ $invoice->status === 'paid' ? 'border-red-200 dark:border-red-700 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20' : 'border-emerald-200 dark:border-emerald-700 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20' }} transition">

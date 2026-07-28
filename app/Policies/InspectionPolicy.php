@@ -16,6 +16,7 @@ class InspectionPolicy
     public function view(User $user, Inspection $inspection): bool
     {
         $property = Property::find($inspection->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
@@ -27,12 +28,14 @@ class InspectionPolicy
     public function update(User $user, Inspection $inspection): bool
     {
         $property = Property::find($inspection->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
     public function delete(User $user, Inspection $inspection): bool
     {
         $property = Property::find($inspection->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 }

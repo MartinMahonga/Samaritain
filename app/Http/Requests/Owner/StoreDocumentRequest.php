@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Owner;
 
 use App\Models\Property;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreDocumentRequest extends FormRequest
@@ -15,6 +16,7 @@ class StoreDocumentRequest extends FormRequest
         $propertyId = $this->input('property_id');
         if ($propertyId) {
             $property = Property::find($propertyId);
+
             return $property && $property->created_by === auth()->id();
         }
 
@@ -24,7 +26,7 @@ class StoreDocumentRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

@@ -137,6 +137,8 @@ import {
     Truck,
     Zap,
     Wind,
+    Trash2,
+    Download,
 } from "lucide";
 
 createIcons({
@@ -279,6 +281,8 @@ createIcons({
         Truck,
         Zap,
         Wind,
+        Trash2,
+        Download,
     },
 });
 

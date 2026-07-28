@@ -34,6 +34,7 @@ class FinancialService
         if ($filterPropertyId) {
             return [intval($filterPropertyId)];
         }
+
         return $propertyIds;
     }
 
@@ -131,6 +132,7 @@ class FinancialService
                     ->where('status', 'paid')->sum('amount_paid'),
             ];
         }
+
         return $incomeByProperty;
     }
 
@@ -187,7 +189,7 @@ class FinancialService
             $propExpenses = Intervention::where('property_id', $prop->id)
                 ->where('status', 'completed')->sum('cost')
                 + Invoice::where('property_id', $prop->id)
-                ->where('status', 'paid')->sum('amount');
+                    ->where('status', 'paid')->sum('amount');
 
             $hasActiveContract = Contract::where('property_id', $prop->id)->where('status', 'active')->exists();
 
@@ -199,6 +201,7 @@ class FinancialService
                 'status' => $hasActiveContract ? 'Loué' : 'Disponible',
             ];
         }
+
         return $propertyStats;
     }
 

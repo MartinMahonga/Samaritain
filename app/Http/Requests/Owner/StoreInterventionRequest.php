@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Owner;
 
 use App\Models\Property;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreInterventionRequest extends FormRequest
@@ -18,13 +19,14 @@ class StoreInterventionRequest extends FormRequest
         }
 
         $property = Property::find($propertyId);
+
         return $property && $property->created_by === auth()->id();
     }
 
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {

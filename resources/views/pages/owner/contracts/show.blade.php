@@ -12,14 +12,21 @@
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $contract->tenant_name }}</h1>
             <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $contract->property->title }}</p>
         </div>
-        <form action="{{ route('owner.contracts.generate-rents', $contract) }}" method="POST">
-            @csrf
-            <button type="submit"
-                class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition">
-                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
-                Régénérer l'échéancier
-            </button>
-        </form>
+        <div class="flex items-center gap-2">
+            <a href="{{ route('owner.contracts.pdf', $contract) }}" target="_blank"
+                class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition">
+                <i data-lucide="file-text" class="w-4 h-4"></i>
+                Télécharger le contrat
+            </a>
+            <form action="{{ route('owner.contracts.generate-rents', $contract) }}" method="POST">
+                @csrf
+                <button type="submit"
+                    class="flex items-center gap-2 px-4 py-2 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-lg text-sm hover:bg-gray-50 dark:hover:bg-gray-700 transition">
+                    <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+                    Régénérer l'échéancier
+                </button>
+            </form>
+        </div>
     </div>
 </div>
 

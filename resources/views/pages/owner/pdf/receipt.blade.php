@@ -20,7 +20,7 @@
         .logo {
             font-size: 24px;
             font-weight: bold;
-            color: #0d9488; /* Tailwind Teal 600 */
+            color: #0d9488;
         }
         .doc-title {
             text-align: right;
@@ -108,7 +108,7 @@
     <div class="section card">
         <div class="title">Désignation du bien</div>
         <strong>{{ $property->title }}</strong><br>
-        Adresse : {{ $property->address }}, {{ $property->city->name }}
+        Adresse : {{ $property->address }}, {{ $property->city->name ?? 'Non spécifiée' }}
     </div>
 
     <p>Je soussigné <strong>{{ auth()->user()->name }}</strong>, propriétaire du logement désigné ci-dessus, déclare avoir reçu de la part du locataire <strong>{{ $contract->tenant_name }}</strong> la somme indiquée ci-dessous au titre du paiement du loyer.</p>

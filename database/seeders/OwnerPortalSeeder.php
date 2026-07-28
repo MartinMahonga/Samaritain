@@ -38,7 +38,7 @@ class OwnerPortalSeeder extends Seeder
                 'property_id' => $property->id,
                 'tenant_name' => fake()->name(),
                 'tenant_email' => fake()->email(),
-                'tenant_phone' => '+2420' . fake()->numerify('#########'),
+                'tenant_phone' => '+2420'.fake()->numerify('#########'),
                 'start_date' => now()->subMonths(6),
                 'end_date' => now()->addMonths(6),
                 'monthly_rent' => $property->price,
@@ -136,9 +136,9 @@ class OwnerPortalSeeder extends Seeder
                 Document::create([
                     'property_id' => $property->id,
                     'name' => fake()->randomElement([
-                        'Facture électricité ' . fake()->monthName(),
+                        'Facture électricité '.fake()->monthName(),
                         'Devis rénovation cuisine',
-                        'Reçu de loyer ' . fake()->monthName(),
+                        'Reçu de loyer '.fake()->monthName(),
                         'Attestation d\'assurance',
                         'Diagnostic performance',
                     ]),

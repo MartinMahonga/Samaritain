@@ -9,16 +9,20 @@ use App\Models\Inspection;
 use App\Models\Property;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class InspectionController extends Controller
 {
     public function index(Request $request)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
-        $properties = Property::where('created_by', auth()->id())->get();
+        Gate::authorize('viewAny', Inspection::class);
 
-        $query = Inspection::whereIn('property_id', $propertyIds)->with('property', 'contract');
+        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+
+        $query = Inspection::whereIn('property_id', $propertyIds)
+            ->with('property:id,title', 'contract:id,tenant_name,property_id');
 
         if ($request->filled('property_id')) {
             $query->where('property_id', $request->property_id);
@@ -35,16 +39,23 @@ class InspectionController extends Controller
 
     public function create()
     {
+        Gate::authorize('create', Inspection::class);
+
         $userId = auth()->id();
-        $properties = Property::where('created_by', $userId)->get();
+        $properties = Property::where('created_by', $userId)->get(['id', 'title']);
         $propertyIds = $properties->pluck('id');
-        $contracts = Contract::whereIn('property_id', $propertyIds)->where('status', 'active')->with('property')->get();
+        $contracts = Contract::whereIn('property_id', $propertyIds)
+            ->where('status', 'active')
+            ->with('property:id,title')
+            ->get(['id', 'tenant_name', 'property_id']);
 
         return view('pages.owner.inspections.create', compact('properties', 'contracts'));
     }
 
     public function store(StoreInspectionRequest $request)
     {
+        Gate::authorize('create', Inspection::class);
+
         $data = $request->validated();
 
         // Handle photo uploads
@@ -72,13 +83,9 @@ class InspectionController extends Controller
 
     public function show(Inspection $inspection)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        Gate::authorize('view', $inspection);
 
-        if (! $propertyIds->contains($inspection->property_id)) {
-            abort(403);
-        }
-
-        $inspection->load('property', 'contract');
+        $inspection->load('property:id,title,address', 'contract:id,tenant_name,tenant_phone,tenant_email,property_id');
 
         return view('pages.owner.inspections.show', compact('inspection'));
     }
@@ -105,25 +112,21 @@ class InspectionController extends Controller
             ->latest()
             ->first();
 
-        $properties = Property::where('created_by', auth()->id())->get();
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
 
         return view('pages.owner.inspections.compare', compact('property', 'checkIn', 'checkOut', 'properties'));
     }
 
     public function downloadPdf(Inspection $inspection)
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
+        Gate::authorize('view', $inspection);
 
-        if (! $propertyIds->contains($inspection->property_id)) {
-            abort(403);
-        }
-
-        $inspection->load('property', 'contract');
+        $inspection->load('property:id,title,address', 'contract:id,tenant_name');
 
         // Generate or regenerate PDF
         $pdf = Pdf::loadView('pages.owner.pdf.inspection', compact('inspection'));
-        $fileName = 'etat_des_lieux_' . $inspection->id . '.pdf';
-        $path = 'documents/inspections/' . $fileName;
+        $fileName = 'etat_des_lieux_'.$inspection->id.'.pdf';
+        $path = 'documents/inspections/'.$fileName;
 
         Storage::put($path, $pdf->output());
 

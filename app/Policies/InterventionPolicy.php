@@ -16,6 +16,7 @@ class InterventionPolicy
     public function view(User $user, Intervention $intervention): bool
     {
         $property = Property::find($intervention->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
@@ -27,12 +28,14 @@ class InterventionPolicy
     public function update(User $user, Intervention $intervention): bool
     {
         $property = Property::find($intervention->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
     public function delete(User $user, Intervention $intervention): bool
     {
         $property = Property::find($intervention->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 }

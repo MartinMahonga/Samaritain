@@ -9,16 +9,17 @@ use App\Models\Document;
 use App\Models\Property;
 use App\Models\RentPayment;
 use Barryvdh\DomPDF\Facade\Pdf;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 
 class ContractController extends Controller
 {
     public function index()
     {
-        $propertyIds = Property::where('created_by', auth()->id())->pluck('id');
-        $contracts = Contract::whereIn('property_id', $propertyIds)
-            ->with('property')
+        Gate::authorize('viewAny', Contract::class);
+
+        $contracts = Contract::where('created_by', auth()->id())
+            ->with('property:id,title')
             ->latest()
             ->paginate(15);
 
@@ -27,12 +28,17 @@ class ContractController extends Controller
 
     public function create()
     {
-        $properties = Property::where('created_by', auth()->id())->get();
+        Gate::authorize('create', Contract::class);
+
+        $properties = Property::where('created_by', auth()->id())->get(['id', 'title']);
+
         return view('pages.owner.contracts.create', compact('properties'));
     }
 
     public function store(StoreContractRequest $request)
     {
+        Gate::authorize('create', Contract::class);
+
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
@@ -47,20 +53,16 @@ class ContractController extends Controller
 
     public function show(Contract $contract)
     {
-        // Authorization check
-        if ($contract->created_by !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('view', $contract);
 
-        $contract->load('property', 'rentPayments');
+        $contract->load('property:id,title,address,city_id', 'rentPayments');
+
         return view('pages.owner.contracts.show', compact('contract'));
     }
 
     public function generateRents(Contract $contract)
     {
-        if ($contract->created_by !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('update', $contract);
 
         $this->generateRentSchedule($contract);
 
@@ -70,16 +72,14 @@ class ContractController extends Controller
     public function togglePaid(RentPayment $rentPayment)
     {
         $contract = $rentPayment->contract;
-        if ($contract->created_by !== auth()->id()) {
-            abort(403);
-        }
+        Gate::authorize('update', $contract);
 
         if ($rentPayment->status === 'paid') {
             // Revert to unpaid
             $rentPayment->update([
                 'status' => 'unpaid',
                 'amount_paid' => 0,
-                'paid_at' => null
+                'paid_at' => null,
             ]);
 
             // Find and delete the generated receipt document if it exists
@@ -98,7 +98,7 @@ class ContractController extends Controller
             $rentPayment->update([
                 'status' => 'paid',
                 'amount_paid' => $rentPayment->amount_due,
-                'paid_at' => now()
+                'paid_at' => now(),
             ]);
 
             // Automatically generate a PDF Receipt
@@ -120,7 +120,7 @@ class ContractController extends Controller
 
         for ($i = 0; $i < 12; $i++) {
             $dueDate = $startDate->copy()->addMonths($i);
-            
+
             RentPayment::create([
                 'contract_id' => $contract->id,
                 'month' => $dueDate->month,
@@ -128,9 +128,22 @@ class ContractController extends Controller
                 'amount_due' => $monthlyRent,
                 'amount_paid' => 0,
                 'due_date' => $dueDate,
-                'status' => 'unpaid'
+                'status' => 'unpaid',
             ]);
         }
+    }
+
+    public function downloadPdf(Contract $contract)
+    {
+        Gate::authorize('view', $contract);
+
+        $contract->load('property.city');
+        $property = $contract->property;
+
+        $pdf = Pdf::loadView('pages.owner.pdf.lease-contract', compact('contract', 'property'));
+        $fileName = 'contrat_bail_'.$contract->id.'_'.$contract->tenant_name.'.pdf';
+
+        return response()->streamDownload(fn () => print ($pdf->output()), $fileName);
     }
 
     protected function generateReceiptPdf(RentPayment $rentPayment)
@@ -139,23 +152,23 @@ class ContractController extends Controller
         $property = $contract->property;
 
         $pdf = Pdf::loadView('pages.owner.pdf.receipt', compact('rentPayment', 'contract', 'property'));
-        
+
         $folder = 'documents/receipts';
-        $fileName = 'recu_' . $rentPayment->id . '_' . time() . '.pdf';
-        $fullPath = $folder . '/' . $fileName;
+        $fileName = 'recu_'.$rentPayment->id.'_'.time().'.pdf';
+        $fullPath = $folder.'/'.$fileName;
 
         Storage::put($fullPath, $pdf->output());
 
         // Register in documents table
         Document::create([
             'property_id' => $property->id,
-            'name' => 'Reçu de loyer - ' . $rentPayment->month . '/' . $rentPayment->year . ' - ' . $contract->tenant_name,
+            'name' => 'Reçu de loyer - '.$rentPayment->month.'/'.$rentPayment->year.' - '.$contract->tenant_name,
             'category' => 'receipt',
             'file_path' => $fullPath,
             'file_size' => Storage::size($fullPath),
             'documentable_id' => $rentPayment->id,
             'documentable_type' => RentPayment::class,
-            'created_by' => auth()->id()
+            'created_by' => auth()->id(),
         ]);
     }
 }

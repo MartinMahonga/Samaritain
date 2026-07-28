@@ -16,6 +16,7 @@ class InvoicePolicy
     public function view(User $user, Invoice $invoice): bool
     {
         $property = Property::find($invoice->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
@@ -27,12 +28,14 @@ class InvoicePolicy
     public function update(User $user, Invoice $invoice): bool
     {
         $property = Property::find($invoice->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 
     public function delete(User $user, Invoice $invoice): bool
     {
         $property = Property::find($invoice->property_id);
+
         return $property && $property->created_by === $user->id;
     }
 }

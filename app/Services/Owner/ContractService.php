@@ -73,14 +73,14 @@ class ContractService
         $pdf = Pdf::loadView('pages.owner.pdf.receipt', compact('rentPayment', 'contract', 'property'));
 
         $folder = 'documents/receipts';
-        $fileName = 'recu_' . $rentPayment->id . '_' . time() . '.pdf';
-        $fullPath = $folder . '/' . $fileName;
+        $fileName = 'recu_'.$rentPayment->id.'_'.time().'.pdf';
+        $fullPath = $folder.'/'.$fileName;
 
         Storage::put($fullPath, $pdf->output());
 
         Document::create([
             'property_id' => $property->id,
-            'name' => 'Reçu de loyer - ' . $rentPayment->month . '/' . $rentPayment->year . ' - ' . $contract->tenant_name,
+            'name' => 'Reçu de loyer - '.$rentPayment->month.'/'.$rentPayment->year.' - '.$contract->tenant_name,
             'category' => 'receipt',
             'file_path' => $fullPath,
             'file_size' => Storage::size($fullPath),
