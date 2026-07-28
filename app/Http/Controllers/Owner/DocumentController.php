@@ -73,7 +73,9 @@ class DocumentController extends Controller
             abort(404, 'Fichier introuvable.');
         }
 
-        return Storage::download($document->file_path, $document->name);
+        $filename = str_replace(['/', '\\'], '-', $document->name);
+
+        return Storage::download($document->file_path, $filename);
     }
 
     public function destroy(Document $document)

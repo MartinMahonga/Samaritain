@@ -192,7 +192,7 @@ class FinancialController extends Controller
 
         // 5. Property stats - single query per type
         $revenueByProperty = RentPayment::whereIn('contract_id', $contractIds)
-            ->where('status', 'paid')
+            ->where('rp.status', 'paid')
             ->selectRaw('c.property_id, COALESCE(SUM(rp.amount_paid), 0) as total')
             ->from('rent_payments as rp')
             ->join('contracts as c', 'c.id', '=', 'rp.contract_id')
