@@ -33,6 +33,7 @@ use App\Http\Controllers\Socialite\ProviderRedirectController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\UserVisitPassController;
 use App\Http\Controllers\VisitRequestController;
+use App\Http\Middleware\EnsureUserCanSignContract;
 use App\Http\Middleware\StaffMiddleware;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -307,6 +308,7 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
     Route::get('/contracts/{contract}', [ContractController::class, 'show'])->name('contracts.show');
     Route::get('/contracts/{contract}/pdf', [ContractController::class, 'downloadPdf'])->name('contracts.pdf');
     Route::post('/contracts/{contract}/generate-rents', [ContractController::class, 'generateRents'])->name('contracts.generate-rents');
+    Route::post('/contracts/{contract}/sign', [ContractController::class, 'sign'])->middleware(EnsureUserCanSignContract::class)->name('contracts.sign');
     Route::post('/rent-payments/{rentPayment}/toggle-paid', [ContractController::class, 'togglePaid'])->name('rent-payments.toggle-paid');
 
     // Invoices (Factures)
@@ -343,6 +345,8 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
 Route::middleware(['auth', 'verified', 'tenant'])->prefix('tenant')->name('tenant.')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\Tenant\DashboardController::class, 'index'])->name('dashboard');
     Route::get('/contracts', [App\Http\Controllers\Tenant\DashboardController::class, 'contracts'])->name('contracts');
+    Route::get('/contracts/{contract}', [App\Http\Controllers\Tenant\DashboardController::class, 'show'])->name('contracts.show');
+    Route::post('/contracts/{contract}/sign', [App\Http\Controllers\Tenant\DashboardController::class, 'sign'])->middleware(EnsureUserCanSignContract::class)->name('contracts.sign');
     Route::get('/payments', [App\Http\Controllers\Tenant\DashboardController::class, 'payments'])->name('payments');
     Route::get('/interventions', [App\Http\Controllers\Tenant\DashboardController::class, 'interventions'])->name('interventions');
     Route::get('/documents', [App\Http\Controllers\Tenant\DashboardController::class, 'documents'])->name('documents');

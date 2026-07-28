@@ -2,12 +2,21 @@
 
 namespace App\Http\Controllers\Owner;
 
+use App\Enums\Owner\ContractStatus;
+use App\Events\ContractFullySigned;
+use App\Events\ContractPendingSignature;
+use App\Events\ContractSigned;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreContractRequest;
 use App\Models\Contract;
 use App\Models\Document;
 use App\Models\Property;
 use App\Models\RentPayment;
+use App\Models\User;
+use App\Notifications\ContractCompletedNotification;
+use App\Notifications\ContractSignedNotification;
+use App\Notifications\ContractSigningRequestNotification;
+use App\Services\ContractSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
@@ -35,17 +44,41 @@ class ContractController extends Controller
         return view('pages.owner.contracts.create', compact('properties'));
     }
 
-    public function store(StoreContractRequest $request)
+    public function store(StoreContractRequest $request, ContractSignatureService $signatureService)
     {
         Gate::authorize('create', Contract::class);
 
         $data = $request->validated();
         $data['created_by'] = auth()->id();
 
+        if ($request->filled('signature')) {
+            $data['status'] = ContractStatus::PENDING_OWNER_SIGNATURE->value;
+        }
+
         $contract = Contract::create($data);
 
         // Pre-generate 12 months of rent payments automatically
         $this->generateRentSchedule($contract);
+
+        // Handle owner signature if provided
+        if ($request->filled('signature')) {
+            $signatureService->createSignature(
+                $contract,
+                auth()->user(),
+                'owner',
+                $request->input('signature')
+            );
+
+            // Notify tenant to sign
+            $tenant = User::where('email', $contract->tenant_email)->first();
+            if ($tenant) {
+                $tenant->notify(new ContractSigningRequestNotification($contract, 'tenant'));
+                event(new ContractPendingSignature($contract, $tenant, 'tenant'));
+            }
+
+            return redirect()->route('owner.contracts.show', $contract)
+                ->with('success', 'Contrat créé et signé avec succès. Le locataire a été notifié pour signer.');
+        }
 
         return redirect()->route('owner.contracts.show', $contract)
             ->with('success', 'Contrat créé avec succès et échéancier généré pour 12 mois.');
@@ -137,13 +170,82 @@ class ContractController extends Controller
     {
         Gate::authorize('view', $contract);
 
-        $contract->load('property.city');
+        $contract->load('property.city', 'signatures.user');
         $property = $contract->property;
 
         $pdf = Pdf::loadView('pages.owner.pdf.lease-contract', compact('contract', 'property'));
         $fileName = 'contrat_bail_'.$contract->id.'_'.$contract->tenant_name.'.pdf';
 
         return response()->streamDownload(fn () => print ($pdf->output()), $fileName);
+    }
+
+    public function sign(Request $request, Contract $contract, ContractSignatureService $signatureService)
+    {
+        Gate::authorize('view', $contract);
+
+        $request->validate([
+            'signature' => ['required', 'string'],
+        ]);
+
+        $signature = $signatureService->createSignature(
+            $contract,
+            auth()->user(),
+            'owner',
+            $request->input('signature')
+        );
+
+        // Check if contract is now fully signed
+        $contract->refresh();
+        if ($contract->isFullySigned()) {
+            event(new ContractFullySigned($contract));
+            $contract->creator->notify(new ContractSignedNotification($contract, 'owner'));
+
+            $tenant = User::where('email', $contract->tenant_email)->first();
+            if ($tenant) {
+                $tenant->notify(new ContractCompletedNotification($contract));
+            }
+
+            // Generate final signed PDF
+            $this->generateSignedPdf($contract);
+        } else {
+            event(new ContractSigned($contract, auth()->user(), 'owner'));
+            $contract->creator->notify(new ContractSignedNotification($contract, 'owner'));
+
+            // Notify tenant to sign
+            $tenant = User::where('email', $contract->tenant_email)->first();
+            if ($tenant) {
+                $tenant->notify(new ContractSigningRequestNotification($contract, 'tenant'));
+                event(new ContractPendingSignature($contract, $tenant, 'tenant'));
+            }
+        }
+
+        return redirect()->route('owner.contracts.show', $contract)
+            ->with('success', 'Contrat signé avec succès.');
+    }
+
+    protected function generateSignedPdf(Contract $contract): void
+    {
+        $contract->load('property.city', 'signatures.user');
+        $property = $contract->property;
+
+        $pdf = Pdf::loadView('pages.owner.pdf.lease-contract', compact('contract', 'property'));
+
+        $folder = 'documents/contracts';
+        $fileName = 'contrat_bail_'.$contract->id.'_v'.$contract->contract_version.'_'.time().'.pdf';
+        $fullPath = $folder.'/'.$fileName;
+
+        Storage::put($fullPath, $pdf->output());
+
+        Document::create([
+            'property_id' => $contract->property_id,
+            'name' => 'Contrat de bail - '.$contract->tenant_name.' (signé)',
+            'category' => 'lease_contract',
+            'file_path' => $fullPath,
+            'file_size' => Storage::size($fullPath),
+            'documentable_id' => $contract->id,
+            'documentable_type' => Contract::class,
+            'created_by' => $contract->created_by,
+        ]);
     }
 
     protected function generateReceiptPdf(RentPayment $rentPayment)

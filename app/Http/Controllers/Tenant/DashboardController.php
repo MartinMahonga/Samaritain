@@ -2,11 +2,17 @@
 
 namespace App\Http\Controllers\Tenant;
 
+use App\Events\ContractFullySigned;
+use App\Events\ContractSigned;
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Owner\ContractController;
 use App\Models\Contract;
 use App\Models\Document;
 use App\Models\Intervention;
 use App\Models\RentPayment;
+use App\Notifications\ContractCompletedNotification;
+use App\Notifications\ContractSignedNotification;
+use App\Services\ContractSignatureService;
 
 class DashboardController extends Controller
 {
@@ -69,6 +75,19 @@ class DashboardController extends Controller
         return view('pages.tenant.contracts', compact('contracts'));
     }
 
+    public function show(Contract $contract)
+    {
+        $user = auth()->user();
+
+        if ($contract->tenant_email !== $user->email) {
+            abort(403);
+        }
+
+        $contract->load('property', 'signatures.user');
+
+        return view('pages.tenant.contract-show', compact('contract'));
+    }
+
     public function payments()
     {
         $user = auth()->user();
@@ -115,5 +134,42 @@ class DashboardController extends Controller
             ->paginate(15);
 
         return view('pages.tenant.documents', compact('documents'));
+    }
+
+    public function sign(Request $request, Contract $contract, ContractSignatureService $signatureService)
+    {
+        $user = auth()->user();
+
+        if ($contract->tenant_email !== $user->email) {
+            abort(403, 'Vous ne pouvez pas signer ce contrat.');
+        }
+
+        $request->validate([
+            'signature' => ['required', 'string'],
+        ]);
+
+        $signature = $signatureService->createSignature(
+            $contract,
+            $user,
+            'tenant',
+            $request->input('signature')
+        );
+
+        // Check if contract is now fully signed
+        $contract->refresh();
+        if ($contract->isFullySigned()) {
+            event(new ContractFullySigned($contract));
+            $contract->creator->notify(new ContractSignedNotification($contract, 'tenant'));
+            $user->notify(new ContractCompletedNotification($contract));
+
+            // Generate final signed PDF
+            (new ContractController)->generateSignedPdf($contract);
+        } else {
+            event(new ContractSigned($contract, $user, 'tenant'));
+            $contract->creator->notify(new ContractSignedNotification($contract, 'tenant'));
+        }
+
+        return redirect()->route('tenant.contracts.show', $contract)
+            ->with('success', 'Contrat signé avec succès.');
     }
 }

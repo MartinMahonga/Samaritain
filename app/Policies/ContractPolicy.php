@@ -31,4 +31,17 @@ class ContractPolicy
     {
         return $contract->created_by === $user->id;
     }
+
+    public function sign(User $user, Contract $contract): bool
+    {
+        if ($user->hasRole('owner')) {
+            return $contract->created_by === $user->id && $contract->status === 'pending_owner';
+        }
+
+        if ($user->hasRole('tenant')) {
+            return $user->email === $contract->tenant_email && $contract->status === 'pending_tenant';
+        }
+
+        return false;
+    }
 }

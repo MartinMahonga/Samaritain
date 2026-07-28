@@ -2,6 +2,106 @@
 
 @section('title', 'Nouveau contrat')
 
+@push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const canvas = document.getElementById('signatureCanvas');
+        if (!canvas) return;
+        
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+        let hasSignature = false;
+
+        function resizeCanvas() {
+            const rect = canvas.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            ctx.strokeStyle = '#1f2937';
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+        canvas.addEventListener('touchstart', startDrawing, { passive: false });
+        canvas.addEventListener('touchmove', draw, { passive: false });
+        canvas.addEventListener('touchend', stopDrawing);
+
+        function getPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: clientX - rect.left,
+                y: clientY - rect.top,
+            };
+        }
+
+        function startDrawing(e) {
+            if (e.type.startsWith('touch')) {
+                e.preventDefault();
+            }
+            drawing = true;
+            const pos = getPos(e);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        }
+
+        function draw(e) {
+            if (!drawing) return;
+            if (e.type.startsWith('touch')) {
+                e.preventDefault();
+            }
+            const pos = getPos(e);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+            hasSignature = true;
+        }
+
+        function stopDrawing() {
+            drawing = false;
+        }
+
+        function debugSignature() {
+            console.log('hasSignature', hasSignature);
+            console.log('canvas dataURL length', canvas.toDataURL('image/png').length);
+        }
+
+        window.clearSignature = function () {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            hasSignature = false;
+            document.getElementById('signatureInput').value = '';
+            const hint = document.getElementById('signatureHint');
+            if (hint) hint.textContent = 'Dessinez votre signature ci-dessus.';
+        };
+
+        const form = canvas.closest('form');
+        if (form) {
+            const signatureInput = document.getElementById('signatureInput');
+            const signatureHint = document.getElementById('signatureHint');
+            form.addEventListener('submit', function (e) {
+                debugSignature();
+                if (!hasSignature) {
+                    e.preventDefault();
+                    alert('Veuillez dessiner votre signature avant de créer le contrat.');
+                    return;
+                }
+                const dataUrl = canvas.toDataURL('image/png');
+                signatureInput.value = dataUrl;
+                if (signatureHint) signatureHint.textContent = 'Signature capturée.';
+            });
+        }
+    });
+</script>
+@endpush
+
 @section('content')
 <div class="mb-6">
     <a href="{{ route('owner.contracts.index') }}" class="text-sm text-gray-500 dark:text-gray-400 hover:text-primary flex items-center gap-1 mb-3">
@@ -46,6 +146,21 @@
                     type="number" placeholder="300000" :value="old('deposit')" />
             </div>
         </div>
+
+        {{-- Owner Signature --}}
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
+            <h3 class="font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
+                <i data-lucide="pen-tool" class="w-4 h-4 text-primary"></i> Signature du propriétaire
+            </h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Dessinez votre signature pour signer le contrat dès sa création.</p>
+            <input type="hidden" name="signature" id="signatureInput">
+            <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden bg-white">
+                <canvas id="signatureCanvas" width="800" height="200" class="w-full h-48 cursor-crosshair"></canvas>
+            </div>
+            <button type="button" onclick="clearSignature()" class="mt-2 text-xs text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
+                Effacer la signature
+            </button>
+        </div>
     </div>
 
     {{-- Sidebar --}}
@@ -61,7 +176,7 @@
             <div class="mt-4">
                 <x-form.select label="Statut du contrat" name="status" icon="badge-check"
                     placeholder="Statut"
-                    :options="['active' => 'Actif', 'pending' => 'En attente', 'terminated' => 'Résilié']" />
+                    :options="['active' => 'Actif', 'pending_owner' => 'En attente propriétaire', 'terminated' => 'Résilié']" />
             </div>
         </div>
 

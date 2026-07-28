@@ -41,6 +41,7 @@ class StoreContractRequest extends FormRequest
             'monthly_rent' => 'required|integer|min:0',
             'deposit' => 'nullable|integer|min:0',
             'status' => 'required|string|in:active,terminated,pending',
+            'signature' => 'nullable|string',
         ];
     }
 }

@@ -64,6 +64,11 @@
             color: #1f2937;
         }
         .clause {
+FCFA
+￼
+￼
+￼
+Prix suggéré
             margin-bottom: 12px;
             padding: 8px 10px;
             background: #f9fafb;
@@ -255,16 +260,53 @@
 
     <div class="signatures">
         <div class="signature-box">
-            <div class="line">Signature du Locataire<br><span style="font-size: 9px; color: #9ca3af;">Précédée de la mention "Lu et approuvé"</span></div>
+            @if(isset($contract) && $contract->tenantSignature)
+                <img src="{{ storage_path('app/'.$contract->tenantSignature->signature_image) }}" alt="Signature locataire" style="max-height: 80px; max-width: 100%;">
+                <div class="line" style="margin-top: 10px;">
+                    Signature du Locataire<br>
+                    <span style="font-size: 9px; color: #9ca3af;">
+                        {{ $contract->tenantSignature->user->name ?? 'Locataire' }}<br>
+                        {{ $contract->tenantSignature->signed_at->format('d/m/Y H:i') }}
+                    </span>
+                </div>
+            @else
+                <div class="line">Signature du Locataire<br><span style="font-size: 9px; color: #9ca3af;">Précédée de la mention "Lu et approuvé"</span></div>
+            @endif
         </div>
         <div class="signature-box">
-            <div class="line">Signature du Propriétaire<br><span style="font-size: 9px; color: #9ca3af;">{{ auth()->user()->name }}</span></div>
+            @if(isset($contract) && $contract->ownerSignature)
+                <img src="{{ storage_path('app/'.$contract->ownerSignature->signature_image) }}" alt="Signature propriétaire" style="max-height: 80px; max-width: 100%;">
+                <div class="line" style="margin-top: 10px;">
+                    Signature du Propriétaire<br>
+                    <span style="font-size: 9px; color: #9ca3af;">
+                        {{ $contract->ownerSignature->user->name ?? auth()->user()->name }}<br>
+                        {{ $contract->ownerSignature->signed_at->format('d/m/Y H:i') }}
+                    </span>
+                </div>
+            @else
+                <div class="line">Signature du Propriétaire<br><span style="font-size: 9px; color: #9ca3af;">{{ auth()->user()->name }}</span></div>
+            @endif
         </div>
     </div>
+
+    @if(isset($contract) && $contract->isFullySigned())
+    <div style="margin-top: 30px; padding: 15px; background: #f0fdf4; border: 2px solid #bbf7d0; border-radius: 5px; text-align: center;">
+        <p style="font-size: 12px; font-weight: bold; color: #059669; margin: 0;">
+            Document signé électroniquement
+        </p>
+        <p style="font-size: 10px; color: #6b7280; margin: 5px 0 0 0;">
+            ID: {{ $contract->id }} | Version: {{ $contract->contract_version }} | 
+            Activé le: {{ $contract->activated_at->format('d/m/Y H:i') }}
+        </p>
+    </div>
+    @endif
 
     <div class="footer">
         Document généré par Samaritain Immobilier — {{ date('d/m/Y à H:i') }}<br>
         Ce document est une version numérique du contrat de bail. Il annule et remplace toute version antérieure.
+        @if(isset($contract) && $contract->isFullySigned())
+        <br>Hash: {{ hash('sha256', $contract->id.'-'.$contract->contract_version.'-'.$contract->tenant_name) }}
+        @endif
     </div>
 </body>
 </html>

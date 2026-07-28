@@ -9,7 +9,7 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function run(): void
+    public function up(): void
     {
         Schema::create('interventions', function (Blueprint $table) {
             $table->id();
@@ -31,7 +31,7 @@ return new class extends Migration
     /**
      * Reverse the migrations.
      */
-    public function runDown(): void
+    public function down(): void
     {
         Schema::dropIfExists('interventions');
     }
