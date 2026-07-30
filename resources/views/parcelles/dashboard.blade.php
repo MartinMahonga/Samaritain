@@ -1,9 +1,8 @@
-@extends('layouts.base')
+@extends('layouts.owner')
 
-@section('title', 'Mon tableau de bord des parcelles')
+@section('title', 'Parcelles')
 
 @section('content')
-    <x-ui.user-dashboard-nav />
     <x-blade-components::layout.container>
         <div class="container mx-auto px-4 py-8">
             <!-- En-tête -->

@@ -119,7 +119,7 @@
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                             <i data-lucide="user" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i> Mon profil
                         </a>
-                        <a href="{{ route('property.dashboard') }}"
+                        <a href="{{ route('owner.dashboard') }}"
                             class="flex items-center rounded-xl gap-2 m-1 px-2 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700">
                             <i data-lucide="layout-dashboard" class="w-3.5 h-3.5 text-gray-400 dark:text-gray-500"></i>
                             Tableau de bord
@@ -259,7 +259,7 @@
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <i data-lucide="briefcase" class="w-4 h-4 text-gray-400 dark:text-gray-500"></i> Services
             </a>
-            <a href="{{ route('property.dashboard') }}" x-on:click="isOpen = false"
+            <a href="{{ route('owner.dashboard') }}" x-on:click="isOpen = false"
                 class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800">
                 <i data-lucide="layout-dashboard" class="w-4 h-4 text-gray-400 dark:text-gray-500"></i> Gérer les biens
             </a>
