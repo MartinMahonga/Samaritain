@@ -10,7 +10,7 @@ class InspectionPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function view(User $user, Inspection $inspection): bool
@@ -22,7 +22,7 @@ class InspectionPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function update(User $user, Inspection $inspection): bool

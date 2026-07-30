@@ -20,9 +20,9 @@ class EnsureUserIsTenant
             abort(403, 'Vous devez être connecté.');
         }
 
-        // Vérifier si l'utilisateur est locataire via un contrat actif
+        // Vérifier si l'utilisateur est locataire via un contrat actif ou en attente de signature
         $isTenant = Contract::where('tenant_email', $user->email)
-            ->where('status', 'active')
+            ->whereIn('status', ['active', 'pending_owner', 'pending_tenant'])
             ->exists();
 
         if (! $isTenant) {

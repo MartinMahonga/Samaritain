@@ -151,11 +151,11 @@ class ContractSignatureService
 
         $status = $contract->status;
 
-        if ($user->hasRole('owner') && $contract->created_by === $user->id) {
+        if ($contract->created_by === $user->id) {
             return $status === ContractStatus::PENDING_OWNER_SIGNATURE->value;
         }
 
-        if ($user->hasRole('tenant') && $this->isTenantForContract($user, $contract)) {
+        if ($this->isTenantForContract($user, $contract)) {
             return $status === ContractStatus::PENDING_TENANT_SIGNATURE->value;
         }
 
@@ -169,11 +169,11 @@ class ContractSignatureService
 
     public function getSignerRoleForUser(User $user, Contract $contract): ?string
     {
-        if ($user->hasRole('owner') && $contract->created_by === $user->id) {
+        if ($contract->created_by === $user->id) {
             return 'owner';
         }
 
-        if ($user->hasRole('tenant') && $this->isTenantForContract($user, $contract)) {
+        if ($this->isTenantForContract($user, $contract)) {
             return 'tenant';
         }
 

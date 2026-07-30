@@ -9,7 +9,7 @@ class DocumentPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function view(User $user, Document $document): bool
@@ -19,7 +19,7 @@ class DocumentPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function update(User $user, Document $document): bool

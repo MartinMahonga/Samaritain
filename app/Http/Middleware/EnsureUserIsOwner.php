@@ -15,8 +15,8 @@ class EnsureUserIsOwner
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (! auth()->check() || ! auth()->user()->hasRole('owner')) {
-            abort(403, 'Accès réservé aux propriétaires.');
+        if (! auth()->check()) {
+            abort(403, 'Vous devez être connecté.');
         }
 
         return $next($request);

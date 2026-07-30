@@ -22,6 +22,11 @@ class Contract extends Model
         'monthly_rent',
         'deposit',
         'status',
+        'owner_signed_at',
+        'tenant_signed_at',
+        'activated_at',
+        'contract_version',
+        'content_hash',
         'created_by',
     ];
 
@@ -59,12 +64,22 @@ class Contract extends Model
 
     public function scopePendingOwnerSignature($query)
     {
-        return $query->where('status', ContractStatus::PENDING_OWNER_SIGNATURE->value);
+        return $query->where('status',
+            'owner_signed_at',
+            'tenant_signed_at',
+            'activated_at',
+            'contract_version',
+            'content_hash', ContractStatus::PENDING_OWNER_SIGNATURE->value);
     }
 
     public function scopePendingTenantSignature($query)
     {
-        return $query->where('status', ContractStatus::PENDING_TENANT_SIGNATURE->value);
+        return $query->where('status',
+            'owner_signed_at',
+            'tenant_signed_at',
+            'activated_at',
+            'contract_version',
+            'content_hash', ContractStatus::PENDING_TENANT_SIGNATURE->value);
     }
 
     public function scopeFullySigned($query)

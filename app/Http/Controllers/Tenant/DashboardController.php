@@ -13,6 +13,7 @@ use App\Models\RentPayment;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
 use App\Services\ContractSignatureService;
+use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {

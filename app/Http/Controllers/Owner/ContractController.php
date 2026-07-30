@@ -18,7 +18,9 @@ use App\Notifications\ContractSignedNotification;
 use App\Notifications\ContractSigningRequestNotification;
 use App\Services\ContractSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Storage;
 
 class ContractController extends Controller
@@ -68,20 +70,41 @@ class ContractController extends Controller
                 'owner',
                 $request->input('signature')
             );
-
-            // Notify tenant to sign
-            $tenant = User::where('email', $contract->tenant_email)->first();
-            if ($tenant) {
-                $tenant->notify(new ContractSigningRequestNotification($contract, 'tenant'));
-                event(new ContractPendingSignature($contract, $tenant, 'tenant'));
-            }
-
-            return redirect()->route('owner.contracts.show', $contract)
-                ->with('success', 'Contrat créé et signé avec succès. Le locataire a été notifié pour signer.');
         }
 
+        // Notify tenant that a contract is waiting — sent systematically on creation
+        $this->notifyTenantOfContractCreation($contract);
+
+        $message = $request->filled('signature')
+            ? 'Contrat créé et signé avec succès. Le locataire a été notifié pour signer.'
+            : 'Contrat créé avec succès et échéancier généré pour 12 mois. Le locataire a été notifié.';
+
         return redirect()->route('owner.contracts.show', $contract)
-            ->with('success', 'Contrat créé avec succès et échéancier généré pour 12 mois.');
+            ->with('success', $message);
+    }
+
+    /**
+     * Notify the tenant that a contract has been created and is awaiting signature.
+     * Sends a single email per contract creation, regardless of whether the
+     * tenant already has an account or not.
+     */
+    protected function notifyTenantOfContractCreation(Contract $contract): void
+    {
+        if (empty($contract->tenant_email)) {
+            return;
+        }
+
+        $tenant = User::where('email', $contract->tenant_email)->first();
+
+        if ($tenant) {
+            // Tenant has an account: database + mail notification
+            $tenant->notify(new ContractSigningRequestNotification($contract, 'tenant'));
+            event(new ContractPendingSignature($contract, $tenant, 'tenant'));
+        } else {
+            // Tenant doesn't have an account yet: send mail-only notification
+            Notification::route('mail', $contract->tenant_email)
+                ->notify(new ContractSigningRequestNotification($contract, 'tenant'));
+        }
     }
 
     public function show(Contract $contract)

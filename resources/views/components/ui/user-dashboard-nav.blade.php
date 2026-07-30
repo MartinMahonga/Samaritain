@@ -9,7 +9,7 @@
                             'route' => 'owner.dashboard',
                             'icon' => 'layout-dashboard',
                             'label' => 'Portail Propriétaire',
-                            'show' => auth()->user()?->hasRole('owner'),
+                            'show' => true,
                         ],
                         [
                             'route' => 'property.dashboard',

@@ -31,14 +31,21 @@ class ContractSigningRequestNotification extends Notification
         $roleLabel = $this->role === 'owner' ? 'propriétaire' : 'locataire';
         $actionUrl = route($this->role === 'owner' ? 'owner.contracts.show' : 'tenant.contracts.show', $this->contract);
 
+        $ownerName = $this->contract->creator?->name ?? 'Propriétaire';
+        $propertyTitle = $this->contract->property?->title ?? 'Bien immobilier';
+        $createdAt = $this->contract->created_at?->format('d/m/Y') ?? now()->format('d/m/Y');
+
         return (new MailMessage)
-            ->subject('Contrat à signer - '.$this->contract->tenant_name)
+            ->subject('Contrat de bail en attente de signature - '.$this->contract->tenant_name)
             ->greeting('Bonjour,')
-            ->line("Un contrat de bail vous demande une signature en tant que $roleLabel.")
-            ->line('Propriété : '.$this->contract->property->title)
-            ->line('Locataire : '.$this->contract->tenant_name)
-            ->action('Signer le contrat', $actionUrl)
-            ->line('Merci de signer ce contrat dans les meilleurs délais.');
+            ->line("Un contrat de bail vous attend pour signature en tant que $roleLabel.")
+            ->line('**Propriétaire :** '.$ownerName)
+            ->line('**Bien concerné :** '.$propertyTitle)
+            ->line('**Date de création :** '.$createdAt)
+            ->line('**Locataire :** '.$this->contract->tenant_name)
+            ->line('Ce contrat est en attente de signature. Merci de le signer dans les meilleurs délais.')
+            ->action('Ouvrir le portail locataire', $actionUrl)
+            ->line('Si vous avez des questions, n\'hésitez pas à contacter le propriétaire.');
     }
 
     public function toArray(object $notifiable): array
@@ -47,7 +54,8 @@ class ContractSigningRequestNotification extends Notification
             'contract_id' => $this->contract->id,
             'role' => $this->role,
             'tenant_name' => $this->contract->tenant_name,
-            'property_title' => $this->contract->property->title,
+            'property_title' => $this->contract->property?->title,
+            'owner_name' => $this->contract->creator?->name,
         ];
     }
 }

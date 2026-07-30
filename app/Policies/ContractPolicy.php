@@ -9,7 +9,7 @@ class ContractPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function view(User $user, Contract $contract): bool
@@ -19,7 +19,7 @@ class ContractPolicy
 
     public function create(User $user): bool
     {
-        return $user->hasRole('owner');
+        return true;
     }
 
     public function update(User $user, Contract $contract): bool
@@ -34,12 +34,12 @@ class ContractPolicy
 
     public function sign(User $user, Contract $contract): bool
     {
-        if ($user->hasRole('owner')) {
-            return $contract->created_by === $user->id && $contract->status === 'pending_owner';
+        if ($contract->created_by === $user->id) {
+            return $contract->status === 'pending_owner';
         }
 
-        if ($user->hasRole('tenant')) {
-            return $user->email === $contract->tenant_email && $contract->status === 'pending_tenant';
+        if ($user->email === $contract->tenant_email) {
+            return $contract->status === 'pending_tenant';
         }
 
         return false;
