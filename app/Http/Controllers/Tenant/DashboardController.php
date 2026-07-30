@@ -13,7 +13,9 @@ use App\Models\RentPayment;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
 use App\Services\ContractSignatureService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class DashboardController extends Controller
 {
@@ -29,6 +31,7 @@ class DashboardController extends Controller
         $totalDue = 0;
         $nextPayment = null;
         $latePayments = collect();
+        $recentPayments = collect();
 
         if ($activeContract) {
             $payments = RentPayment::where('contract_id', $activeContract->id)->get();
@@ -43,6 +46,11 @@ class DashboardController extends Controller
                 ->where('status', 'unpaid')
                 ->where('due_date', '<', now())
                 ->orderBy('due_date')
+                ->get();
+            $recentPayments = RentPayment::where('contract_id', $activeContract->id)
+                ->orderByDesc('year')
+                ->orderByDesc('month')
+                ->take(5)
                 ->get();
         }
 
@@ -61,7 +69,7 @@ class DashboardController extends Controller
             ->get();
 
         return view('pages.tenant.dashboard', compact(
-            'contracts', 'activeContract', 'totalPaid', 'totalDue', 'nextPayment', 'latePayments', 'interventions', 'documents'
+            'contracts', 'activeContract', 'totalPaid', 'totalDue', 'nextPayment', 'latePayments', 'interventions', 'documents', 'recentPayments'
         ));
     }
 
@@ -172,5 +180,41 @@ class DashboardController extends Controller
 
         return redirect()->route('tenant.contracts.show', $contract)
             ->with('success', 'Contrat signé avec succès.');
+    }
+
+    public function downloadPdf(Contract $contract)
+    {
+        $user = auth()->user();
+
+        if ($contract->tenant_email !== $user->email) {
+            abort(403, 'Vous ne pouvez pas télécharger ce contrat.');
+        }
+
+        $contract->load('property.city', 'signatures.user');
+        $property = $contract->property;
+
+        $pdf = Pdf::loadView('pages.owner.pdf.lease-contract', compact('contract', 'property'));
+        $fileName = 'contrat_bail_'.$contract->id.'_'.$contract->tenant_name.'.pdf';
+
+        return response()->streamDownload(fn () => print ($pdf->output()), $fileName);
+    }
+
+    public function downloadDocument(Document $document)
+    {
+        $user = auth()->user();
+
+        $propertyIds = Contract::where('tenant_email', $user->email)->pluck('property_id');
+
+        if (! $propertyIds->contains($document->property_id)) {
+            abort(403, 'Vous ne pouvez pas télécharger ce document.');
+        }
+
+        if (! Storage::exists($document->file_path)) {
+            abort(404, 'Fichier introuvable.');
+        }
+
+        $filename = str_replace(['/', '\\'], '-', $document->name);
+
+        return Storage::download($document->file_path, $filename);
     }
 }

@@ -39,8 +39,6 @@
                 <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
                     @foreach($payments->sortBy(['year', 'month']) as $payment)
                         @php
-                            $pc = ['unpaid' => 'gray', 'paid' => 'emerald', 'late' => 'red', 'partial' => 'amber'];
-                            $pl = ['unpaid' => 'Non payé', 'paid' => 'Payé', 'late' => 'En retard', 'partial' => 'Partiel'];
                             $months = ['', 'Janv', 'Févr', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
                         @endphp
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
@@ -57,9 +55,15 @@
                                 {{ $payment->due_date->format('d/m/Y') }}
                             </td>
                             <td class="px-5 py-3 text-center">
-                                <span class="text-xs px-2 py-1 rounded-full bg-{{ $pc[$payment->status] ?? 'gray' }}-100 text-{{ $pc[$payment->status] ?? 'gray' }}-600">
-                                    {{ $pl[$payment->status] ?? $payment->status }}
-                                </span>
+                                @if($payment->status === 'paid')
+                                    <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">Payé</span>
+                                @elseif($payment->status === 'unpaid' && $payment->due_date < now())
+                                    <span class="text-xs font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded-full">En retard</span>
+                                @elseif($payment->status === 'partial')
+                                    <span class="text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-1 rounded-full">Partiel</span>
+                                @else
+                                    <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">Non payé</span>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

@@ -187,6 +187,56 @@
     </div>
 </div>
 
+{{-- Recent Payments --}}
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5 mb-6">
+    <div class="flex justify-between items-center mb-4">
+        <h3 class="font-semibold text-gray-800 dark:text-white">Derniers paiements</h3>
+        <a href="{{ route('tenant.payments') }}" class="text-xs text-emerald-600 dark:text-emerald-400 hover:underline">Voir tous →</a>
+    </div>
+    <div class="space-y-2">
+        @php
+            $statusLabels = ['unpaid' => 'Non payé', 'paid' => 'Payé', 'late' => 'En retard', 'partial' => 'Partiel'];
+            $statusColors = ['unpaid' => 'gray', 'paid' => 'emerald', 'late' => 'red', 'partial' => 'amber'];
+            $months = ['', 'Janv', 'Févr', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
+        @endphp
+        @forelse($recentPayments->sortBy([['year', 'asc'], ['month', 'asc']]) as $payment)
+            <div class="flex items-center justify-between p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded-lg transition">
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 bg-emerald-100 dark:bg-emerald-900/30 rounded-lg flex items-center justify-center shrink-0">
+                        <i data-lucide="banknote" class="w-4 h-4 text-emerald-600 dark:text-emerald-400"></i>
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium text-gray-800 dark:text-white">
+                            {{ $months[$payment->month] ?? $payment->month }} {{ $payment->year }}
+                        </p>
+                        <p class="text-xs text-gray-400 dark:text-gray-500">{{ number_format($payment->amount_due, 0, ',', ' ') }} FCFA</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-3">
+                    @if($payment->status === 'paid')
+                        <span class="text-xs font-medium text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-900/30 px-2 py-1 rounded-full">
+                            Payé
+                        </span>
+                    @elseif($payment->status === 'unpaid' && $payment->due_date < now())
+                        <span class="text-xs font-medium text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 px-2 py-1 rounded-full">
+                            En retard
+                        </span>
+                    @else
+                        <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
+                            {{ $statusLabels[$payment->status] ?? $payment->status }}
+                        </span>
+                    @endif
+                </div>
+            </div>
+        @empty
+            <div class="text-center py-6">
+                <i data-lucide="banknote" class="w-8 h-8 text-gray-300 dark:text-gray-600 mx-auto mb-2"></i>
+                <p class="text-sm text-gray-400 dark:text-gray-500">Aucun paiement</p>
+            </div>
+        @endforelse
+    </div>
+</div>
+
 {{-- Recent Documents --}}
 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-5">
     <div class="flex justify-between items-center mb-4">
@@ -205,7 +255,7 @@
                         <p class="text-xs text-gray-400 dark:text-gray-500">{{ number_format($doc->file_size / 1024, 1) }} Ko</p>
                     </div>
                 </div>
-                <a href="{{ route('owner.documents.download', $doc) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 ml-4 shrink-0">
+                <a href="{{ route('tenant.documents.download', $doc) }}" class="text-blue-600 dark:text-blue-400 hover:text-blue-700 ml-4 shrink-0">
                     <i data-lucide="download" class="w-4 h-4"></i>
                 </a>
             </div>
