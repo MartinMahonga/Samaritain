@@ -9,6 +9,7 @@ use App\Events\ContractSigned;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreContractRequest;
 use App\Models\Contract;
+use App\Models\Conversation;
 use App\Models\Document;
 use App\Models\Property;
 use App\Models\RentPayment;
@@ -16,6 +17,7 @@ use App\Models\User;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
 use App\Notifications\ContractSigningRequestNotification;
+use App\Notifications\MessageSentNotification;
 use App\Services\ContractSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -228,6 +230,9 @@ class ContractController extends Controller
                 $tenant->notify(new ContractCompletedNotification($contract));
             }
 
+            // Create conversation between owner and tenant
+            $this->createConversation($contract);
+
             // Generate final signed PDF
             $this->generateSignedPdf($contract);
         } else {
@@ -244,6 +249,31 @@ class ContractController extends Controller
 
         return redirect()->route('owner.contracts.show', $contract)
             ->with('success', 'Contrat signé avec succès.');
+    }
+
+    protected function createConversation(Contract $contract): void
+    {
+        $tenant = User::where('email', $contract->tenant_email)->first();
+
+        if (! $tenant) {
+            return;
+        }
+
+        $conversation = Conversation::create([
+            'contract_id' => $contract->id,
+            'owner_id' => $contract->created_by,
+            'tenant_id' => $tenant->id,
+            'last_message_at' => now(),
+        ]);
+
+        // Send initial system-like greeting from owner
+        $greeting = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => $contract->created_by,
+            'body' => "Bonjour {$tenant->name}, votre contrat pour « {$contract->property->title} » est maintenant actif. Vous pouvez communiquer ici.",
+        ]);
+
+        $tenant->notify(new MessageSentNotification($greeting, $conversation));
     }
 
     protected function generateSignedPdf(Contract $contract): void

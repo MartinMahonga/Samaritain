@@ -184,4 +184,24 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Property::class, 'created_by');
     }
+
+    public function conversationsAsOwner(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'owner_id');
+    }
+
+    public function conversationsAsTenant(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'tenant_id');
+    }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function conversations()
+    {
+        return Conversation::forUser($this);
+    }
 }

@@ -33,6 +33,9 @@
 
                 <!-- Documents -->
                 <x-sidebar.item icon="folder-open" label="Documents" href="{{ route('owner.documents.index') }}" :active="request()->routeIs('owner.documents.*')" />
+
+                <!-- Messagerie -->
+                <x-sidebar.item icon="message-circle" label="Messagerie" href="{{ route('messenger') }}" :active="request()->routeIs('messenger')" />
             </x-sidebar.group>
 
             <!-- Links to standard listings -->

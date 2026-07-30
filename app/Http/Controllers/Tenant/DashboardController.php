@@ -7,11 +7,14 @@ use App\Events\ContractSigned;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\Owner\ContractController;
 use App\Models\Contract;
+use App\Models\Conversation;
 use App\Models\Document;
 use App\Models\Intervention;
+use App\Models\Message;
 use App\Models\RentPayment;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
+use App\Notifications\MessageSentNotification;
 use App\Services\ContractSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -171,6 +174,9 @@ class DashboardController extends Controller
             $contract->creator->notify(new ContractSignedNotification($contract, 'tenant'));
             $user->notify(new ContractCompletedNotification($contract));
 
+            // Create conversation between owner and tenant
+            $this->createConversation($contract);
+
             // Generate final signed PDF
             (new ContractController)->generateSignedPdf($contract);
         } else {
@@ -180,6 +186,30 @@ class DashboardController extends Controller
 
         return redirect()->route('tenant.contracts.show', $contract)
             ->with('success', 'Contrat signé avec succès.');
+    }
+
+    protected function createConversation(Contract $contract): void
+    {
+        $owner = $contract->creator;
+
+        if (! $owner) {
+            return;
+        }
+
+        $conversation = Conversation::create([
+            'contract_id' => $contract->id,
+            'owner_id' => $owner->id,
+            'tenant_id' => auth()->id(),
+            'last_message_at' => now(),
+        ]);
+
+        $greeting = Message::create([
+            'conversation_id' => $conversation->id,
+            'sender_id' => $owner->id,
+            'body' => "Bonjour, votre contrat pour « {$contract->property->title} » est maintenant actif.",
+        ]);
+
+        $owner->notify(new MessageSentNotification($greeting, $conversation));
     }
 
     public function downloadPdf(Contract $contract)

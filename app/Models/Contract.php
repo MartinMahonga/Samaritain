@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Contract extends Model
 {
@@ -60,6 +61,11 @@ class Contract extends Model
     public function signatures(): HasMany
     {
         return $this->hasMany(ContractSignature::class);
+    }
+
+    public function conversation(): HasOne
+    {
+        return $this->hasOne(Conversation::class);
     }
 
     public function scopePendingOwnerSignature($query)

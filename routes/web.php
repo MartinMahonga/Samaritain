@@ -245,6 +245,12 @@ Route::get('/transactions/pay', [TransactionController::class, 'paymentPage'])
 Route::get('/transactions/{transaction}/callback', [TransactionController::class, 'callback'])
     ->name('transactions.callback');
 
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/messenger', function () {
+        return view('pages.messenger.index');
+    })->name('messenger');
+});
+
 // User visit passes routes
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/visit-pass/create/{property}', [UserVisitPassController::class, 'create'])
@@ -262,8 +268,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/my-visit-passes/{visitPass}', [UserVisitPassController::class, 'destroy'])
         ->name('my-visit-passes.destroy');
 });
-
-Route::livewire('chat', 'pages::chat.index');
 
 // Route::get('/debug-signature', function (Request $request) {
 //     return response()->json([

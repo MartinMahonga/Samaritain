@@ -1,23 +1,19 @@
 <x-layout.dashboard>
 
     <x-slot:title>
-        Espace Locataire | Samaritain
+        Messagerie | Samaritain
     </x-slot:title>
 
     <x-slot:sidebar>
         <x-sidebar>
-            <x-sidebar.header name="Samaritain" role="Locataire" />
+            <x-sidebar.header name="Samaritain" role="Messagerie" />
 
-            <x-sidebar.group label="Mon Espace">
-                <x-sidebar.item icon="layout-dashboard" label="Tableau de bord" href="{{ route('tenant.dashboard') }}" :active="request()->routeIs('tenant.dashboard')" />
-                <x-sidebar.item icon="file-signature" label="Mon contrat" href="{{ route('tenant.contracts') }}" :active="request()->routeIs('tenant.contracts')" />
-                <x-sidebar.item icon="banknote" label="Mes paiements" href="{{ route('tenant.payments') }}" :active="request()->routeIs('tenant.payments')" />
-                <x-sidebar.item icon="wrench" label="Interventions" href="{{ route('tenant.interventions') }}" :active="request()->routeIs('tenant.interventions')" />
-                <x-sidebar.item icon="folder-open" label="Mes documents" href="{{ route('tenant.documents') }}" :active="request()->routeIs('tenant.documents')" />
-
-                <!-- Messagerie -->
-                <x-sidebar.item icon="message-circle" label="Messagerie" href="{{ route('messenger') }}" :active="request()->routeIs('messenger')" />
-            </x-sidebar.group>
+            <div class="p-3">
+                <flux:button href="{{ route('messenger') }}" variant="primary" class="w-full">
+                    <i data-lucide="message-circle" class="w-4 h-4 mr-2"></i>
+                    Messagerie
+                </flux:button>
+            </div>
 
             @if (auth()->user()->profile_image)
                 <x-sidebar.footer name="{{ auth()->user()->name }}" email="{{ auth()->user()->email }}"
@@ -46,7 +42,16 @@
         </div>
     @endif
 
-    @yield('content')
+    <div class="h-[calc(100vh-120px)]">
+        <div class="flex h-full bg-white dark:bg-gray-900 border dark:border-gray-800 rounded-lg overflow-hidden shadow-sm">
+            <div class="w-full md:w-80 border-r dark:border-gray-800 h-full">
+                <livewire:messenger.conversation-list />
+            </div>
+            <div class="hidden md:block flex-1 h-full">
+                <livewire:messenger.chat-window />
+            </div>
+        </div>
+    </div>
 
     @stack('scripts')
 
