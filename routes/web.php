@@ -347,7 +347,9 @@ Route::middleware(['auth', 'verified', 'tenant'])->prefix('tenant')->name('tenan
     Route::get('/contracts', [App\Http\Controllers\Tenant\DashboardController::class, 'contracts'])->name('contracts');
     Route::get('/contracts/{contract}', [App\Http\Controllers\Tenant\DashboardController::class, 'show'])->name('contracts.show');
     Route::post('/contracts/{contract}/sign', [App\Http\Controllers\Tenant\DashboardController::class, 'sign'])->middleware(EnsureUserCanSignContract::class)->name('contracts.sign');
+    Route::get('/contracts/{contract}/pdf', [App\Http\Controllers\Tenant\DashboardController::class, 'downloadPdf'])->name('contracts.pdf');
     Route::get('/payments', [App\Http\Controllers\Tenant\DashboardController::class, 'payments'])->name('payments');
     Route::get('/interventions', [App\Http\Controllers\Tenant\DashboardController::class, 'interventions'])->name('interventions');
     Route::get('/documents', [App\Http\Controllers\Tenant\DashboardController::class, 'documents'])->name('documents');
+    Route::get('/documents/{document}/download', [App\Http\Controllers\Tenant\DashboardController::class, 'downloadDocument'])->name('documents.download');
 });

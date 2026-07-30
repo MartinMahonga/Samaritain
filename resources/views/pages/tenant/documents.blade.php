@@ -41,7 +41,7 @@
                         <td class="px-5 py-3 text-gray-500 dark:text-gray-400">{{ number_format($doc->file_size / 1024, 1) }} Ko</td>
                         <td class="px-5 py-3 text-xs text-gray-500 dark:text-gray-400">{{ $doc->created_at->format('d/m/Y') }}</td>
                         <td class="px-5 py-3 text-center">
-                            <a href="{{ route('owner.documents.download', $doc) }}" class="inline-flex items-center gap-1 px-3 py-1 text-xs border border-gray-200 dark:border-gray-600 rounded-lg hover:text-emerald-600 hover:border-emerald-200 transition">
+                            <a href="{{ route('tenant.documents.download', $doc) }}" class="inline-flex items-center gap-1 px-3 py-1 text-xs border border-gray-200 dark:border-gray-600 rounded-lg hover:text-emerald-600 hover:border-emerald-200 transition">
                                 <i data-lucide="download" class="w-3 h-3"></i> Télécharger
                             </a>
                         </td>
