@@ -26,6 +26,7 @@ class Contract extends Model
         'owner_signed_at',
         'tenant_signed_at',
         'activated_at',
+        'cancelled_at',
         'contract_version',
         'content_hash',
         'created_by',
@@ -36,6 +37,10 @@ class Contract extends Model
         'end_date' => 'date',
         'monthly_rent' => 'integer',
         'deposit' => 'integer',
+        'owner_signed_at' => 'datetime',
+        'tenant_signed_at' => 'datetime',
+        'activated_at' => 'datetime',
+        'cancelled_at' => 'datetime',
     ];
 
     public function property(): BelongsTo
@@ -70,22 +75,12 @@ class Contract extends Model
 
     public function scopePendingOwnerSignature($query)
     {
-        return $query->where('status',
-            'owner_signed_at',
-            'tenant_signed_at',
-            'activated_at',
-            'contract_version',
-            'content_hash', ContractStatus::PENDING_OWNER_SIGNATURE->value);
+        return $query->where('status', ContractStatus::PENDING_OWNER_SIGNATURE->value);
     }
 
     public function scopePendingTenantSignature($query)
     {
-        return $query->where('status',
-            'owner_signed_at',
-            'tenant_signed_at',
-            'activated_at',
-            'contract_version',
-            'content_hash', ContractStatus::PENDING_TENANT_SIGNATURE->value);
+        return $query->where('status', ContractStatus::PENDING_TENANT_SIGNATURE->value);
     }
 
     public function scopeFullySigned($query)
@@ -112,5 +107,29 @@ class Contract extends Model
     public function getTenantSignatureAttribute()
     {
         return $this->signatures()->where('role', 'tenant')->first();
+    }
+
+    public function isCancelled(): bool
+    {
+        return $this->status === ContractStatus::CANCELLED->value;
+    }
+
+    public function canBeCancelled(): bool
+    {
+        return in_array($this->status, [
+            ContractStatus::DRAFT->value,
+            ContractStatus::PENDING_OWNER_SIGNATURE->value,
+            ContractStatus::PENDING_TENANT_SIGNATURE->value,
+            ContractStatus::ACTIVE->value,
+        ], true);
+    }
+
+    public function canBeDeleted(): bool
+    {
+        return in_array($this->status, [
+            ContractStatus::DRAFT->value,
+            ContractStatus::CANCELLED->value,
+            ContractStatus::REJECTED->value,
+        ], true);
     }
 }

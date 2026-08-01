@@ -32,8 +32,24 @@
             <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
                 @forelse($contracts as $contract)
                     @php
-                        $statusColors = ['active' => 'emerald', 'pending' => 'amber', 'terminated' => 'red'];
-                        $statusLabels = ['active' => 'Actif', 'pending' => 'En attente', 'terminated' => 'Résilié'];
+                        $statusColors = [
+                            'draft' => 'gray',
+                            'pending_owner' => 'amber',
+                            'pending_tenant' => 'orange',
+                            'active' => 'emerald',
+                            'rejected' => 'red',
+                            'cancelled' => 'red',
+                            'terminated' => 'red',
+                        ];
+                        $statusLabels = [
+                            'draft' => 'Brouillon',
+                            'pending_owner' => 'En attente propriétaire',
+                            'pending_tenant' => 'En attente locataire',
+                            'active' => 'Actif',
+                            'rejected' => 'Refusé',
+                            'cancelled' => 'Annulé',
+                            'terminated' => 'Résilié',
+                        ];
                         $color = $statusColors[$contract->status] ?? 'gray';
                     @endphp
                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
@@ -53,7 +69,16 @@
                             </span>
                         </td>
                         <td class="px-5 py-3 text-center">
-                            <a href="{{ route('owner.contracts.show', $contract) }}" class="text-blue-600 dark:text-blue-400 hover:underline text-xs">Voir</a>
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('owner.contracts.show', $contract) }}" class="text-blue-600 dark:text-blue-400 hover:underline text-xs">Voir</a>
+                                @if($contract->canBeDeleted())
+                                    <form action="{{ route('owner.contracts.destroy', $contract) }}" method="POST" onsubmit="return confirm('⚠️ Supprimer définitivement ce contrat et toutes les données associées ?')">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="text-red-600 dark:text-red-400 hover:underline text-xs">Supprimer</button>
+                                    </form>
+                                @endif
+                            </div>
                         </td>
                     </tr>
                 @empty

@@ -29,7 +29,12 @@ class ContractPolicy
 
     public function delete(User $user, Contract $contract): bool
     {
-        return $contract->created_by === $user->id;
+        return $contract->created_by === $user->id && $contract->canBeDeleted();
+    }
+
+    public function cancel(User $user, Contract $contract): bool
+    {
+        return $contract->created_by === $user->id && $contract->canBeCancelled();
     }
 
     public function sign(User $user, Contract $contract): bool

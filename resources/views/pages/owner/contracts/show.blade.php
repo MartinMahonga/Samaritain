@@ -12,7 +12,7 @@
             <h1 class="text-2xl font-bold text-gray-800 dark:text-white">{{ $contract->tenant_name }}</h1>
             <p class="text-gray-500 dark:text-gray-400 mt-1">{{ $contract->property->title }}</p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
             @if($contract->status === 'pending_owner')
                 <button onclick="document.getElementById('signatureModal').classList.remove('hidden')" class="flex items-center gap-2 px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-medium transition">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H2v-4.572L16.732 3.732z"></path></svg>
@@ -32,6 +32,27 @@
                     Régénérer l'échéancier
                 </button>
             </form>
+            @if($contract->canBeCancelled())
+                <form action="{{ route('owner.contracts.cancel', $contract) }}" method="POST" onsubmit="return confirm('Êtes-vous sûr de vouloir annuler ce contrat ? Cette action est irréversible.')">
+                    @csrf
+                    <button type="submit"
+                        class="flex items-center gap-2 px-4 py-2 border border-amber-200 dark:border-amber-700 text-amber-600 dark:text-amber-400 rounded-lg text-sm hover:bg-amber-50 dark:hover:bg-amber-900/20 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"></path></svg>
+                        Annuler le contrat
+                    </button>
+                </form>
+            @endif
+            @if($contract->canBeDeleted())
+                <form action="{{ route('owner.contracts.destroy', $contract) }}" method="POST" onsubmit="return confirm('⚠️ ATTENTION : Cette action supprimera définitivement le contrat et toutes les données associées (signatures, paiements, documents). Cette action est IRRÉVERSIBLE. Confirmez-vous ?')">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="flex items-center gap-2 px-4 py-2 border border-red-200 dark:border-red-700 text-red-600 dark:text-red-400 rounded-lg text-sm hover:bg-red-50 dark:hover:bg-red-900/20 transition">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                        Supprimer
+                    </button>
+                </form>
+            @endif
         </div>
     </div>
 </div>
@@ -46,8 +67,24 @@
                     <dt class="text-gray-500 dark:text-gray-400">Statut</dt>
                     <dd>
                         @php
-                            $sc = ['active' => 'emerald', 'pending' => 'amber', 'terminated' => 'red'];
-                            $sl = ['active' => 'Actif', 'pending' => 'En attente', 'terminated' => 'Résilié'];
+                            $sc = [
+                                'draft' => 'gray',
+                                'pending_owner' => 'amber',
+                                'pending_tenant' => 'orange',
+                                'active' => 'emerald',
+                                'rejected' => 'red',
+                                'cancelled' => 'red',
+                                'terminated' => 'red',
+                            ];
+                            $sl = [
+                                'draft' => 'Brouillon',
+                                'pending_owner' => 'En attente propriétaire',
+                                'pending_tenant' => 'En attente locataire',
+                                'active' => 'Actif',
+                                'rejected' => 'Refusé',
+                                'cancelled' => 'Annulé',
+                                'terminated' => 'Résilié',
+                            ];
                             $c = $sc[$contract->status] ?? 'gray';
                         @endphp
                         <span class="text-xs px-2 py-1 rounded-full bg-{{ $c }}-100 dark:bg-{{ $c }}-900/30 text-{{ $c }}-600 dark:text-{{ $c }}-400">
@@ -71,6 +108,12 @@
                     <dt class="text-gray-500 dark:text-gray-400">Dépôt garantie</dt>
                     <dd class="text-gray-800 dark:text-white">{{ $contract->deposit ? number_format($contract->deposit, 0, ',', ' ') . ' FCFA' : '—' }}</dd>
                 </div>
+                @if($contract->cancelled_at)
+                <div class="flex justify-between">
+                    <dt class="text-gray-500 dark:text-gray-400">Annulé le</dt>
+                    <dd class="text-red-600 dark:text-red-400 font-medium">{{ $contract->cancelled_at->format('d/m/Y H:i') }}</dd>
+                </div>
+                @endif
             </dl>
 
             <div class="border-t border-gray-100 dark:border-gray-700 mt-4 pt-4">
@@ -123,6 +166,16 @@
                     </div>
                 @endif
             </div>
+        </div>
+        @endif
+
+        @if($contract->isCancelled())
+        <div class="bg-red-50 dark:bg-red-900/20 rounded-xl border border-red-100 dark:border-red-800 p-5">
+            <div class="flex items-center gap-2 mb-2">
+                <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                <h3 class="font-semibold text-red-800 dark:text-red-300">Contrat annulé</h3>
+            </div>
+            <p class="text-sm text-red-600 dark:text-red-400">Ce contrat a été annulé{{ $contract->cancelled_at ? ' le ' . $contract->cancelled_at->format('d/m/Y à H:i') : '' }}. Les données sont conservées mais le contrat n'est plus actif.</p>
         </div>
         @endif
 

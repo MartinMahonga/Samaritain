@@ -1,7 +1,9 @@
 <?php
 
 use App\Enums\Owner\ContractStatus;
+use App\Events\ContractFullySigned;
 use App\Models\Contract;
+use App\Models\Conversation;
 use App\Models\Property;
 use App\Models\User;
 use App\Notifications\ContractSigningRequestNotification;
@@ -173,4 +175,70 @@ it('sends only one notification per contract creation', function () {
         ->assertRedirect();
 
     Notification::assertSentToTimes($this->tenant, ContractSigningRequestNotification::class, 1);
+});
+
+it('creates a conversation when contract becomes fully signed', function () {
+    $contract = Contract::factory()->create([
+        'property_id' => $this->property->id,
+        'created_by' => $this->owner->id,
+        'tenant_email' => $this->tenant->email,
+        'status' => ContractStatus::PENDING_TENANT_SIGNATURE->value,
+        'owner_signed_at' => now(),
+    ]);
+
+    actingAs($this->tenant)
+        ->post(route('tenant.contracts.sign', $contract), [
+            'signature' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+        ])
+        ->assertRedirect();
+
+    $contract->refresh();
+    expect($contract->status)->toBe(ContractStatus::ACTIVE->value);
+
+    $conversation = Conversation::where('contract_id', $contract->id)->first();
+    expect($conversation)->not->toBeNull();
+    expect($conversation->owner_id)->toBe($this->owner->id);
+    expect($conversation->tenant_id)->toBe($this->tenant->id);
+});
+
+it('does not create duplicate conversation when event fires twice', function () {
+    $contract = Contract::factory()->create([
+        'property_id' => $this->property->id,
+        'created_by' => $this->owner->id,
+        'tenant_email' => $this->tenant->email,
+        'status' => ContractStatus::PENDING_TENANT_SIGNATURE->value,
+        'owner_signed_at' => now(),
+    ]);
+
+    actingAs($this->tenant)
+        ->post(route('tenant.contracts.sign', $contract), [
+            'signature' => 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==',
+        ])
+        ->assertRedirect();
+
+    // Manually dispatch the event again to simulate a double fire
+    event(new ContractFullySigned($contract->refresh()));
+
+    $count = Conversation::where('contract_id', $contract->id)->count();
+    expect($count)->toBe(1);
+});
+
+it('allows owner to access their messenger page', function () {
+    actingAs($this->owner)
+        ->get(route('owner.messenger'))
+        ->assertOk();
+});
+
+it('allows tenant to access their messenger page', function () {
+    // Ensure tenant has a contract so the tenant middleware passes
+    Contract::factory()->create([
+        'property_id' => $this->property->id,
+        'created_by' => $this->owner->id,
+        'tenant_email' => $this->tenant->email,
+        'status' => ContractStatus::ACTIVE->value,
+    ]);
+
+    actingAs($this->tenant)
+        ->get(route('tenant.messenger'))
+        ->assertOk();
 });

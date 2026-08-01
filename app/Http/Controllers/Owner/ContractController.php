@@ -3,21 +3,23 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Enums\Owner\ContractStatus;
+use App\Events\ContractCancelled;
 use App\Events\ContractFullySigned;
 use App\Events\ContractPendingSignature;
 use App\Events\ContractSigned;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Owner\StoreContractRequest;
 use App\Models\Contract;
+use App\Models\ContractSignature;
 use App\Models\Conversation;
 use App\Models\Document;
 use App\Models\Property;
 use App\Models\RentPayment;
 use App\Models\User;
+use App\Notifications\ContractCancelledNotification;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
 use App\Notifications\ContractSigningRequestNotification;
-use App\Notifications\MessageSentNotification;
 use App\Services\ContractSignatureService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
@@ -230,9 +232,6 @@ class ContractController extends Controller
                 $tenant->notify(new ContractCompletedNotification($contract));
             }
 
-            // Create conversation between owner and tenant
-            $this->createConversation($contract);
-
             // Generate final signed PDF
             $this->generateSignedPdf($contract);
         } else {
@@ -251,29 +250,86 @@ class ContractController extends Controller
             ->with('success', 'Contrat signé avec succès.');
     }
 
-    protected function createConversation(Contract $contract): void
+    /**
+     * Cancel a contract (soft action — keeps data, changes status).
+     */
+    public function cancel(Contract $contract)
     {
-        $tenant = User::where('email', $contract->tenant_email)->first();
+        Gate::authorize('cancel', $contract);
 
-        if (! $tenant) {
-            return;
+        $contract->update([
+            'status' => ContractStatus::CANCELLED->value,
+            'cancelled_at' => now(),
+        ]);
+
+        event(new ContractCancelled($contract));
+
+        // Notify tenant if they have an account
+        $tenant = User::where('email', $contract->tenant_email)->first();
+        if ($tenant) {
+            $tenant->notify(new ContractCancelledNotification($contract));
+        } else {
+            Notification::route('mail', $contract->tenant_email)
+                ->notify(new ContractCancelledNotification($contract));
         }
 
-        $conversation = Conversation::create([
-            'contract_id' => $contract->id,
-            'owner_id' => $contract->created_by,
-            'tenant_id' => $tenant->id,
-            'last_message_at' => now(),
-        ]);
+        return redirect()->route('owner.contracts.show', $contract)
+            ->with('success', 'Contrat annulé avec succès.');
+    }
 
-        // Send initial system-like greeting from owner
-        $greeting = Message::create([
-            'conversation_id' => $conversation->id,
-            'sender_id' => $contract->created_by,
-            'body' => "Bonjour {$tenant->name}, votre contrat pour « {$contract->property->title} » est maintenant actif. Vous pouvez communiquer ici.",
-        ]);
+    /**
+     * Permanently delete a contract and its related files.
+     * Only allowed for draft, cancelled, or rejected contracts.
+     */
+    public function destroy(Contract $contract)
+    {
+        Gate::authorize('delete', $contract);
 
-        $tenant->notify(new MessageSentNotification($greeting, $conversation));
+        // Delete associated files from storage
+        $this->deleteContractFiles($contract);
+
+        // Delete related conversation (if any)
+        $contract->conversation()->delete();
+
+        // Delete related documents (receipts, signed PDFs)
+        Document::where('documentable_id', $contract->id)
+            ->where('documentable_type', Contract::class)
+            ->delete();
+
+        // Rent payments and signatures cascade on delete via foreign keys
+        $contract->delete();
+
+        return redirect()->route('owner.contracts.index')
+            ->with('success', 'Contrat supprimé définitivement.');
+    }
+
+    /**
+     * Delete all files associated with a contract from storage.
+     */
+    protected function deleteContractFiles(Contract $contract): void
+    {
+        // Delete signature images
+        $contract->signatures->each(function (ContractSignature $signature) {
+            Storage::delete($signature->signature_image);
+        });
+
+        // Delete contract PDF documents
+        $documents = Document::where('documentable_id', $contract->id)
+            ->where('documentable_type', Contract::class)
+            ->get();
+
+        $documents->each(function (Document $document) {
+            Storage::delete($document->file_path);
+        });
+
+        // Delete receipt PDFs for this contract's rent payments
+        $receiptDocuments = Document::where('documentable_type', RentPayment::class)
+            ->whereIn('documentable_id', $contract->rentPayments()->pluck('id'))
+            ->get();
+
+        $receiptDocuments->each(function (Document $document) {
+            Storage::delete($document->file_path);
+        });
     }
 
     protected function generateSignedPdf(Contract $contract): void

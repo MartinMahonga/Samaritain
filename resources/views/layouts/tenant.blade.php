@@ -16,7 +16,7 @@
                 <x-sidebar.item icon="folder-open" label="Mes documents" href="{{ route('tenant.documents') }}" :active="request()->routeIs('tenant.documents')" />
 
                 <!-- Messagerie -->
-                <x-sidebar.item icon="message-circle" label="Messagerie" href="{{ route('messenger') }}" :active="request()->routeIs('messenger')" />
+                <x-sidebar.item icon="message-circle" label="Messagerie" href="{{ route('tenant.messenger') }}" :active="request()->routeIs('tenant.messenger')" />
             </x-sidebar.group>
 
             @if (auth()->user()->profile_image)

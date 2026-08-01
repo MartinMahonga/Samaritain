@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\ContractFullySigned;
+use App\Listeners\CreateConversationOnContractSigned;
 use App\Models\AgencyInvitation;
 use App\Models\Parcelle;
 use App\Models\Property;
@@ -11,6 +13,7 @@ use App\Policies\MemberPolicy;
 use App\Policies\ParcellePolicy;
 use App\Policies\PropertyPolicy;
 use App\Policies\RolePolicy;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
@@ -41,5 +44,10 @@ class AppServiceProvider extends ServiceProvider
         Gate::policy(AgencyInvitation::class, InvitationPolicy::class);
         Gate::policy(Role::class, RolePolicy::class);
         Gate::policy(Parcelle::class, ParcellePolicy::class);
+
+        Event::listen(
+            ContractFullySigned::class,
+            CreateConversationOnContractSigned::class
+        );
     }
 }

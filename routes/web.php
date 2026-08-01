@@ -247,6 +247,16 @@ Route::get('/transactions/{transaction}/callback', [TransactionController::class
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/messenger', function () {
+        $user = auth()->user();
+
+        if ($user->hasRole('owner') || $user->isAdmin()) {
+            return redirect()->route('owner.messenger');
+        }
+
+        if ($user->hasRole('tenant')) {
+            return redirect()->route('tenant.messenger');
+        }
+
         return view('pages.messenger.index');
     })->name('messenger');
 });
@@ -313,6 +323,8 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
     Route::get('/contracts/{contract}/pdf', [ContractController::class, 'downloadPdf'])->name('contracts.pdf');
     Route::post('/contracts/{contract}/generate-rents', [ContractController::class, 'generateRents'])->name('contracts.generate-rents');
     Route::post('/contracts/{contract}/sign', [ContractController::class, 'sign'])->middleware(EnsureUserCanSignContract::class)->name('contracts.sign');
+    Route::post('/contracts/{contract}/cancel', [ContractController::class, 'cancel'])->name('contracts.cancel');
+    Route::delete('/contracts/{contract}', [ContractController::class, 'destroy'])->name('contracts.destroy');
     Route::post('/rent-payments/{rentPayment}/toggle-paid', [ContractController::class, 'togglePaid'])->name('rent-payments.toggle-paid');
 
     // Invoices (Factures)
@@ -343,6 +355,11 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
     Route::post('/documents', [DocumentController::class, 'store'])->name('documents.store');
     Route::get('/documents/{document}/download', [DocumentController::class, 'download'])->name('documents.download');
     Route::delete('/documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
+
+    // Messagerie
+    Route::get('/messenger', function () {
+        return view('pages.owner.messenger');
+    })->name('messenger');
 });
 
 // Tenant Portal Routes
@@ -356,4 +373,9 @@ Route::middleware(['auth', 'verified', 'tenant'])->prefix('tenant')->name('tenan
     Route::get('/interventions', [App\Http\Controllers\Tenant\DashboardController::class, 'interventions'])->name('interventions');
     Route::get('/documents', [App\Http\Controllers\Tenant\DashboardController::class, 'documents'])->name('documents');
     Route::get('/documents/{document}/download', [App\Http\Controllers\Tenant\DashboardController::class, 'downloadDocument'])->name('documents.download');
+
+    // Messagerie
+    Route::get('/messenger', function () {
+        return view('pages.tenant.messenger');
+    })->name('messenger');
 });
