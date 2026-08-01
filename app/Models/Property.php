@@ -177,6 +177,11 @@ class Property extends Model
         return $type === 'daily' ? '/jour' : '/mois';
     }
 
+    public function visitPasses()
+    {
+        return $this->morphMany(VisitPass::class, 'visit_passable');
+    }
+
     public function contracts(): HasMany
     {
         return $this->hasMany(Contract::class);

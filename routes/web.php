@@ -263,8 +263,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // User visit passes routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/visit-pass/create/{property}', [UserVisitPassController::class, 'create'])
+    Route::get('/visit-pass/create/{visitPassable}', [UserVisitPassController::class, 'create'])
         ->name('my-visit-passes.create');
+    Route::get('/visit-pass/create/parcelle/{visitPassable}', [UserVisitPassController::class, 'create'])
+        ->name('my-visit-passes.create.parcelle');
     Route::post('/visit-pass', [UserVisitPassController::class, 'store'])
         ->name('my-visit-passes.store');
     Route::get('/my-visit-passes', [UserVisitPassController::class, 'index'])

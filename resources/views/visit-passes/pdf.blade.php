@@ -98,16 +98,16 @@
     </div>
 
     <div class="section">
-        <h2>Propriété</h2>
-        <div class="property-title">{{ $visitPass->property->title }}</div>
+        <h2>Bien</h2>
+        <div class="property-title">{{ $visitPass->visitPassable->title }}</div>
         <div class="grid">
             <div class="row">
                 <div class="label">Ville</div>
-                <div class="value">{{ $visitPass->property->city->name ?? 'Brazzaville' }}</div>
+                <div class="value">{{ $visitPass->visitPassable->city->name ?? 'Brazzaville' }}</div>
             </div>
             <div class="row">
                 <div class="label">Adresse</div>
-                <div class="value">{{ $visitPass->property->address ?? 'Non spécifiée' }}</div>
+                <div class="value">{{ $visitPass->visitPassable->address ?? 'Non spécifiée' }}</div>
             </div>
         </div>
     </div>

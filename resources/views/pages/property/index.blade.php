@@ -52,33 +52,18 @@
                         </div>
                     </div>
 
-                    <!-- Ville -->
-                    <div>
-                        <label class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Ville</label>
-                        <select name="city_id" id="city_id"
-                            class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
-                            <option value="">Toutes les villes</option>
-                            @foreach ($cities as $city)
-                                <option value="{{ $city->id }}" {{ request('city_id') == $city->id ? 'selected' : '' }}>
-                                    {{ $city->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div>
-                        <label
-                            class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Arrondissement</label>
-                        <select name="arrondissement_id" id="arrondissement_id"
-                            class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background dark:bg-gray-900 text-foreground dark:text-white">
-                            <option value="">Toutes les Arrondissement</option>
-                            @foreach ($arrondissements as $arrondissement)
-                                <option value="{{ $arrondissement->id }}"
-                                    {{ request('arrondissement_id') == $arrondissement->id ? 'selected' : '' }}>
-                                    {{ $arrondissement->name }}
-                                </option>
-                            @endforeach
-                        </select>
+                    <!-- Ville + Arrondissement (Livewire) -->
+                    <div class="lg:col-span-2">
+                        <livewire:arrondissement-filter
+                            :ville="request('city_id') ? \App\Models\City::find(request('city_id'))?->name : ''"
+                            :arrondissement-id="request('arrondissement_id') ? (int) request('arrondissement_id') : null"
+                            ville-name="city_id"
+                            arrondissement-name="arrondissement_id"
+                            ville-label="Ville"
+                            arrondissement-label="Arrondissement"
+                            ville-placeholder="Toutes les villes"
+                            arrondissement-placeholder="Toutes les arrondissements"
+                        />
                     </div>
 
                     <!-- Catégorie -->

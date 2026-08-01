@@ -7,6 +7,16 @@ use Illuminate\Support\Str;
 
 class Parcelle extends Model
 {
+    public const TYPES = [
+        'terrain_nu' => 'Terrain nu',
+        'terrain_construit' => 'Terrain construit',
+        'demi_parcelle' => 'Demi parcelle',
+        'parcelle_jumelee' => 'Parcelle jumelée',
+        'terrain_agricole' => 'Terrain agricole',
+        'terrain_commercial' => 'Terrain commercial',
+        'parcelle_en_lotissement' => 'Parcelle en lotissement',
+    ];
+
     protected $fillable = [
         'titre',
         'slug',
@@ -16,6 +26,7 @@ class Parcelle extends Model
         'superficie',
         'prix',
         'statut',
+        'type',
         'reference',
         'viabilisee',
         'titre_foncier',
@@ -42,6 +53,16 @@ class Parcelle extends Model
     public function arrondissement()
     {
         return $this->belongsTo(Arrondissement::class);
+    }
+
+    public function visitPasses()
+    {
+        return $this->morphMany(VisitPass::class, 'visit_passable');
+    }
+
+    public function getTypeLabelAttribute(): ?string
+    {
+        return $this->type ? (self::TYPES[$this->type] ?? $this->type) : null;
     }
 
     protected static function boot()

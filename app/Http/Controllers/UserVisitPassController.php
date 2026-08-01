@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreVisitPassRequest;
+use App\Models\Parcelle;
 use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\VisitPass;
@@ -22,11 +23,11 @@ class UserVisitPassController extends Controller
     /**
      * Show the form to create a visit pass for a property.
      */
-    public function create(Property $property)
+    public function create(Property|Parcelle $visitPassable)
     {
         $price = $this->visitPassService->getPassPrice();
 
-        return view('visit-passes.create', compact('property', 'price'));
+        return view('visit-passes.create', compact('visitPassable', 'price'));
     }
 
     /**
@@ -105,7 +106,7 @@ class UserVisitPassController extends Controller
     {
         Gate::authorize('view', $visitPass);
 
-        $visitPass->load('property.images', 'property.city', 'property.category');
+        $visitPass->load('visitPassable');
 
         return view('visit-passes.show', compact('visitPass'));
     }

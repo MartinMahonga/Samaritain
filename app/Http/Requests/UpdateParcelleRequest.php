@@ -22,6 +22,7 @@ class UpdateParcelleRequest extends FormRequest
             'superficie' => ['sometimes', 'numeric', 'min:1'],
             'prix' => ['sometimes', 'numeric', 'min:0'],
             'statut' => ['sometimes', 'in:disponible,vendu,réservé'],
+            'type' => ['nullable', 'in:'.implode(',', array_keys(\App\Models\Parcelle::TYPES))],
             'titre_foncier' => ['nullable', 'string', 'max:255'],
             'viabilisee' => ['nullable', 'boolean'],
             'images' => ['nullable', 'array'],

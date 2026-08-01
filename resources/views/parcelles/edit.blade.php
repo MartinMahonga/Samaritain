@@ -79,6 +79,7 @@
                             placeholder="Ex: 500" value="{{ $parcelle->superficie }}" />
                         <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000" placeholder="Ex: 5000000"
                             value="{{ $parcelle->prix }}" />
+                        <x-form.select name="type" label="Type de parcelle" :options="array_combine(array_keys(\App\Models\Parcelle::TYPES), \App\Models\Parcelle::TYPES)" placeholder="Choisir un type" :selected="old('type', $parcelle->type)" />
                     </div>
                 </div>
 

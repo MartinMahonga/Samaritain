@@ -64,14 +64,14 @@
 
                 {{-- Property info --}}
                 <div class="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-sm border border-gray-100 dark:border-gray-700">
-                    <h2 class="font-display text-lg font-semibold mb-4 dark:text-white">Propriété</h2>
+                    <h2 class="font-display text-lg font-semibold mb-4 dark:text-white">Bien</h2>
                     <div class="flex gap-4">
                         <div class="w-24 h-24 rounded-lg overflow-hidden shrink-0">
-                            @if($visitPass->property->cover_image_url)
-                                <img src="{{ $visitPass->property->cover_image_url }}" alt="{{ $visitPass->property->title }}"
+                            @if($visitPass->visitPassable->cover_image_url)
+                                <img src="{{ $visitPass->visitPassable->cover_image_url }}" alt="{{ $visitPass->visitPassable->title }}"
                                     class="w-full h-full object-cover">
-                            @elseif($visitPass->property->images->isNotEmpty())
-                                <img src="{{ $visitPass->property->images->first()->image_url }}" alt="{{ $visitPass->property->title }}"
+                            @elseif($visitPass->visitPassable->images->isNotEmpty())
+                                <img src="{{ $visitPass->visitPassable->images->first()->image_url }}" alt="{{ $visitPass->visitPassable->title }}"
                                     class="w-full h-full object-cover">
                             @else
                                 <div class="w-full h-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
@@ -80,17 +80,17 @@
                             @endif
                         </div>
                         <div>
-                            <h3 class="font-display font-semibold dark:text-white">{{ $visitPass->property->title }}</h3>
+                            <h3 class="font-display font-semibold dark:text-white">{{ $visitPass->visitPassable->title }}</h3>
                             <div class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 mt-1">
                                 <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                {{ $visitPass->property->city->name ?? 'Brazzaville' }}
-                                @if($visitPass->property->address)
-                                    , {{ $visitPass->property->address }}
+                                {{ $visitPass->visitPassable->city->name ?? 'Brazzaville' }}
+                                @if($visitPass->visitPassable->address)
+                                    , {{ $visitPass->visitPassable->address }}
                                 @endif
                             </div>
-                            @if($visitPass->property->category)
+                            @if($visitPass->visitPassable->category)
                                 <span class="inline-block text-xs text-gray-400 dark:text-gray-500 mt-1">
-                                    {{ $visitPass->property->category->name }}
+                                    {{ $visitPass->visitPassable->category->name }}
                                 </span>
                             @endif
                         </div>

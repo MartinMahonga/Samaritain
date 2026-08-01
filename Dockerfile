@@ -66,7 +66,11 @@ RUN chown -R www-data:www-data storage bootstrap/cache
 
 RUN chmod -R 775 storage bootstrap/cache
 
+# Fix tempnam() error - create temp directory with proper permissions
+RUN mkdir -p /tmp/app && chown -R www-data:www-data /tmp/app && chmod 775 /tmp/app
+
 ENV APP_ENV=production
+ENV TMPDIR=/tmp/app
 
 EXPOSE 8080
 
