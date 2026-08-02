@@ -22,6 +22,7 @@ class StoreParcelleRequest extends FormRequest
             'superficie' => ['required', 'numeric', 'min:1'],
             'prix' => ['required', 'numeric', 'min:0'],
             'statut' => ['nullable', 'in:disponible,vendu,réservé'],
+            'type' => ['nullable', 'in:'.implode(',', array_keys(\App\Models\Parcelle::TYPES))],
             'titre_foncier' => ['nullable', 'string', 'max:255'],
             'viabilisee' => ['nullable', 'boolean'],
             'images' => ['nullable', 'array'],

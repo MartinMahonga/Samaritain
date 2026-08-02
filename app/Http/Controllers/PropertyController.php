@@ -86,6 +86,7 @@ class PropertyController extends Controller
             'properties' => $properties,
             'cities' => City::select(['id', 'name'])->get(),
             'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
+            'filters' => $request->all(),
         ]);
     }
 
@@ -238,7 +239,7 @@ class PropertyController extends Controller
     /**
      * Display properties for a specific city (filter)
      */
-    public function byCity(City $city)
+    public function byCity(Request $request, City $city)
     {
         $properties = Property::where('city_id', $city->id)
             ->where('is_active', true)
@@ -251,13 +252,14 @@ class PropertyController extends Controller
             'properties' => $properties,
             'cities' => City::select(['id', 'name'])->get(),
             'selectedCity' => $city,
+            'filters' => $request->all(),
         ]);
     }
 
     /**
      * Display properties by category
      */
-    public function byCategory(Category $category)
+    public function byCategory(Request $request, Category $category)
     {
         $properties = Property::where('category_id', $category->id)
             ->where('is_active', true)
@@ -270,6 +272,7 @@ class PropertyController extends Controller
             'properties' => $properties,
             'cities' => City::select(['id', 'name'])->get(),
             'selectedCategory' => $category,
+            'filters' => $request->all(),
         ]);
     }
 

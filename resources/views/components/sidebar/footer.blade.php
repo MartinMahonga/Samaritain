@@ -44,7 +44,7 @@
                 x-transition:leave-end="opacity-0 -translate-y-1" x-on:click.away="open = false"
                 @keydown.escape.window="open = false" x-cloak
                 class="origin-bottom-right absolute right-0 bottom-full mb-2 w-48 bg-[var(--sidebar)] border border-[var(--sidebar-border)] rounded-md shadow-lg z-50 overflow-hidden flex flex-col gap-2 p-1">
-                <a href="#"
+                <a href="{{ route('profile.show') }}"
                     class="flex gap-1 text-sm text-[var(--sidebar-accent-foreground)] hover:text-[var(--foreground)] hover:bg-[var(--sidebar-border)] px-2 py-2 rounded-md">
                     <i data-lucide="user" class="w-4 h-4 mr-2"></i>
                     Profil

@@ -220,6 +220,20 @@
                             </x-slot:prefix>
                             Retour aux parcelles
                         </x-btn>
+
+                        @auth
+                            <a href="{{ route('my-visit-passes.create.parcelle', $parcelle) }}"
+                                class="inline-flex w-full items-center justify-center gap-x-1.5 transition-colors duration-100 text-sm font-medium rounded-[var(--radius)] bg-emerald-600 text-white hover:bg-emerald-700 h-9 px-4 py-2">
+                                <i data-lucide="ticket" class="w-4 h-4"></i>
+                                Acheter un pass visite
+                            </a>
+                        @else
+                            <a href="{{ route('login') }}"
+                                class="inline-flex w-full items-center justify-center gap-x-1.5 transition-colors duration-100 text-sm font-medium rounded-[var(--radius)] bg-emerald-600 text-white hover:bg-emerald-700 h-9 px-4 py-2">
+                                <i data-lucide="log-in" class="w-4 h-4"></i>
+                                Connectez-vous pour acheter un pass visite
+                            </a>
+                        @endauth
                     </div>
                 </div>
             </div>

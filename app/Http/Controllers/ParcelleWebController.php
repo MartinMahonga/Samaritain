@@ -25,6 +25,7 @@ class ParcelleWebController extends Controller
             'ville',
             'arrondissement_id',
             'statut',
+            'type',
             'viabilisee',
             'prix_min',
             'prix_max',

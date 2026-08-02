@@ -36,35 +36,33 @@
                         </div>
                     </div>
 
-                    <!-- City -->
-
-                    <div>
-                        <label class="block text-sm font-medium text-foreground/80 mb-2">Villes</label>
-                        <select name="ville" id="ville"
-                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
-                            <option value="">Toutes les villes</option>
-                            <option value="Brazzaville" {{ request('ville') === 'Brazzaville' ? 'selected' : '' }}>Brazzaville</option>
-                            <option value="Pointe-noire" {{ request('ville') === 'Pointe-noire' ? 'selected' : '' }}>Pointe-noire</option>
-                        </select>
+                    <!-- Ville + Arrondissement (Livewire) -->
+                    <div class="lg:col-span-2">
+                        <livewire:arrondissement-filter
+                            :ville="request('ville', '')"
+                            :arrondissement-id="request('arrondissement_id') ? (int) request('arrondissement_id') : null"
+                            ville-name="ville"
+                            arrondissement-name="arrondissement_id"
+                            ville-label="Ville"
+                            arrondissement-label="Arrondissement"
+                            ville-placeholder="Toutes les villes"
+                            arrondissement-placeholder="Toutes les arrondissements"
+                        />
                     </div>
-                 
 
-                    
+                    <!-- Type de parcelle -->
                     <div>
-                        <label
-                            class="block text-sm font-medium text-card-foreground dark:text-gray-300 mb-2">Arrondissement</label>
-                        <select name="arrondissement_id" id="arrondissement_id"
-                            class="w-full px-4 py-2.5 border border-border dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-ring dark:focus:ring-primary/30 focus:border-ring dark:focus:border-primary bg-background  text-foreground dark:text-white">
-                            <option value="">Toutes les Arrondissement</option>
-                            @foreach ($arrondissements as $arrondissement)
-                                <option value="{{ $arrondissement->id }}"
-                                    {{ request('arrondissement_id') == $arrondissement->id ? 'selected' : '' }}>
-                                    {{ $arrondissement->name }}
+                        <label class="block text-sm font-medium text-foreground/80 mb-2">Type de parcelle</label>
+                        <select name="type" id="type"
+                            class="w-full px-4 py-2.5 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground">
+                            <option value="">Tous les types</option>
+                            @foreach (\App\Models\Parcelle::TYPES as $typeKey => $typeLabel)
+                                <option value="{{ $typeKey }}" {{ request('type') === $typeKey ? 'selected' : '' }}>
+                                    {{ $typeLabel }}
                                 </option>
                             @endforeach
                         </select>
                     </div>
-                   
                 </div>
 
                 <!-- Advanced Filters Toggle -->
@@ -151,7 +149,7 @@
             </div>
 
             <!-- Active filters -->
-            @if (request()->anyFilled(['titre', 'ville', 'arrondissement_id', 'statut', 'prix_min', 'prix_max', 'superficie_min', 'viabilisee']))
+            @if (request()->anyFilled(['titre', 'ville', 'arrondissement_id', 'type', 'statut', 'prix_min', 'prix_max', 'superficie_min', 'viabilisee']))
                 <div class="flex flex-wrap gap-2">
                     <span class="text-sm text-muted-foreground">Filtres actifs :</span>
                     @if (request('titre'))
@@ -169,11 +167,11 @@
                             Arrondissement: {{ $arrondissements->firstWhere('id', request('arrondissement_id'))?->name }}
                         </span>
                     @endif
-                    {{-- @if (request('statut'))
+                    @if (request('type'))
                         <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
-                            {{ ucfirst(request('statut')) }}
+                            Type: {{ \App\Models\Parcelle::TYPES[request('type')] ?? request('type') }}
                         </span>
-                    @endif --}}
+                    @endif
                     @if (request('prix_min'))
                         <span class="px-2 py-1 bg-primary/10 text-primary rounded-full text-xs">
                             Prix ≥ {{ number_format(request('prix_min'), 0, ',', ' ') }} FCFA
@@ -245,7 +243,7 @@
 
         // Auto-submit on filter change (optional)
         document.addEventListener('DOMContentLoaded', function() {
-            const selects = ['statut', 'viabilisee'];
+            const selects = ['statut', 'viabilisee', 'type'];
             selects.forEach(id => {
                 const element = document.getElementById(id);
                 if (element) {

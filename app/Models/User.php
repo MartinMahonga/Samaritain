@@ -9,6 +9,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Storage;
@@ -162,5 +163,45 @@ class User extends Authenticatable implements MustVerifyEmail
     public function visitPasses()
     {
         return $this->hasMany(VisitPass::class);
+    }
+
+    public function contracts(): HasMany
+    {
+        return $this->hasMany(Contract::class, 'created_by');
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class, 'created_by');
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class, 'created_by');
+    }
+
+    public function properties(): HasMany
+    {
+        return $this->hasMany(Property::class, 'created_by');
+    }
+
+    public function conversationsAsOwner(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'owner_id');
+    }
+
+    public function conversationsAsTenant(): HasMany
+    {
+        return $this->hasMany(Conversation::class, 'tenant_id');
+    }
+
+    public function sentMessages(): HasMany
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function conversations()
+    {
+        return Conversation::forUser($this);
     }
 }

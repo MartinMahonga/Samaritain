@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('properties', function (Blueprint $table) {
-            //
+        Schema::table('contracts', function (Blueprint $table) {
+            $table->timestamp('cancelled_at')->nullable()->after('activated_at');
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('properties', function (Blueprint $table) {
-            //
+        Schema::table('contracts', function (Blueprint $table) {
+            $table->dropColumn('cancelled_at');
         });
     }
 };

@@ -80,9 +80,9 @@
                 </div>
 
 
-                <p class="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
-                     <i data-lucide="map-pin" class="w-3 h-3 flex-shrink-0"></i>
-                    {{ $property->arrondissement->name ?? '' }}, {{ $property->city->name }}
+                 <p class="text-gray-400 text-xs flex items-center gap-1 mt-0.5">
+                      <i data-lucide="map-pin" class="w-3 h-3 flex-shrink-0"></i>
+                    {{ $property->arrondissement?->name ?? '' }}, {{ $property->city?->name ?? '' }}
                 </p>
             </div>
         </div>

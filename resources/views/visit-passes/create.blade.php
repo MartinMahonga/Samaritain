@@ -10,9 +10,15 @@
         <nav aria-label="Fil d'Ariane" class="flex items-center gap-2 text-xs text-[#6B6660] dark:text-gray-400 mb-10 font-body">
             <a href="{{ route('index') }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">Accueil</a>
             <i data-lucide="chevron-right" class="w-3 h-3"></i>
-            <a href="{{ route('property.index') }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">Propriétés</a>
-            <i data-lucide="chevron-right" class="w-3 h-3"></i>
-            <a href="{{ route('property.show', $property) }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">{{ $property->title }}</a>
+            @if($visitPassable instanceof \App\Models\Property)
+                <a href="{{ route('property.index') }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">Propriétés</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <a href="{{ route('property.show', $visitPassable) }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">{{ $visitPassable->title }}</a>
+            @else
+                <a href="{{ route('parcelles.index') }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">Parcelles</a>
+                <i data-lucide="chevron-right" class="w-3 h-3"></i>
+                <a href="{{ route('parcelles.show', $visitPassable) }}" class="hover:text-primary dark:hover:text-primary-400 transition-colors">{{ $visitPassable->titre }}</a>
+            @endif
             <i data-lucide="chevron-right" class="w-3 h-3"></i>
             <span class="dark:text-gray-300">Pass visite</span>
         </nav>
@@ -28,7 +34,11 @@
 
                     <form action="{{ route('my-visit-passes.store') }}" method="POST" class="space-y-5">
                         @csrf
-                        <input type="hidden" name="property_id" value="{{ $property->id }}">
+                        @if($visitPassable instanceof \App\Models\Property)
+                            <input type="hidden" name="property_id" value="{{ $visitPassable->id }}">
+                        @else
+                            <input type="hidden" name="parcelle_id" value="{{ $visitPassable->id }}">
+                        @endif
 
                         <x-form.input
                             label="Nom complet"
@@ -72,14 +82,20 @@
                 </div>
             </div>
 
-            {{-- Property summary --}}
+            {{-- Summary --}}
             <div class="lg:sticky lg:top-8">
                 <div class="bg-white dark:bg-gray-800 rounded-xl overflow-hidden shadow-sm border border-gray-100 dark:border-gray-700">
-                    @if($property->cover_image_url)
-                        <img src="{{ $property->cover_image_url }}" alt="{{ $property->title }}"
-                            class="w-full h-48 object-cover">
-                    @elseif($property->images->isNotEmpty())
-                        <img src="{{ $property->images->first()->image_url }}" alt="{{ $property->title }}"
+                    @php
+                        $cover = null;
+                        if ($visitPassable instanceof \App\Models\Property) {
+                            $cover = $visitPassable->cover_image_url ?? ($visitPassable->images->first()->image_url ?? null);
+                        } else {
+                            $cover = optional($visitPassable->images->first())->url;
+                        }
+                    @endphp
+
+                    @if($cover)
+                        <img src="{{ $cover }}" alt="{{ $visitPassable->title ?? $visitPassable->titre }}"
                             class="w-full h-48 object-cover">
                     @else
                         <div class="w-full h-48 bg-gray-100 dark:bg-gray-700 flex items-center justify-center">
@@ -88,15 +104,13 @@
                     @endif
 
                     <div class="p-5">
-                        <h3 class="font-display font-semibold text-lg dark:text-white mb-2">{{ $property->title }}</h3>
+                        <h3 class="font-display font-semibold text-lg dark:text-white mb-2">{{ $visitPassable->title ?? $visitPassable->titre }}</h3>
 
-                        @if($property->city)
+                        @php $cityName = optional($visitPassable->city ?? \App\Models\City::find($visitPassable->city_id ?? null))->name; @endphp
+                        @if($cityName)
                             <div class="flex items-center gap-1.5 text-sm text-gray-500 dark:text-gray-400 mb-3">
                                 <i data-lucide="map-pin" class="w-3.5 h-3.5"></i>
-                                {{ $property->city->name }}
-                                @if($property->address)
-                                    , {{ $property->address }}
-                                @endif
+                                {{ $cityName }}
                             </div>
                         @endif
 
@@ -111,7 +125,6 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 </div>

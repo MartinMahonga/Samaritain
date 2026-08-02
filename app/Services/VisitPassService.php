@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\Parcelle;
 use App\Models\Property;
 use App\Models\VisitPass;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -17,9 +18,6 @@ use Illuminate\Support\Str;
 
 class VisitPassService
 {
-    /**
-     * The price of a visit pass in FCFA.
-     */
     const PASS_PRICE = 5000;
 
     public function getPassPrice(): int
@@ -30,12 +28,19 @@ class VisitPassService
     public function createVisitPass(array $data): VisitPass
     {
         return DB::transaction(function () use ($data) {
-            $property = Property::findOrFail($data['property_id']);
+            $visitPassable = null;
+
+            if (! empty($data['property_id'])) {
+                $visitPassable = Property::findOrFail($data['property_id']);
+            } elseif (! empty($data['parcelle_id'])) {
+                $visitPassable = Parcelle::findOrFail($data['parcelle_id']);
+            }
 
             $visitPass = VisitPass::create([
                 'uuid' => (string) Str::uuid(),
                 'user_id' => auth()->id(),
-                'property_id' => $property->id,
+                'visit_passable_type' => $visitPassable::class,
+                'visit_passable_id' => $visitPassable->id,
                 'holder_name' => $data['holder_name'],
                 'phone' => $data['phone'],
                 'email' => $data['email'] ?? null,
@@ -98,7 +103,7 @@ class VisitPassService
 
     public function getUserVisitPasses()
     {
-        return VisitPass::with('property.images', 'property.city')
+        return VisitPass::with('visitPassable')
             ->where('user_id', auth()->id())
             ->orderBy('created_at', 'desc')
             ->paginate(15);
