@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Exceptions\PawaPayException;
+use App\Http\Requests\StoreVisitPassRequest;
 use App\Models\Parcelle;
 use App\Models\Property;
 use App\Models\Transaction;
