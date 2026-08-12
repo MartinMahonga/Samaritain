@@ -2,8 +2,10 @@
 
 use App\Exceptions\PawaPayException;
 use App\Jobs\ProcessPawaPayCallback;
+use App\Models\Property;
 use App\Models\Transaction;
 use App\Models\User;
+use App\Models\VisitPass;
 use App\Services\PawapayService;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Http;
@@ -253,6 +255,87 @@ test('payment_page laisse la transaction en pending si l\'API pawaPay échoue', 
 test('payment_page nécessite une authentification', function () {
     $this->get(route('transactions.pay'))
         ->assertRedirect(route('login'));
+});
+
+/*
+|--------------------------------------------------------------------------
+| Tests du flow visit pass → paiement (UserVisitPassController)
+|--------------------------------------------------------------------------
+*/
+
+test('store visit pass crée le pass et redirige vers la page de paiement pawaPay', function () {
+    config([
+        'services.pawapay.base_url' => 'https://api.sandbox.pawapay.io',
+        'services.pawapay.token' => 'test-token',
+    ]);
+
+    Http::fake([
+        'api.sandbox.pawapay.io/v2/paymentpage' => Http::response([
+            'depositId' => 'some-uuid',
+            'status' => 'ACCEPTED',
+            'redirectUrl' => 'https://api.sandbox.pawapay.io/payment-page/xyz',
+        ], 200),
+    ]);
+
+    $user = User::factory()->create();
+    $property = Property::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('my-visit-passes.store'), [
+            'property_id' => $property->id,
+            'holder_name' => 'Jean Dupont',
+            'phone' => '+242061234567',
+        ])
+        ->assertRedirect('https://api.sandbox.pawapay.io/payment-page/xyz');
+
+    $visitPass = VisitPass::where('user_id', $user->id)->first();
+
+    expect($visitPass)->not->toBeNull()
+        ->and($visitPass->holder_name)->toBe('Jean Dupont')
+        ->and($visitPass->payment_status)->toBe('pending')
+        ->and($visitPass->transaction_id)->not->toBeNull();
+
+    $transaction = Transaction::where('user_id', $user->id)->first();
+
+    expect($transaction)->not->toBeNull()
+        ->and($transaction->visit_pass_id)->toBe($visitPass->id)
+        ->and($transaction->deposit_id)->not->toBeNull()
+        ->and($transaction->amount)->toBe(5000);
+
+    // Le depositId persisté est bien celui envoyé à pawaPay (clé d'idempotence),
+    // et le callbackUrl est transmis pour le webhook serveur-à-serveur.
+    Http::assertSent(fn ($request) => str_contains($request->url(), '/v2/paymentpage')
+        && $request['depositId'] === $transaction->deposit_id
+        && str_contains($request['callbackUrl'], '/webhook'));
+});
+
+test('store visit pass laisse la transaction en pending si l\'API pawaPay échoue', function () {
+    config([
+        'services.pawapay.base_url' => 'https://api.sandbox.pawapay.io',
+        'services.pawapay.token' => 'test-token',
+    ]);
+
+    Http::fake([
+        'api.sandbox.pawapay.io/v2/paymentpage' => Http::response('Server error', 500),
+    ]);
+
+    $user = User::factory()->create();
+    $property = Property::factory()->create();
+
+    $this->actingAs($user)
+        ->post(route('my-visit-passes.store'), [
+            'property_id' => $property->id,
+            'holder_name' => 'Jean Dupont',
+            'phone' => '+242061234567',
+        ])
+        ->assertRedirect();
+
+    $transaction = Transaction::where('user_id', $user->id)->first();
+
+    // Règle critique : en cas d'erreur HTTP, ne JAMAIS marquer failed — rester pending
+    expect($transaction)->not->toBeNull()
+        ->and($transaction->status)->toBe('pending')
+        ->and($transaction->visit_pass_id)->not->toBeNull();
 });
 
 /*
