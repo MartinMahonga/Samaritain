@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreVisitPassRequest;
+use App\Exceptions\PawaPayException;
 use App\Models\Parcelle;
 use App\Models\Property;
 use App\Models\Transaction;
@@ -41,26 +41,28 @@ class UserVisitPassController extends Controller
         return $this->redirectToPayment($visitPass);
     }
 
-    /**
-     * Redirect to pawaPay payment page for the given visit pass.
-     */
     protected function redirectToPayment(VisitPass $visitPass)
     {
+        // Generate and persist the UUIDv4 idempotency key BEFORE calling pawaPay.
+        $depositId = (string) Str::uuid();
+
         $transaction = Transaction::create([
             'user_id' => auth()->id(),
             'visit_pass_id' => $visitPass->id,
             'status' => 'pending',
             'amount' => $visitPass->amount,
+            'deposit_id' => $depositId,
+            'provider' => null,
+            'currency' => 'XAF',
         ]);
 
         $visitPass->update(['transaction_id' => $transaction->transaction_id]);
 
         try {
-            $depositId = (string) Str::uuid();
-
             $result = $this->pawapay->createPaymentPage([
                 'depositId' => $depositId,
                 'returnUrl' => route('transactions.callback', $transaction),
+                'callbackUrl' => route('transactions.webhook', $transaction),
                 'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
@@ -76,11 +78,20 @@ class UserVisitPassController extends Controller
                 ],
             ]);
 
+            // Store the pawaPay response on the transaction record.
+            $transaction->update([
+                'status' => $result['status'] ?? 'pending',
+                'provider' => $result['provider'] ?? null,
+                'raw_response' => $result,
+            ]);
+
             return redirect($result['redirectUrl']);
 
-        } catch (\Exception $e) {
-            $transaction->update(['status' => 'failed']);
-            $visitPass->markAsPaymentFailed();
+        } catch (PawaPayException $e) {
+            // Do NOT mark as failed — leave as pending for reconciliation.
+            $transaction->update([
+                'raw_response' => ['error' => $e->getMessage(), 'status_code' => $e->getStatusCode()],
+            ]);
 
             return redirect()->route('my-visit-passes.show', $visitPass)
                 ->with('error', 'Une erreur est survenue lors de la création du paiement: '.$e->getMessage());

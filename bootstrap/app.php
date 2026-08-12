@@ -29,6 +29,12 @@ return Application::configure(basePath: dirname(__DIR__))
             'owner' => EnsureUserIsOwner::class,
             'tenant' => EnsureUserIsTenant::class,
         ]);
+
+        // pawaPay server-to-server callbacks are unauthenticated POSTs with
+        // HMAC signature verification handled in the controller. Exclude from CSRF.
+        $middleware->validateCsrfTokens(except: [
+            'transactions/*/webhook',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

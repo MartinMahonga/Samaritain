@@ -48,8 +48,14 @@ return [
     ],
 
     'pawapay' => [
-        'base_url' => env('PAWAPAY_API_URL'),
-        'token' => env('PAWAPAY_API_KEY'),
+        'base_url' => env('PAWAPAY_ENV', 'sandbox') === 'production'
+            ? env('PAWAPAY_LIVE_URL', 'https://api.pawapay.io')
+            : env('PAWAPAY_SANDBOX_URL', 'https://api.sandbox.pawapay.io'),
+        'token' => env('PAWAPAY_API_TOKEN'),
+        'callback_secret' => env('PAWAPAY_CALLBACK_SECRET'),
+        'verify_callback_signature' => (bool) env('PAWAPAY_CALLBACK_VERIFY_SIGNATURE', false),
+        'currency' => env('PAWAPAY_CURRENCY', 'XAF'),
+        'country' => env('PAWAPAY_COUNTRY', 'COG'),
     ],
 
 ];
