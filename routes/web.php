@@ -242,8 +242,19 @@ Route::get('/transactions/pay', [TransactionController::class, 'paymentPage'])
     ->middleware('auth')
     ->name('transactions.pay');
 
+// pawaPay server-to-server callback (callbackUrl) — POST, CSRF-exempt via bootstrap/app.php
+Route::post('/transactions/{transaction}/webhook', [TransactionController::class, 'handleCallback'])
+    ->name('transactions.webhook');
+
+// pawaPay browser redirect (returnUrl) — GET, user sees the result
 Route::get('/transactions/{transaction}/callback', [TransactionController::class, 'callback'])
+    ->middleware('auth')
     ->name('transactions.callback');
+
+// Manual status check endpoint
+Route::get('/transactions/{transaction}/status', [TransactionController::class, 'status'])
+    ->middleware('auth')
+    ->name('transactions.status');
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/messenger', function () {

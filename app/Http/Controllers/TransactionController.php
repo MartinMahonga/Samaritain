@@ -2,33 +2,57 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\PawaPayException;
+use App\Jobs\ProcessPawaPayCallback;
 use App\Models\Transaction;
 use App\Services\PawapayService;
 use App\Services\VisitPassService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class TransactionController extends Controller
 {
-    public function __construct(protected PawapayService $pawapay) {}
+    public function __construct(
+        protected PawapayService $pawapay,
+        protected VisitPassService $visitPassService,
+    ) {}
 
+    /**
+     * Initiate a payment via the pawaPay hosted payment page.
+     *
+     * Flow:
+     *  1. Generate a UUIDv4 (depositId) — the idempotency key and reconciliation anchor.
+     *  2. Persist Transaction as PENDING with the depositId.
+     *  3. Call pawaPay PaymentPage API.
+     *  4. Store the raw response and redirect to the hosted page.
+     *
+     * Critical rule: if the HTTP call fails, do NOT mark the transaction as FAILED.
+     * Leave it as PENDING — the reconciliation job will check the status later.
+     */
     public function paymentPage()
     {
+        $user = auth()->user();
+
+        // 1. Generate the UUIDv4 idempotency key before any API call.
+        $depositId = (string) Str::uuid();
+
+        // 2. Persist the transaction BEFORE calling pawaPay — this is your
+        //    reconciliation anchor if the network call fails or times out.
         $transaction = Transaction::create([
-            'user_id' => auth()->id(),
+            'user_id' => $user->id,
             'status' => 'pending',
             'amount' => 5000,
+            'deposit_id' => $depositId,
+            'provider' => null,
+            'currency' => 'XAF',
         ]);
 
-        if (! $transaction) {
-            return redirect()->back()->with('error', 'Une erreur est survenue lors de la création de la transaction, veuillez réessayer.');
-        }
-
+        // 3. Call pawaPay to create the hosted payment page.
         try {
-            $depositId = (string) Str::uuid();
-
             $result = $this->pawapay->createPaymentPage([
-                'depositId' => $depositId, // uuid du modèle
+                'depositId' => $depositId,
                 'returnUrl' => route('transactions.callback', $transaction),
+                'callbackUrl' => route('transactions.webhook', $transaction),
                 'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
@@ -42,43 +66,147 @@ class TransactionController extends Controller
                     ['userId' => (string) $transaction->user_id],
                 ],
             ]);
-
+        } catch (PawaPayException $e) {
+            // Do NOT mark as failed — leave as pending for reconciliation.
             $transaction->update([
-                'status' => 'pending',
+                'raw_response' => ['error' => $e->getMessage(), 'status_code' => $e->getStatusCode()],
             ]);
 
-            return redirect($result['redirectUrl']);
-
-        } catch (\Exception $e) {
-            $transaction->update(['status' => 'failed']);
-
-            return redirect()->route('transactions.callback', $transaction)
-                ->with('error', 'Une erreur est survenue lors de la création de la page de paiement: '.$e->getMessage());
+            return redirect()->back()->with([
+                'error' => 'Une erreur est survenue lors de la création de la page de paiement. Veuillez réessayer.',
+            ]);
         }
+
+        // 4. Store the response and redirect to the hosted payment page.
+        $transaction->update([
+            'status' => strtolower($result['status'] ?? 'pending'),
+            'provider' => $result['provider'] ?? null,
+            'raw_response' => $result,
+        ]);
+
+        return redirect($result['redirectUrl']);
     }
 
+    /**
+     * Handle the pawaPay browser redirect (returnUrl) after payment.
+     *
+     * The user's browser is redirected here after completing the payment on
+     * pawaPay's hosted page. The actual status verification happens via
+     * the server-to-server webhook callback. Here we show the user a
+     * simple result page.
+     */
     public function callback(Transaction $transaction)
     {
-        // Vérifier le statut de la transaction auprès de pawaPay
-        // et mettre à jour le statut de la transaction dans la base de données.
-        $transaction->update(['status' => 'completed']);
+        $user = auth()->user();
 
-        // Si une demande de pass visite est associée, la mettre à jour
-        if ($transaction->visit_pass_id) {
+        if ($transaction->user_id !== $user->id) {
+            abort(403, 'Vous n\'êtes pas autorisé à consulter cette transaction.');
+        }
+
+        if ($transaction->visit_pass_id && $transaction->visitPass) {
             $visitPass = $transaction->visitPass;
 
-            if ($visitPass) {
-                $visitPassService = app(VisitPassService::class);
-
-                // Ici, dans une vraie intégration, on vérifierait le statut via l'API pawaPay
-                // Pour l'instant, on simule la confirmation de paiement
-                $visitPassService->handleSuccessfulPayment($visitPass);
-
+            if ($visitPass->isPaid()) {
                 return redirect()->route('my-visit-passes.show', $visitPass)
                     ->with('success', 'Paiement confirmé avec succès ! Votre pass visite est disponible.');
             }
         }
 
         return view('pages.payment', ['transaction' => $transaction]);
+    }
+
+    /**
+     * Handle the pawaPay server-to-server webhook callback — POST.
+     *
+     * Verify the signature (if configured), then dispatch a queued job that
+     * independently verifies the deposit status via the pawaPay API before
+     * updating the local record. Respond 200 immediately — all heavy work
+     * is offloaded to the queue.
+     */
+    public function handleCallback(Request $request, Transaction $transaction)
+    {
+        $payload = $request->getContent();
+        $signature = $request->header('X-PawaPay-Signature', '');
+
+        if (! $this->pawapay->verifyCallbackSignature($payload, $signature)) {
+            \Log::warning('pawaPay callback signature verification failed', [
+                'transaction_id' => $transaction->transaction_id,
+                'signature' => $signature,
+            ]);
+
+            return response('Invalid signature', 403);
+        }
+
+        $callbackData = $request->validate([
+            'depositId' => ['nullable', 'string'],
+            'payoutId' => ['nullable', 'string'],
+            'refundId' => ['nullable', 'string'],
+            'event' => ['nullable', 'string'],
+            'status' => ['nullable', 'string'],
+        ]);
+
+        ProcessPawaPayCallback::dispatch($transaction, $callbackData);
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Manually check the status of a deposit via the pawaPay API.
+     */
+    public function status(Transaction $transaction)
+    {
+        $user = auth()->user();
+
+        if ($transaction->user_id !== $user->id) {
+            abort(403, 'Vous n\'êtes pas autorisé à consulter cette transaction.');
+        }
+
+        if (! $transaction->deposit_id) {
+            return redirect()->back()->with('error', 'Aucun identifiant de dépôt n\'est associé à cette transaction.');
+        }
+
+        try {
+            $statusResponse = $this->pawapay->getDepositStatus($transaction->deposit_id);
+        } catch (PawaPayException $e) {
+            return redirect()->back()->with('error', 'Impossible de vérifier le statut du paiement auprès de pawaPay.');
+        }
+
+        $pawaPayStatus = strtoupper($statusResponse['status'] ?? 'UNKNOWN');
+
+        $transaction->update([
+            'raw_response' => $statusResponse,
+            'status' => $this->mapPawaPayStatus($pawaPayStatus),
+        ]);
+
+        if ($pawaPayStatus === 'COMPLETED' && $transaction->visit_pass_id) {
+            $visitPass = $transaction->visitPass;
+            if ($visitPass && ! $visitPass->isPaid()) {
+                $this->visitPassService->handleSuccessfulPayment($visitPass);
+            }
+        }
+
+        if (in_array($pawaPayStatus, ['FAILED', 'REJECTED']) && $transaction->visit_pass_id) {
+            $visitPass = $transaction->visitPass;
+            if ($visitPass && ! $visitPass->isPaymentFailed()) {
+                $this->visitPassService->handleFailedPayment($visitPass);
+            }
+        }
+
+        return redirect()->back()->with('status', 'Statut du paiement: '.$pawaPayStatus);
+    }
+
+    /**
+     * Map pawaPay statuses to local transaction statuses.
+     */
+    protected function mapPawaPayStatus(string $status): string
+    {
+        return match ($status) {
+            'COMPLETED' => 'completed',
+            'FAILED', 'REJECTED' => 'failed',
+            'ACCEPTED' => 'accepted',
+            'PROCESSING' => 'processing',
+            'PENDING' => 'pending',
+            default => 'pending',
+        };
     }
 }

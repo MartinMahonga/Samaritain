@@ -2,12 +2,16 @@
 
 namespace App\Models;
 
+use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transaction extends Model
 {
-    use HasUuids;
+    use HasFactory, HasUuids;
 
     protected $primaryKey = 'transaction_id';
 
@@ -20,6 +24,15 @@ class Transaction extends Model
         'visit_pass_id',
         'status',
         'amount',
+        'deposit_id',
+        'provider',
+        'currency',
+        'raw_response',
+    ];
+
+    protected $casts = [
+        'amount' => 'integer',
+        'raw_response' => 'array',
     ];
 
     // Nécessaire car ta clé primaire ne s'appelle pas "id"
@@ -28,13 +41,18 @@ class Transaction extends Model
         return ['transaction_id'];
     }
 
-    public function user()
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function visitPass()
+    public function visitPass(): BelongsTo
     {
         return $this->belongsTo(VisitPass::class);
+    }
+
+    protected static function newFactory(): Factory
+    {
+        return TransactionFactory::new();
     }
 }
