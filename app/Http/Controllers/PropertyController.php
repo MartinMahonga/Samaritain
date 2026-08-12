@@ -56,10 +56,6 @@ class PropertyController extends Controller
             $query->where('surface', '>=', $request->surface);
         }
 
-        if ($request->filled('rooms')) {
-            $query->where('rooms', $request->rooms);
-        }
-
         if ($request->filled('bedrooms')) {
             $query->where('bedrooms', $request->bedrooms);
         }
@@ -313,9 +309,9 @@ class PropertyController extends Controller
             $query->where('surface', '>=', $request->surface);
         }
 
-        if ($request->filled('rooms')) {
-            $query->where('rooms', $request->rooms);
-        }
+        // if ($request->filled('rooms')) {
+        //     $query->where('rooms', $request->rooms);
+        // }
 
         if ($request->filled('bedrooms')) {
             $query->where('bedrooms', $request->bedrooms);

@@ -75,6 +75,10 @@
                         <x-ui.property-description :property="$property" />
                     @endif
 
+                    <a href="{{ route('artisans.index') }}"
+                        class="inline-flex items-center gap-2 text-sm font-medium text-primary dark:text-primary-400 mt-6 mb-6 hover:underline">
+                        Besoin d’un dépannage pour votre {{ $property->title }} ?
+                    </a>
                     {{-- Amenities --}}
                     @if ($property->amenities->isNotEmpty())
                         <x-ui.property-amenity :property="$property" />

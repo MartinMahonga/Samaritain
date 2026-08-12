@@ -55,7 +55,6 @@
                 <div class="p-6 border-b border-gray-100 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Détails du bien</h2>
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-                        <x-form.input name="rooms" label="Pièces" type="number" value="{{ old('rooms', 0) }}" />
                         <x-form.input name="bedrooms" label="Chambres" type="number" value="{{ old('bedrooms', 0) }}" />
                         <x-form.input name="bathrooms" label="Salle de bains" type="number"
                             value="{{ old('bathrooms', 0) }}" />

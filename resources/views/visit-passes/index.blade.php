@@ -113,13 +113,10 @@
                                                 Expire: {{ $visitPass->expires_at->format('d/m/Y H:i') }}
                                                 @if($visitPass->isActive())
                                                     @php
-                                                        $daysLeft = now()->diffInDays($visitPass->expires_at, false);
-                                                        $hoursLeft = now()->diffInHours($visitPass->expires_at, false);
+                                                        $daysLeft = max(0, (int) now()->diffInDays($visitPass->expires_at, false));
                                                     @endphp
                                                     @if($daysLeft > 0)
-                                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold">({{ $daysLeft }} j)</span>
-                                                    @elseif($hoursLeft > 0)
-                                                        <span class="text-amber-600 dark:text-amber-400 font-semibold">({{ $hoursLeft }} h)</span>
+                                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold">({{ $daysLeft }} jours)</span>
                                                     @endif
                                                 @endif
                                             </span>

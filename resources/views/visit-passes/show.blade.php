@@ -182,26 +182,12 @@
                                     </span>
                                 @elseif($visitPass->isActive())
                                     @php
-                                        $daysLeft = now()->diffInDays($visitPass->expires_at, false);
-                                        $hoursLeft = now()->diffInHours($visitPass->expires_at, false);
-                                        $minutesLeft = now()->diffInMinutes($visitPass->expires_at, false);
+                                        $daysLeft = max(0, (int) now()->diffInDays($visitPass->expires_at, false));
                                     @endphp
-                                    @if($daysLeft >= 1)
-                                        <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
-                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                                            {{ $daysLeft }} jour(s) et {{ $hoursLeft % 24 }}h
-                                        </span>
-                                    @elseif($hoursLeft >= 1)
-                                        <span class="text-amber-600 dark:text-amber-400 font-semibold flex items-center gap-1">
-                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                                            {{ $hoursLeft }}h {{ $minutesLeft % 60 }}min
-                                        </span>
-                                    @else
-                                        <span class="text-red-600 dark:text-red-400 font-semibold flex items-center gap-1">
-                                            <i data-lucide="clock" class="w-3.5 h-3.5"></i>
-                                            {{ $minutesLeft }} min
-                                        </span>
-                                    @endif
+                                    <span class="text-emerald-600 dark:text-emerald-400 font-semibold flex items-center gap-1">
+                                        <i data-lucide="clock" class="w-3.5 h-3.5"></i>
+                                        {{ $daysLeft }} jour{{ $daysLeft > 1 ? 's' : '' }}
+                                    </span>
                                 @else
                                     <span class="text-gray-400 dark:text-gray-500 italic">Non activé</span>
                                 @endif

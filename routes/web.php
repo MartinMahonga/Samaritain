@@ -238,7 +238,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
 });
 
-Route::get('/transactions/pay', [TransactionController::class, 'paymentPage'])
+Route::get('/pay', [TransactionController::class, 'depositForm'])
     ->middleware('auth')
     ->name('transactions.pay');
 

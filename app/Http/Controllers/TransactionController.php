@@ -111,8 +111,6 @@ class TransactionController extends Controller
                     ->with('success', 'Paiement confirmé avec succès ! Votre pass visite est disponible.');
             }
         }
-
-        return view('pages.payment', ['transaction' => $transaction]);
     }
 
     /**

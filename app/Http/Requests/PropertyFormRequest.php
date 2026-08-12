@@ -31,7 +31,6 @@ class PropertyFormRequest extends FormRequest
             'price' => ['required', 'integer', 'min:0'],
             'price_type' => ['required', 'in:monthly,daily'],
             'surface' => ['required', 'integer', 'min:10'],
-            'rooms' => ['required', 'integer', 'min:1'],
             'bedrooms' => ['required', 'integer', 'min:0'],
             'bathrooms' => ['required', 'integer', 'min:0'],
             'floor' => ['required', 'integer', 'min:0'],

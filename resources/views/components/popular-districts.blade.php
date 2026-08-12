@@ -77,12 +77,12 @@
             city: 'brazzaville',
             districts: {
                 brazzaville: [
-                    { id: 1, name: 'Bacongo', count: 14, icon: 'building-2' },
-                    { id: 2, name: 'Moungali', count: 9, icon: 'building-2' },
+                    { id: 1, name: 'Makélékélé', count: 14, icon: 'building-2' },
+                    { id: 2, name: 'Bacongo', count: 9, icon: 'building-2' },
                     { id: 3, name: 'Poto-Poto', count: 11, icon: 'store' },
-                    { id: 4, name: 'Ouenzé', count: 7, icon: 'home' },
-                    { id: 5, name: 'Talangaï', count: 6, icon: 'home' },
-                    { id: 6, name: 'Makélékélé', count: 8, icon: 'building' },
+                    { id: 4, name: 'Moungali', count: 7, icon: 'home' },
+                    { id: 5, name: 'Ouenze', count: 6, icon: 'home' },
+                    { id: 6, name: 'Talangai', count: 8, icon: 'building' },
                     { id: 7, name: 'Mfilou', count: 5, icon: 'landmark' },
                     { id: 8, name: 'Djiri', count: 4, icon: 'trees' }
                 ],
