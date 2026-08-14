@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\Parcelle;
+use App\Models\Property;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Route;
 
@@ -24,13 +26,13 @@ class RouteServiceProvider extends ServiceProvider
     {
         Route::bind('visitPassable', function ($value) {
             // Try to find a Parcelle first
-            $parcelle = \App\Models\Parcelle::where('slug', $value)->first();
+            $parcelle = Parcelle::where('slug', $value)->first();
             if ($parcelle) {
                 return $parcelle;
             }
 
             // Then try to find a Property
-            $property = \App\Models\Property::where('slug', $value)->first();
+            $property = Property::where('slug', $value)->first();
             if ($property) {
                 return $property;
             }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\RentPayment;
 use App\Models\Transaction;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -39,7 +40,7 @@ class TransactionFactory extends Factory
     public function forRentPayment(): static
     {
         return $this->state(fn () => [
-            'rent_payment_id' => \App\Models\RentPayment::factory(),
+            'rent_payment_id' => RentPayment::factory(),
         ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Exceptions\PawaPayException;
 use App\Jobs\ProcessPawaPayCallback;
 use App\Models\Transaction;
 use App\Services\PawapayService;
+use App\Services\RentPaymentService;
 use App\Services\VisitPassService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -196,11 +197,11 @@ class TransactionController extends Controller
         }
 
         if ($pawaPayStatus === 'COMPLETED' && $transaction->rent_payment_id && $transaction->rentPayment) {
-            app(\App\Services\RentPaymentService::class)->handleSuccessfulPayment($transaction->rentPayment);
+            app(RentPaymentService::class)->handleSuccessfulPayment($transaction->rentPayment);
         }
 
         if (in_array($pawaPayStatus, ['FAILED', 'REJECTED']) && $transaction->rent_payment_id && $transaction->rentPayment) {
-            app(\App\Services\RentPaymentService::class)->handleFailedPayment($transaction->rentPayment);
+            app(RentPaymentService::class)->handleFailedPayment($transaction->rentPayment);
         }
 
         return redirect()->back()->with('status', 'Statut du paiement: '.$pawaPayStatus);

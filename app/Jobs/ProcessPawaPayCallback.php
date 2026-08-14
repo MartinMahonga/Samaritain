@@ -51,10 +51,14 @@ class ProcessPawaPayCallback implements ShouldQueue
             return;
         }
 
-        // Independently verify the deposit status via the pawaPay API.
+        // Independently verify the status via the pawaPay API.
         // Never trust the callback payload alone — always confirm with pawaPay.
         try {
-            $statusResponse = $pawapayService->getDepositStatus($depositId);
+            if ($this->transaction->type === 'payout' && $this->transaction->payout_id) {
+                $statusResponse = $pawapayService->getPayoutStatus($this->transaction->payout_id);
+            } else {
+                $statusResponse = $pawapayService->getDepositStatus($depositId);
+            }
         } catch (PawaPayException $e) {
             // Re-throw to leverage the retry queue — the callback may arrive
             // before pawaPay has updated the status internally.

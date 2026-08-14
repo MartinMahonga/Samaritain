@@ -115,7 +115,7 @@ class ContractController extends Controller
     {
         Gate::authorize('view', $contract);
 
-        $contract->load('property:id,title,address,city_id', 'rentPayments');
+        $contract->load('property:id,title,address,city_id', 'rentPayments.transaction');
 
         return view('pages.owner.contracts.show', compact('contract'));
     }

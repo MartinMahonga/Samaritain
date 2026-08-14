@@ -35,7 +35,10 @@ class ReconcilePawaPayPaymentsCommand extends Command
 
         $stuckTransactions = Transaction::query()
             ->whereIn('status', ['pending', 'accepted', 'processing'])
-            ->whereNotNull('deposit_id')
+            ->where(function ($q) {
+                $q->whereNotNull('deposit_id')
+                    ->orWhereNotNull('payout_id');
+            })
             ->where('updated_at', '<', now()->subMinutes($thresholdMinutes))
             ->orderBy('updated_at')
             ->get();
@@ -51,7 +54,12 @@ class ReconcilePawaPayPaymentsCommand extends Command
 
         foreach ($stuckTransactions as $transaction) {
             try {
-                $statusResponse = $pawapayService->getDepositStatus($transaction->deposit_id);
+                // Choose the right status-check endpoint based on the transaction type.
+                if ($transaction->type === 'payout' && $transaction->payout_id) {
+                    $statusResponse = $pawapayService->getPayoutStatus($transaction->payout_id);
+                } else {
+                    $statusResponse = $pawapayService->getDepositStatus($transaction->deposit_id);
+                }
             } catch (\Throwable $e) {
                 Log::error('pawaPay reconciliation failed for transaction', [
                     'transaction_id' => $transaction->transaction_id,
@@ -135,13 +143,15 @@ class ReconcilePawaPayPaymentsCommand extends Command
     }
 
     /**
-     * Handle NOT_FOUND — the deposit was never created, do not mark as failed.
+     * Handle NOT_FOUND — the deposit/payout was never created, do not mark as failed.
      */
     protected function reconcileAsNotFound(Transaction $transaction): void
     {
-        Log::warning('pawaPay reconciliation: deposit NOT_FOUND — leaving as pending', [
+        Log::warning('pawaPay reconciliation: NOT_FOUND — leaving as pending', [
             'transaction_id' => $transaction->transaction_id,
+            'type' => $transaction->type,
             'deposit_id' => $transaction->deposit_id,
+            'payout_id' => $transaction->payout_id,
         ]);
 
         $transaction->update(['status' => 'pending']);

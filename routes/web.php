@@ -27,6 +27,7 @@ use App\Http\Controllers\Owner\FinancialController;
 use App\Http\Controllers\Owner\InspectionController;
 use App\Http\Controllers\Owner\InterventionController;
 use App\Http\Controllers\Owner\InvoiceController;
+use App\Http\Controllers\Owner\PayoutController;
 use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\ProfileController;
@@ -402,6 +403,11 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
     Route::get('/messenger', function () {
         return view('pages.owner.messenger');
     })->name('messenger');
+
+    // Payouts (virements Mobile Money)
+    Route::get('/payouts', [PayoutController::class, 'index'])->name('payouts.index');
+    Route::get('/payouts/create', [PayoutController::class, 'create'])->name('payouts.create');
+    Route::post('/payouts', [PayoutController::class, 'store'])->name('payouts.store');
 });
 
 // Tenant Portal Routes
