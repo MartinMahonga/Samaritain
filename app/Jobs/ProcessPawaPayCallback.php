@@ -7,6 +7,7 @@ use App\Events\PaymentFailed;
 use App\Exceptions\PawaPayException;
 use App\Models\Transaction;
 use App\Services\PawapayService;
+use App\Services\RentPaymentService;
 use App\Services\VisitPassService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -94,6 +95,14 @@ class ProcessPawaPayCallback implements ShouldQueue
             }
         }
 
+        if ($this->transaction->rent_payment_id) {
+            $rentPayment = $this->transaction->rentPayment;
+
+            if ($rentPayment) {
+                app(RentPaymentService::class)->handleSuccessfulPayment($rentPayment);
+            }
+        }
+
         // Fire a domain event for listeners to react to
         event(new PaymentCompleted($this->transaction));
     }
@@ -110,6 +119,14 @@ class ProcessPawaPayCallback implements ShouldQueue
 
             if ($visitPass) {
                 app(VisitPassService::class)->handleFailedPayment($visitPass);
+            }
+        }
+
+        if ($this->transaction->rent_payment_id) {
+            $rentPayment = $this->transaction->rentPayment;
+
+            if ($rentPayment) {
+                app(RentPaymentService::class)->handleFailedPayment($rentPayment);
             }
         }
 

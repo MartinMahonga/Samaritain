@@ -34,6 +34,7 @@
                         <th class="px-5 py-3 text-right">Montant payé</th>
                         <th class="px-5 py-3">Échéance</th>
                         <th class="px-5 py-3 text-center">Statut</th>
+                        <th class="px-5 py-3 text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
@@ -63,6 +64,20 @@
                                     <span class="text-xs font-medium text-amber-600 dark:text-amber-400 bg-amber-100 dark:bg-amber-900/30 px-2 py-1 rounded-full">Partiel</span>
                                 @else
                                     <span class="text-xs font-medium text-gray-600 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">Non payé</span>
+                                @endif
+                            </td>
+                            <td class="px-5 py-3 text-center">
+                                @if($payment->isPaid())
+                                    <span class="text-xs text-emerald-600 dark:text-emerald-400">—</span>
+                                @else
+                                    <form method="POST" action="{{ route('tenant.rent-payments.pay', $payment) }}" class="inline">
+                                        @csrf
+                                        <button type="submit"
+                                            class="inline-flex items-center gap-1.5 text-xs font-semibold text-white bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-1 dark:focus:ring-offset-gray-800 rounded-lg px-3 py-1.5 transition">
+                                            <i data-lucide="wallet" class="w-3.5 h-3.5"></i>
+                                            Payer
+                                        </button>
+                                    </form>
                                 @endif
                             </td>
                         </tr>

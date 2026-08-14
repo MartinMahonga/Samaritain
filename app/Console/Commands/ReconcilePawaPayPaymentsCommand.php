@@ -6,6 +6,7 @@ use App\Events\PaymentCompleted;
 use App\Events\PaymentFailed;
 use App\Models\Transaction;
 use App\Services\PawapayService;
+use App\Services\RentPaymentService;
 use App\Services\VisitPassService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
@@ -97,6 +98,11 @@ class ReconcilePawaPayPaymentsCommand extends Command
                 ->handleSuccessfulPayment($transaction->visitPass);
         }
 
+        if ($transaction->rent_payment_id && $transaction->rentPayment) {
+            app(RentPaymentService::class)
+                ->handleSuccessfulPayment($transaction->rentPayment);
+        }
+
         event(new PaymentCompleted($transaction));
     }
 
@@ -110,6 +116,11 @@ class ReconcilePawaPayPaymentsCommand extends Command
         if ($transaction->visit_pass_id && $transaction->visitPass) {
             app(VisitPassService::class)
                 ->handleFailedPayment($transaction->visitPass);
+        }
+
+        if ($transaction->rent_payment_id && $transaction->rentPayment) {
+            app(RentPaymentService::class)
+                ->handleFailedPayment($transaction->rentPayment);
         }
 
         event(new PaymentFailed($transaction));

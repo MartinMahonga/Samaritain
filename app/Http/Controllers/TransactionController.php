@@ -111,6 +111,11 @@ class TransactionController extends Controller
                     ->with('success', 'Paiement confirmé avec succès ! Votre pass visite est disponible.');
             }
         }
+
+        if ($transaction->rent_payment_id) {
+            return redirect()->route('tenant.payments')
+                ->with('success', 'Votre paiement de loyer a bien été pris en compte.');
+        }
     }
 
     /**
@@ -188,6 +193,14 @@ class TransactionController extends Controller
             if ($visitPass && ! $visitPass->isPaymentFailed()) {
                 $this->visitPassService->handleFailedPayment($visitPass);
             }
+        }
+
+        if ($pawaPayStatus === 'COMPLETED' && $transaction->rent_payment_id && $transaction->rentPayment) {
+            app(\App\Services\RentPaymentService::class)->handleSuccessfulPayment($transaction->rentPayment);
+        }
+
+        if (in_array($pawaPayStatus, ['FAILED', 'REJECTED']) && $transaction->rent_payment_id && $transaction->rentPayment) {
+            app(\App\Services\RentPaymentService::class)->handleFailedPayment($transaction->rentPayment);
         }
 
         return redirect()->back()->with('status', 'Statut du paiement: '.$pawaPayStatus);

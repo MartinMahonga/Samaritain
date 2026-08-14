@@ -20,6 +20,7 @@ class RentPayment extends Model
         'due_date',
         'paid_at',
         'status',
+        'transaction_id',
     ];
 
     protected $casts = [
@@ -36,8 +37,41 @@ class RentPayment extends Model
         return $this->belongsTo(Contract::class);
     }
 
+    public function transaction(): BelongsTo
+    {
+        return $this->belongsTo(Transaction::class, 'transaction_id', 'transaction_id');
+    }
+
     public function documents(): MorphMany
     {
         return $this->morphMany(Document::class, 'documentable');
+    }
+
+    /**
+     * Mark this rent payment as fully paid.
+     */
+    public function markAsPaid(): void
+    {
+        $this->update([
+            'status' => 'paid',
+            'amount_paid' => $this->amount_due,
+            'paid_at' => now(),
+        ]);
+    }
+
+    /**
+     * Mark this rent payment as failed — keep it unpaid so the tenant can retry.
+     */
+    public function markAsPaymentFailed(): void
+    {
+        $this->update([
+            'status' => 'unpaid',
+            'paid_at' => null,
+        ]);
+    }
+
+    public function isPaid(): bool
+    {
+        return $this->status === 'paid';
     }
 }

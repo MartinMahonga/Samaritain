@@ -23,6 +23,7 @@ class TransactionFactory extends Factory
         return [
             'user_id' => User::factory(),
             'visit_pass_id' => null,
+            'rent_payment_id' => null,
             'status' => 'pending',
             'amount' => fake()->numberBetween(1000, 10000),
             'deposit_id' => null,
@@ -30,5 +31,15 @@ class TransactionFactory extends Factory
             'currency' => 'XAF',
             'raw_response' => null,
         ];
+    }
+
+    /**
+     * Link the transaction to a rent payment.
+     */
+    public function forRentPayment(): static
+    {
+        return $this->state(fn () => [
+            'rent_payment_id' => \App\Models\RentPayment::factory(),
+        ]);
     }
 }
