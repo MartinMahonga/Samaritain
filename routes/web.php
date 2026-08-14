@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\ArtisanCategoryController;
 use App\Http\Controllers\Admin\ArtisanController as AdminArtisanController;
 use App\Http\Controllers\Admin\ArtisanProjectController as AdminArtisanProjectController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\ParcelleCategoryController;
 use App\Http\Controllers\Admin\ParcelleController;
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\RoleController;
@@ -124,6 +128,31 @@ Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddlewa
     Route::put('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'update'])->name('artisans.projects.update');
     Route::delete('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'destroy'])->name('artisans.projects.destroy');
     Route::delete('/artisans/{artisan}/projects/image/{image}', [AdminArtisanProjectController::class, 'destroyImage'])->name('artisans.projects.image.destroy');
+
+    // Configuration — nested group ensures "configuration." appears in route names.
+    // Without it, Route::resource('configuration/category', ...) produces
+    // "admin.category.index" instead of "admin.configuration.category.index".
+    Route::prefix('configuration')->name('configuration.')->group(function () {
+        // Configuration — Catégories de maisons
+        Route::resource('category', CategoryController::class);
+        Route::patch('category/{category}/toggle-active', [CategoryController::class, 'toggleActive'])->name('category.toggle-active');
+        Route::post('category/update-sort', [CategoryController::class, 'updateSort'])->name('category.update-sort');
+
+        // Configuration — Équipements
+        Route::resource('amenity', AmenityController::class);
+        Route::patch('amenity/{amenity}/toggle-active', [AmenityController::class, 'toggleActive'])->name('amenity.toggle-active');
+        Route::post('amenity/update-sort', [AmenityController::class, 'updateSort'])->name('amenity.update-sort');
+
+        // Configuration — Catégories d'artisans
+        Route::resource('artisan-category', ArtisanCategoryController::class);
+        Route::patch('artisan-category/{category}/toggle-active', [ArtisanCategoryController::class, 'toggleActive'])->name('artisan-category.toggle-active');
+        Route::post('artisan-category/update-sort', [ArtisanCategoryController::class, 'updateSort'])->name('artisan-category.update-sort');
+
+        // Configuration — Catégories de parcelles
+        Route::resource('parcelle-category', ParcelleCategoryController::class);
+        Route::patch('parcelle-category/{category}/toggle-active', [ParcelleCategoryController::class, 'toggleActive'])->name('parcelle-category.toggle-active');
+        Route::post('parcelle-category/update-sort', [ParcelleCategoryController::class, 'updateSort'])->name('parcelle-category.update-sort');
+    });
 });
 
 // Socialite

@@ -3,10 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
-class Amenity extends Model
+class ParcelleCategory extends Model
 {
     protected $fillable = [
         'name',
@@ -25,15 +25,15 @@ class Amenity extends Model
     {
         parent::boot();
 
-        static::creating(function (Amenity $amenity) {
-            if (empty($amenity->slug)) {
-                $amenity->slug = static::generateUniqueSlug($amenity->name);
+        static::creating(function (ParcelleCategory $category) {
+            if (empty($category->slug)) {
+                $category->slug = static::generateUniqueSlug($category->name);
             }
         });
     }
 
     /**
-     * Generate a unique slug for an amenity.
+     * Generate a unique slug for a parcelle category.
      */
     public static function generateUniqueSlug(string $name, ?int $ignoreId = null): string
     {
@@ -64,8 +64,8 @@ class Amenity extends Model
         return $query->where('is_active', true);
     }
 
-    public function properties(): BelongsToMany
+    public function parcelles(): HasMany
     {
-        return $this->belongsToMany(Property::class, 'amenity_property');
+        return $this->hasMany(Parcelle::class);
     }
 }

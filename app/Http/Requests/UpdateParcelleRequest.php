@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Parcelle;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateParcelleRequest extends FormRequest
@@ -22,7 +23,8 @@ class UpdateParcelleRequest extends FormRequest
             'superficie' => ['sometimes', 'numeric', 'min:1'],
             'prix' => ['sometimes', 'numeric', 'min:0'],
             'statut' => ['sometimes', 'in:disponible,vendu,réservé'],
-            'type' => ['nullable', 'in:'.implode(',', array_keys(\App\Models\Parcelle::TYPES))],
+            'type' => ['nullable', 'in:'.implode(',', array_keys(Parcelle::TYPES))],
+            'parcelle_category_id' => ['nullable', 'exists:parcelle_categories,id'],
             'titre_foncier' => ['nullable', 'string', 'max:255'],
             'viabilisee' => ['nullable', 'boolean'],
             'images' => ['nullable', 'array'],

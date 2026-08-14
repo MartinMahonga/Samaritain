@@ -40,7 +40,19 @@
                 <x-sidebar.item icon="ticket" label="Passe visite" href="{{ route('passes.index') }}" :active="request()->routeIs('passes.index')" />
                 <x-sidebar.item icon="scan-line" label="Scanner un pass" href="{{ route('scan.index') }}" :active="request()->routeIs('scan.index')" />
                 <x-sidebar.item icon="inbox" label="Inbox" href="{{ route('notifications.all') }}" :active="request()->routeIs('notifications.all')" />
-                <x-sidebar.item icon="settings-2" label="Paramètres" href="#" />
+
+                @can('manage-settings')
+                    <x-sidebar.item icon="settings-2" label="Configuration" :active="request()->routeIs('admin.configuration.*')" :expanded="request()->routeIs('admin.configuration.*')">
+                        <x-sidebar.sub-item label="Catégories de maisons" href="{{ route('admin.configuration.category.index') }}"
+                            :active="request()->routeIs('admin.configuration.category.*')" />
+                        <x-sidebar.sub-item label="Catégories de parcelles" href="{{ route('admin.configuration.parcelle-category.index') }}"
+                            :active="request()->routeIs('admin.configuration.parcelle-category.*')" />
+                        <x-sidebar.sub-item label="Catégories d'artisans" href="{{ route('admin.configuration.artisan-category.index') }}"
+                            :active="request()->routeIs('admin.configuration.artisan-category.*')" />
+                        <x-sidebar.sub-item label="Équipements" href="{{ route('admin.configuration.amenity.index') }}"
+                            :active="request()->routeIs('admin.configuration.amenity.*')" />
+                    </x-sidebar.item>
+                @endcan
             </x-sidebar.group>
 
             <!-- Projects Group -->
@@ -72,6 +84,12 @@
     @if (session('success'))
         <x-alert style="success">
             {{ session('success') }}
+        </x-alert>
+    @endif
+
+    @if (session('error'))
+        <x-alert style="danger">
+            {{ session('error') }}
         </x-alert>
     @endif
 

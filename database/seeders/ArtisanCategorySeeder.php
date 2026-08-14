@@ -27,8 +27,14 @@ class ArtisanCategorySeeder extends Seeder
             'Isolation',
         ];
 
-        foreach ($categories as $category) {
-            ArtisanCategory::create(['name' => $category]);
+        foreach ($categories as $index => $category) {
+            ArtisanCategory::updateOrCreate(
+                ['name' => $category],
+                [
+                    'is_active' => true,
+                    'sort_order' => $index,
+                ]
+            );
         }
     }
 }

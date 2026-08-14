@@ -27,6 +27,7 @@ class Parcelle extends Model
         'prix',
         'statut',
         'type',
+        'parcelle_category_id',
         'reference',
         'viabilisee',
         'titre_foncier',
@@ -53,6 +54,11 @@ class Parcelle extends Model
     public function arrondissement()
     {
         return $this->belongsTo(Arrondissement::class);
+    }
+
+    public function parcelleCategory()
+    {
+        return $this->belongsTo(ParcelleCategory::class);
     }
 
     public function visitPasses()

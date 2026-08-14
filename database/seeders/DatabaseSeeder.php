@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
             AmenitySeeder::class,
             ArrondissementSeeder::class,
             ArtisanCategorySeeder::class,
+            ParcelleCategorySeeder::class,
             ParcelleSeeder::class,
             PropertySeeder::class,
             PropertyCategorySeeder::class,

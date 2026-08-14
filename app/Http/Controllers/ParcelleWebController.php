@@ -6,6 +6,7 @@ use App\Http\Requests\StoreParcelleRequest;
 use App\Http\Requests\UpdateParcelleRequest;
 use App\Models\Arrondissement;
 use App\Models\Parcelle;
+use App\Models\ParcelleCategory;
 use App\Models\ParcelleImage;
 use App\Services\ParcelleService;
 use Illuminate\Http\RedirectResponse;
@@ -51,8 +52,9 @@ class ParcelleWebController extends Controller
         Gate::authorize('create', Parcelle::class);
 
         $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+        $parcelleCategories = ParcelleCategory::active()->orderBy('sort_order')->orderBy('name')->get();
 
-        return view('parcelles.create', compact('arrondissements'));
+        return view('parcelles.create', compact('arrondissements', 'parcelleCategories'));
     }
 
     public function store(StoreParcelleRequest $request): RedirectResponse
@@ -75,8 +77,9 @@ class ParcelleWebController extends Controller
         Gate::authorize('update', $parcelle);
 
         $arrondissements = Arrondissement::orderBy('name')->pluck('name', 'id');
+        $parcelleCategories = ParcelleCategory::active()->orderBy('sort_order')->orderBy('name')->get();
 
-        return view('parcelles.edit', compact('parcelle', 'arrondissements'));
+        return view('parcelles.edit', compact('parcelle', 'arrondissements', 'parcelleCategories'));
     }
 
     public function update(UpdateParcelleRequest $request, Parcelle $parcelle): RedirectResponse

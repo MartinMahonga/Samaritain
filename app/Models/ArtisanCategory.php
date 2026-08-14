@@ -14,6 +14,14 @@ class ArtisanCategory extends Model
     protected $fillable = [
         'name',
         'slug',
+        'description',
+        'is_active',
+        'sort_order',
+    ];
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'sort_order' => 'integer',
     ];
 
     protected static function boot()
@@ -25,6 +33,11 @@ class ArtisanCategory extends Model
                 $category->slug = Str::slug($category->name);
             }
         });
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 
     public function artisans(): BelongsToMany
