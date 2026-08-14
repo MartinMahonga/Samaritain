@@ -4,17 +4,21 @@ namespace App\Http\Controllers\Tenant;
 
 use App\Events\ContractFullySigned;
 use App\Events\ContractSigned;
+use App\Exceptions\PawaPayException;
 use App\Http\Controllers\Controller;
 use App\Models\Contract;
 use App\Models\Document;
 use App\Models\Intervention;
 use App\Models\RentPayment;
+use App\Models\Transaction;
 use App\Notifications\ContractCompletedNotification;
 use App\Notifications\ContractSignedNotification;
 use App\Services\ContractSignatureService;
+use App\Services\PawapayService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class DashboardController extends Controller
 {
@@ -112,6 +116,90 @@ class DashboardController extends Controller
         }
 
         return view('pages.tenant.payments', compact('contract', 'payments'));
+    }
+
+    /**
+     * Initiate the pawaPay payment for a rent payment.
+     *
+     * Flow:
+     *  1. Generate a UUIDv4 (depositId) — the idempotency key and reconciliation anchor.
+     *  2. Persist the Transaction as PENDING, linked to the rent payment, BEFORE calling pawaPay.
+     *  3. Call the pawaPay hosted Payment Page API.
+     *  4. Redirect the tenant to the hosted page.
+     *
+     * Critical rule: if the HTTP call fails, do NOT mark the transaction as FAILED.
+     * Leave it as PENDING — the reconciliation job will check the status later.
+     */
+    public function payRentPayment(RentPayment $rentPayment, PawapayService $pawapay)
+    {
+        $user = auth()->user();
+        $contract = $rentPayment->contract;
+
+        // The tenant must own the contract and it must be active.
+        if ($contract->tenant_email !== $user->email || $contract->status !== 'active') {
+            abort(403, 'Vous ne pouvez pas payer ce loyer.');
+        }
+
+        if ($rentPayment->isPaid()) {
+            return redirect()->route('tenant.payments')
+                ->with('info', 'Ce loyer est déjà payé.');
+        }
+
+        // 1. Generate the UUIDv4 idempotency key before any API call.
+        $depositId = (string) Str::uuid();
+
+        // 2. Persist the transaction BEFORE calling pawaPay — reconciliation anchor.
+        $transaction = Transaction::create([
+            'user_id' => $user->id,
+            'rent_payment_id' => $rentPayment->id,
+            'status' => 'pending',
+            'amount' => $rentPayment->amount_due,
+            'deposit_id' => $depositId,
+            'provider' => null,
+            'currency' => config('services.pawapay.currency', 'XAF'),
+        ]);
+
+        $rentPayment->update(['transaction_id' => $transaction->transaction_id]);
+
+        // 3. Call pawaPay to create the hosted payment page.
+        try {
+            $result = $pawapay->createPaymentPage([
+                'depositId' => $depositId,
+                'returnUrl' => route('transactions.callback', $transaction),
+                'callbackUrl' => route('transactions.webhook', $transaction),
+                'customerMessage' => 'Samaritain',
+                'amountDetails' => [
+                    'amount' => (string) $transaction->amount,
+                    'currency' => config('services.pawapay.currency', 'XAF'),
+                ],
+                'language' => 'FR',
+                'country' => config('services.pawapay.country', 'COG'),
+                'reason' => 'Paiement loyer '.$rentPayment->month.'/'.$rentPayment->year.' - '.$contract->tenant_name,
+                'metadata' => [
+                    ['transactionId' => $transaction->transaction_id],
+                    ['rentPaymentId' => (string) $rentPayment->id],
+                    ['userId' => (string) $transaction->user_id],
+                ],
+            ]);
+
+            $transaction->update([
+                'status' => strtolower($result['status'] ?? 'pending'),
+                'provider' => $result['provider'] ?? null,
+                'raw_response' => $result,
+            ]);
+
+            // 4. Redirect to the hosted payment page.
+            return redirect($result['redirectUrl']);
+
+        } catch (PawaPayException $e) {
+            // Do NOT mark as failed — leave as pending for reconciliation.
+            $transaction->update([
+                'raw_response' => ['error' => $e->getMessage(), 'status_code' => $e->getStatusCode()],
+            ]);
+
+            return redirect()->route('tenant.payments')
+                ->with('error', 'Une erreur est survenue lors de la création du paiement. Veuillez réessayer.');
+        }
     }
 
     public function interventions()

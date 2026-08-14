@@ -19,10 +19,14 @@ class PropertyCategorySeeder extends Seeder
             ['name' => 'Appartement journalier', 'price_type' => 'daily'],
         ];
 
-        foreach ($categories as $category) {
+        foreach ($categories as $index => $category) {
             Category::updateOrCreate(
                 ['name' => $category['name']],
-                ['price_type' => $category['price_type']]
+                [
+                    'price_type' => $category['price_type'],
+                    'is_active' => true,
+                    'sort_order' => $index,
+                ]
             );
         }
     }

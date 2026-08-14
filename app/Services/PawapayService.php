@@ -245,4 +245,81 @@ class PawapayService
 
         return hash_equals($expected, $signature);
     }
+
+    /**
+     * Initiate a payout (send money to a recipient via Mobile Money).
+     *
+     * The payoutId must be a UUIDv4 generated and persisted by your application
+     * BEFORE calling this method. Reusing a payoutId returns DUPLICATE_IGNORED.
+     *
+     * @param  string  $payoutId  The UUIDv4 idempotency key.
+     * @param  array  $data  The payout payload (recipient, amountDetails, provider, etc.)
+     * @return array The pawaPay response containing status, provider, etc.
+     *
+     * @throws PawaPayException
+     */
+    public function createPayout(string $payoutId, array $data): array
+    {
+        $payload = array_merge($data, ['payoutId' => $payoutId]);
+
+        $response = $this->httpClient()
+            ->post("{$this->baseUrl}/v2/payouts", $payload);
+
+        if ($response->failed()) {
+            Log::warning('pawaPay payout creation failed', [
+                'payoutId' => $payoutId,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            throw new PawaPayException(
+                'Erreur lors de la création du paiement sortant pawaPay.',
+                $response->status(),
+                $response->body(),
+            );
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Check the status of a payout.
+     *
+     * Used for reconciliation of payouts stuck in PENDING/PROCESSING.
+     * NOT_FOUND means the payout was never created — do NOT treat as FAILED.
+     *
+     * @param  string  $payoutId  The UUIDv4 payout identifier.
+     * @return array The pawaPay status response.
+     *
+     * @throws PawaPayException Only for HTTP-level failures; NOT_FOUND is returned as a status array.
+     */
+    public function getPayoutStatus(string $payoutId): array
+    {
+        $response = $this->httpClient()
+            ->get("{$this->baseUrl}/v2/payouts/{$payoutId}");
+
+        if ($response->status() === 404) {
+            return [
+                'payoutId' => $payoutId,
+                'status' => 'NOT_FOUND',
+                'reason' => 'Payout not found',
+            ];
+        }
+
+        if ($response->failed()) {
+            Log::warning('pawaPay payout status check failed', [
+                'payoutId' => $payoutId,
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+
+            throw new PawaPayException(
+                'Erreur lors de la vérification du statut du paiement sortant.',
+                $response->status(),
+                $response->body(),
+            );
+        }
+
+        return $response->json();
+    }
 }

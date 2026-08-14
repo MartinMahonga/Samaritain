@@ -133,9 +133,9 @@ class PropertyController extends Controller
     public function create()
     {
         return view('pages.property.create', [
-            'categories' => Category::propertyTypes()->select(['id', 'name'])->get(),
+            'categories' => Category::active()->propertyTypes()->select(['id', 'name'])->orderBy('sort_order')->get(),
             'cities' => City::select(['id', 'name'])->get(),
-            'amenities' => Amenity::select(['id', 'name'])->get(),
+            'amenities' => Amenity::active()->select(['id', 'name'])->orderBy('sort_order')->get(),
             'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
         ]);
     }
@@ -177,9 +177,9 @@ class PropertyController extends Controller
 
         return view('pages.property.edit', [
             'property' => $property,
-            'categories' => Category::propertyTypes()->select(['id', 'name'])->get(),
+            'categories' => Category::active()->propertyTypes()->select(['id', 'name'])->orderBy('sort_order')->get(),
             'cities' => City::select(['id', 'name'])->get(),
-            'amenities' => Amenity::select(['id', 'name'])->get(),
+            'amenities' => Amenity::active()->select(['id', 'name'])->orderBy('sort_order')->get(),
             'arrondissements' => Arrondissement::select(['id', 'name'])->get(),
         ]);
     }

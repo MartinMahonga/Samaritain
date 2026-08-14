@@ -203,8 +203,9 @@
 
     {{-- Rent Payments Schedule --}}
     <div class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden">
-        <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700">
+        <div class="px-5 py-4 border-b border-gray-100 dark:border-gray-700 flex items-center justify-between">
             <h3 class="font-semibold text-gray-800 dark:text-white">Échéancier de loyer</h3>
+            <span class="text-xs text-gray-400 dark:text-gray-500">{{ $contract->rentPayments->where('status', 'paid')->count() }}/{{ $contract->rentPayments->count() }} payés</span>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full text-sm">
@@ -215,6 +216,7 @@
                         <th class="px-5 py-3 font-medium text-right">Montant payé</th>
                         <th class="px-5 py-3 font-medium">Échéance</th>
                         <th class="px-5 py-3 font-medium text-center">Statut</th>
+                        <th class="px-5 py-3 font-medium text-center">Paiement MoMo</th>
                         <th class="px-5 py-3 font-medium text-center">Action</th>
                     </tr>
                 </thead>
@@ -225,6 +227,26 @@
                             $pl = ['unpaid' => 'Non payé', 'paid' => 'Payé', 'late' => 'En retard', 'partial' => 'Partiel'];
                             $payColor = $pc[$payment->status] ?? 'gray';
                             $months = ['', 'Janv', 'Févr', 'Mars', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sept', 'Oct', 'Nov', 'Déc'];
+
+                            // pawaPay transaction linked to this rent payment
+                            $tx = $payment->transaction;
+                            $txStatusColors = [
+                                'pending'    => 'amber',
+                                'accepted'   => 'blue',
+                                'processing' => 'blue',
+                                'completed'  => 'success',
+                                'failed'     => 'red',
+                                'rejected'   => 'red',
+                            ];
+                            $txStatusLabels = [
+                                'pending'    => 'En attente',
+                                'accepted'   => 'Accepté',
+                                'processing' => 'En cours',
+                                'completed'  => 'Complété',
+                                'failed'     => 'Échoué',
+                                'rejected'   => 'Refusé',
+                            ];
+                            $txColor = $tx ? ($txStatusColors[$tx->status] ?? 'gray') : null;
                         @endphp
                         <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/30 transition">
                             <td class="px-5 py-3 font-medium text-gray-800 dark:text-white">
@@ -239,6 +261,16 @@
                                 </span>
                             </td>
                             <td class="px-5 py-3 text-center">
+                                @if($tx)
+                                    <span class="text-xs px-2 py-1 rounded-full {{ $txColor === 'success' ? 'bg-success/10 text-success' : 'bg-'.$txColor.'-100 dark:bg-'.$txColor.'-900/30 text-'.$txColor.'-600 dark:text-'.$txColor.'-400' }}"
+                                        title="pawaPay ID: {{ $tx->deposit_id ?? '—' }}">
+                                        {{ $txStatusLabels[$tx->status] ?? $tx->status }}
+                                    </span>
+                                @else
+                                    <span class="text-xs text-gray-400 dark:text-gray-600">—</span>
+                                @endif
+                            </td>
+                            <td class="px-5 py-3 text-center">
                                 <form action="{{ route('owner.rent-payments.toggle-paid', $payment) }}" method="POST" class="inline">
                                     @csrf
                                     <button type="submit"
@@ -250,7 +282,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="px-5 py-8 text-center text-gray-400 dark:text-gray-500">
+                            <td colspan="7" class="px-5 py-8 text-center text-gray-400 dark:text-gray-500">
                                 Aucun échéancier. <a href="{{ route('owner.contracts.generate-rents', $contract) }}" class="text-primary hover:underline">Générer</a>
                             </td>
                         </tr>
@@ -260,6 +292,7 @@
         </div>
     </div>
 </div>
+
 @if($contract->status === 'pending_owner')
 <div id="signatureModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
     <div class="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">

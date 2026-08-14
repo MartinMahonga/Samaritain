@@ -1,10 +1,14 @@
 <?php
 
+use App\Http\Controllers\Admin\AmenityController;
+use App\Http\Controllers\Admin\ArtisanCategoryController;
 use App\Http\Controllers\Admin\ArtisanController as AdminArtisanController;
 use App\Http\Controllers\Admin\ArtisanProjectController as AdminArtisanProjectController;
+use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\InvitationController;
 use App\Http\Controllers\Admin\MemberController;
+use App\Http\Controllers\Admin\ParcelleCategoryController;
 use App\Http\Controllers\Admin\ParcelleController;
 use App\Http\Controllers\Admin\PropertyController as AdminPropertyController;
 use App\Http\Controllers\Admin\RoleController;
@@ -23,6 +27,7 @@ use App\Http\Controllers\Owner\FinancialController;
 use App\Http\Controllers\Owner\InspectionController;
 use App\Http\Controllers\Owner\InterventionController;
 use App\Http\Controllers\Owner\InvoiceController;
+use App\Http\Controllers\Owner\PayoutController;
 use App\Http\Controllers\ParcelleWebController;
 use App\Http\Controllers\PassController;
 use App\Http\Controllers\ProfileController;
@@ -124,6 +129,31 @@ Route::prefix('/admin/dashboard')->middleware(['auth', 'verified', StaffMiddlewa
     Route::put('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'update'])->name('artisans.projects.update');
     Route::delete('/artisans/{artisan}/projects/{project}', [AdminArtisanProjectController::class, 'destroy'])->name('artisans.projects.destroy');
     Route::delete('/artisans/{artisan}/projects/image/{image}', [AdminArtisanProjectController::class, 'destroyImage'])->name('artisans.projects.image.destroy');
+
+    // Configuration — nested group ensures "configuration." appears in route names.
+    // Without it, Route::resource('configuration/category', ...) produces
+    // "admin.category.index" instead of "admin.configuration.category.index".
+    Route::prefix('configuration')->name('configuration.')->group(function () {
+        // Configuration — Catégories de maisons
+        Route::resource('category', CategoryController::class);
+        Route::patch('category/{category}/toggle-active', [CategoryController::class, 'toggleActive'])->name('category.toggle-active');
+        Route::post('category/update-sort', [CategoryController::class, 'updateSort'])->name('category.update-sort');
+
+        // Configuration — Équipements
+        Route::resource('amenity', AmenityController::class);
+        Route::patch('amenity/{amenity}/toggle-active', [AmenityController::class, 'toggleActive'])->name('amenity.toggle-active');
+        Route::post('amenity/update-sort', [AmenityController::class, 'updateSort'])->name('amenity.update-sort');
+
+        // Configuration — Catégories d'artisans
+        Route::resource('artisan-category', ArtisanCategoryController::class);
+        Route::patch('artisan-category/{category}/toggle-active', [ArtisanCategoryController::class, 'toggleActive'])->name('artisan-category.toggle-active');
+        Route::post('artisan-category/update-sort', [ArtisanCategoryController::class, 'updateSort'])->name('artisan-category.update-sort');
+
+        // Configuration — Catégories de parcelles
+        Route::resource('parcelle-category', ParcelleCategoryController::class);
+        Route::patch('parcelle-category/{category}/toggle-active', [ParcelleCategoryController::class, 'toggleActive'])->name('parcelle-category.toggle-active');
+        Route::post('parcelle-category/update-sort', [ParcelleCategoryController::class, 'updateSort'])->name('parcelle-category.update-sort');
+    });
 });
 
 // Socialite
@@ -238,7 +268,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/avis/{avis}', [AvisController::class, 'destroy'])->name('avis.destroy');
 });
 
-Route::get('/pay', [TransactionController::class, 'depositForm'])
+Route::get('/pay', [TransactionController::class, 'paymentPage'])
     ->middleware('auth')
     ->name('transactions.pay');
 
@@ -373,6 +403,11 @@ Route::middleware(['auth', 'verified', 'owner'])->prefix('owner')->name('owner.'
     Route::get('/messenger', function () {
         return view('pages.owner.messenger');
     })->name('messenger');
+
+    // Payouts (virements Mobile Money)
+    Route::get('/payouts', [PayoutController::class, 'index'])->name('payouts.index');
+    Route::get('/payouts/create', [PayoutController::class, 'create'])->name('payouts.create');
+    Route::post('/payouts', [PayoutController::class, 'store'])->name('payouts.store');
 });
 
 // Tenant Portal Routes
@@ -383,6 +418,7 @@ Route::middleware(['auth', 'verified', 'tenant'])->prefix('tenant')->name('tenan
     Route::post('/contracts/{contract}/sign', [App\Http\Controllers\Tenant\DashboardController::class, 'sign'])->middleware(EnsureUserCanSignContract::class)->name('contracts.sign');
     Route::get('/contracts/{contract}/pdf', [App\Http\Controllers\Tenant\DashboardController::class, 'downloadPdf'])->name('contracts.pdf');
     Route::get('/payments', [App\Http\Controllers\Tenant\DashboardController::class, 'payments'])->name('payments');
+    Route::post('/rent-payments/{rentPayment}/pay', [App\Http\Controllers\Tenant\DashboardController::class, 'payRentPayment'])->name('rent-payments.pay');
     Route::get('/interventions', [App\Http\Controllers\Tenant\DashboardController::class, 'interventions'])->name('interventions');
     Route::get('/documents', [App\Http\Controllers\Tenant\DashboardController::class, 'documents'])->name('documents');
     Route::get('/documents/{document}/download', [App\Http\Controllers\Tenant\DashboardController::class, 'downloadDocument'])->name('documents.download');

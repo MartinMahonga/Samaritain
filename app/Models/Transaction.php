@@ -22,9 +22,12 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'visit_pass_id',
+        'rent_payment_id',
+        'type',
         'status',
         'amount',
         'deposit_id',
+        'payout_id',
         'provider',
         'currency',
         'raw_response',
@@ -49,6 +52,11 @@ class Transaction extends Model
     public function visitPass(): BelongsTo
     {
         return $this->belongsTo(VisitPass::class);
+    }
+
+    public function rentPayment(): BelongsTo
+    {
+        return $this->belongsTo(RentPayment::class);
     }
 
     protected static function newFactory(): Factory

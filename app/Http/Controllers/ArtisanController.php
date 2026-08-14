@@ -81,7 +81,7 @@ class ArtisanController extends Controller
 
     public function create()
     {
-        $categories = ArtisanCategory::orderBy('name')->get();
+        $categories = ArtisanCategory::active()->orderBy('sort_order')->orderBy('name')->get();
         $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
 
         return view('pages.artisans.create', compact('categories', 'arrondissements'));
@@ -117,7 +117,7 @@ class ArtisanController extends Controller
     {
         Gate::authorize('update', $artisan);
 
-        $categories = ArtisanCategory::orderBy('name')->get();
+        $categories = ArtisanCategory::active()->orderBy('sort_order')->orderBy('name')->get();
         $selectedCategories = $artisan->categories->pluck('id')->toArray();
         $arrondissements = Arrondissement::with('city')->orderBy('name')->get();
 

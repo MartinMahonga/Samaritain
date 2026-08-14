@@ -8,6 +8,7 @@
 /.codex
 /.cursor/
 /.cline/
+/.agents/
 /.idea
 /.nova
 /.phpunit.cache

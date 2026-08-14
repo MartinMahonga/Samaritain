@@ -7,6 +7,7 @@ use App\Events\PaymentFailed;
 use App\Exceptions\PawaPayException;
 use App\Models\Transaction;
 use App\Services\PawapayService;
+use App\Services\RentPaymentService;
 use App\Services\VisitPassService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -50,10 +51,14 @@ class ProcessPawaPayCallback implements ShouldQueue
             return;
         }
 
-        // Independently verify the deposit status via the pawaPay API.
+        // Independently verify the status via the pawaPay API.
         // Never trust the callback payload alone — always confirm with pawaPay.
         try {
-            $statusResponse = $pawapayService->getDepositStatus($depositId);
+            if ($this->transaction->type === 'payout' && $this->transaction->payout_id) {
+                $statusResponse = $pawapayService->getPayoutStatus($this->transaction->payout_id);
+            } else {
+                $statusResponse = $pawapayService->getDepositStatus($depositId);
+            }
         } catch (PawaPayException $e) {
             // Re-throw to leverage the retry queue — the callback may arrive
             // before pawaPay has updated the status internally.
@@ -94,6 +99,14 @@ class ProcessPawaPayCallback implements ShouldQueue
             }
         }
 
+        if ($this->transaction->rent_payment_id) {
+            $rentPayment = $this->transaction->rentPayment;
+
+            if ($rentPayment) {
+                app(RentPaymentService::class)->handleSuccessfulPayment($rentPayment);
+            }
+        }
+
         // Fire a domain event for listeners to react to
         event(new PaymentCompleted($this->transaction));
     }
@@ -110,6 +123,14 @@ class ProcessPawaPayCallback implements ShouldQueue
 
             if ($visitPass) {
                 app(VisitPassService::class)->handleFailedPayment($visitPass);
+            }
+        }
+
+        if ($this->transaction->rent_payment_id) {
+            $rentPayment = $this->transaction->rentPayment;
+
+            if ($rentPayment) {
+                app(RentPaymentService::class)->handleFailedPayment($rentPayment);
             }
         }
 

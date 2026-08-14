@@ -55,7 +55,7 @@ class ArtisanController extends Controller
     {
         Gate::authorize('create', Artisan::class);
 
-        $categories = ArtisanCategory::orderBy('name')->get();
+        $categories = ArtisanCategory::active()->orderBy('sort_order')->orderBy('name')->get();
 
         return view('pages.admin.artisans.create', compact('categories'));
     }
@@ -104,7 +104,7 @@ class ArtisanController extends Controller
     {
         Gate::authorize('update', $artisan);
 
-        $categories = ArtisanCategory::orderBy('name')->get();
+        $categories = ArtisanCategory::active()->orderBy('sort_order')->orderBy('name')->get();
         $selectedCategories = $artisan->categories->pluck('id')->toArray();
 
         return view('pages.admin.artisans.edit', compact('artisan', 'categories', 'selectedCategories'));

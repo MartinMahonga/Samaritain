@@ -66,7 +66,7 @@
                             placeholder="Ex: 500" required />
                         <x-form.input name="prix" label="Prix (FCFA) *" type="number" step="1000" placeholder="Ex: 5000000"
                             required />
-                        <x-form.select name="type" label="Type de parcelle" :options="array_combine(array_keys(\App\Models\Parcelle::TYPES), \App\Models\Parcelle::TYPES)" placeholder="Choisir un type" />
+                        <x-form.select name="parcelle_category_id" label="Type de parcelle" :options="$parcelleCategories" placeholder="Choisir un type" />
                     </div>
                 </div>
 
