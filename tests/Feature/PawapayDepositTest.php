@@ -303,10 +303,10 @@ test('store visit pass crée le pass et redirige vers la page de paiement pawaPa
         ->and($transaction->amount)->toBe(5000);
 
     // Le depositId persisté est bien celui envoyé à pawaPay (clé d'idempotence),
-    // et le callbackUrl est transmis pour le webhook serveur-à-serveur.
+    // et aucun callbackUrl n'est transmis car non supporté par l'API paymentpage.
     Http::assertSent(fn ($request) => str_contains($request->url(), '/v2/paymentpage')
         && $request['depositId'] === $transaction->deposit_id
-        && str_contains($request['callbackUrl'], '/webhook'));
+        && ! isset($request['callbackUrl']));
 });
 
 test('store visit pass laisse la transaction en pending si l\'API pawaPay échoue', function () {
@@ -400,6 +400,72 @@ test('webhook rejette un callback avec signature invalide', function () {
     ]);
 
     $response = $this->postJson(route('transactions.webhook', $transaction), [
+        'depositId' => $transaction->deposit_id,
+        'status' => 'COMPLETED',
+    ], [
+        'X-PawaPay-Signature' => 'invalid-signature',
+    ]);
+
+    $response->assertStatus(403);
+    Queue::assertNotPushed(ProcessPawaPayCallback::class);
+});
+
+test('generic_webhook accepte un callback valide et dispatch le job de traitement', function () {
+    config([
+        'services.pawapay.base_url' => 'https://api.sandbox.pawapay.io',
+        'services.pawapay.token' => 'test-token',
+        'services.pawapay.callback_secret' => 'my-secret',
+        'services.pawapay.verify_callback_signature' => true,
+    ]);
+
+    Queue::fake();
+
+    $user = User::factory()->create();
+    $transaction = Transaction::create([
+        'user_id' => $user->id,
+        'deposit_id' => (string) Str::uuid(),
+        'status' => 'pending',
+        'amount' => 5000,
+        'currency' => 'XAF',
+    ]);
+
+    $payload = json_encode(['depositId' => $transaction->deposit_id, 'status' => 'COMPLETED']);
+    $signature = hash_hmac('sha256', $payload, 'my-secret');
+
+    $response = $this->postJson(route('transactions.generic_webhook'), [
+        'depositId' => $transaction->deposit_id,
+        'status' => 'COMPLETED',
+    ], [
+        'X-PawaPay-Signature' => $signature,
+    ]);
+
+    $response->assertStatus(200);
+
+    Queue::assertPushed(ProcessPawaPayCallback::class, function ($job) use ($transaction) {
+        return $job->transaction->transaction_id === $transaction->transaction_id;
+    });
+});
+
+test('generic_webhook rejette un callback avec signature invalide', function () {
+    config([
+        'services.pawapay.base_url' => 'https://api.sandbox.pawapay.io',
+        'services.pawapay.token' => 'test-token',
+        'services.pawapay.callback_secret' => 'my-secret',
+        'services.pawapay.verify_callback_signature' => true,
+    ]);
+
+    Queue::fake();
+
+    $user = User::factory()->create();
+    $transaction = Transaction::create([
+        'user_id' => $user->id,
+        'deposit_id' => (string) Str::uuid(),
+        'status' => 'pending',
+        'amount' => 5000,
+        'currency' => 'XAF',
+    ]);
+
+    $response = $this->postJson(route('transactions.generic_webhook'), [
         'depositId' => $transaction->deposit_id,
         'status' => 'COMPLETED',
     ], [

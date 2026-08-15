@@ -34,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
         // HMAC signature verification handled in the controller. Exclude from CSRF.
         $middleware->validateCsrfTokens(except: [
             'transactions/*/webhook',
+            'transactions/webhook',
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

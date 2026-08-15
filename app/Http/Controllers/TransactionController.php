@@ -53,7 +53,6 @@ class TransactionController extends Controller
             $result = $this->pawapay->createPaymentPage([
                 'depositId' => $depositId,
                 'returnUrl' => route('transactions.callback', $transaction),
-                'callbackUrl' => route('transactions.webhook', $transaction),
                 'customerMessage' => 'Samaritain',
                 'amountDetails' => [
                     'amount' => (string) $transaction->amount,
@@ -148,6 +147,57 @@ class TransactionController extends Controller
             'event' => ['nullable', 'string'],
             'status' => ['nullable', 'string'],
         ]);
+
+        ProcessPawaPayCallback::dispatch($transaction, $callbackData);
+
+        return response('OK', 200);
+    }
+
+    /**
+     * Handle the pawaPay server-to-server generic webhook callback — POST.
+     *
+     * This endpoint is called without a dynamic transaction ID. It identifies the
+     * transaction in the database using the depositId, payoutId, or refundId
+     * from the webhook payload.
+     */
+    public function handleGenericCallback(Request $request)
+    {
+        $payload = $request->getContent();
+        $signature = $request->header('X-PawaPay-Signature', '');
+
+        if (! $this->pawapay->verifyCallbackSignature($payload, $signature)) {
+            \Log::warning('pawaPay generic callback signature verification failed', [
+                'signature' => $signature,
+            ]);
+
+            return response('Invalid signature', 403);
+        }
+
+        $callbackData = $request->validate([
+            'depositId' => ['nullable', 'string'],
+            'payoutId' => ['nullable', 'string'],
+            'refundId' => ['nullable', 'string'],
+            'event' => ['nullable', 'string'],
+            'status' => ['nullable', 'string'],
+        ]);
+
+        $reference = $callbackData['depositId'] ?? $callbackData['payoutId'] ?? $callbackData['refundId'] ?? null;
+
+        if (! $reference) {
+            return response('Missing reference', 400);
+        }
+
+        $transaction = Transaction::where('deposit_id', $reference)
+            ->orWhere('payout_id', $reference)
+            ->first();
+
+        if (! $transaction) {
+            \Log::warning('pawaPay generic callback: transaction not found', [
+                'reference' => $reference,
+            ]);
+
+            return response('Transaction not found', 404);
+        }
 
         ProcessPawaPayCallback::dispatch($transaction, $callbackData);
 

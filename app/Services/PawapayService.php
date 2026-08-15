@@ -158,6 +158,17 @@ class PawapayService
      */
     public function createPaymentPage(array $data): array
     {
+        // pawaPay V2 hosted payment page does not support callbackUrl in the request body.
+        // Webhooks must be configured globally in the pawaPay Merchant Dashboard.
+        if (array_key_exists('callbackUrl', $data)) {
+            unset($data['callbackUrl']);
+        }
+
+        // pawaPay API rejects "localhost" in returnUrl. We normalize it to "127.0.0.1" for local testing.
+        if (isset($data['returnUrl'])) {
+            $data['returnUrl'] = str_replace('//localhost', '//127.0.0.1', $data['returnUrl']);
+        }
+
         $response = $this->httpClient()
             ->post("{$this->baseUrl}/v2/paymentpage", $data);
 
